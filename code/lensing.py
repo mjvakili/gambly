@@ -5,6 +5,8 @@ import pylab
 from matplotlib import lines as mlines
 from matplotlib import pyplot as plt
 import numpy as np
+
+"""
 from halotools.empirical_models import PrebuiltHodModelFactory
 model = PrebuiltHodModelFactory('hearin15', threshold = 10.6, redshift = 0., 
                         central_assembias_strength = 0, 
@@ -25,7 +27,7 @@ rr , gg_model = baseline_model.mock.compute_galaxy_matter_cross_clustering(rbins
 #rr , gg_model = baseline_model.mock.compute_galaxy_matter_cross_clustering(rbin = a)
 plt.loglog(rr , gg_model , "b.")
 plt.loglog(rbins , gg , "r.")
-
+"""
 
 
 eps = 1e-13
@@ -63,10 +65,16 @@ def sigmabar(xigm , rbins):
 
 def dsigma(xigm , rbins):
 
-    
-    for j in range((len(r))):
+    A = np.pi * (rbins[-1:]**2. - rbins[1:]**2.) 
+    R = rbins
+    delta = np.zeros_like((xigm))
+    r = .5*(rbins[1:]+rbins[:-1])
+    sig = sigma(xigm , rbins)
+    for j in range(len(r)):
 
-        print 1 + 2 
+        (np.pi * rbins[j]**2.)**-1. * np.sum((A*sig)[:j] - sig[j])
+
+    return sig
 
 
 def dsigmap(xigm , rbins):
@@ -85,7 +93,7 @@ if __name__ =='__main__':
 
      print sigma(xigm , rbins)
      
-     pylab.plot( r , dsigmap(xigm , rbins))
+     pylab.plot( r , dsigma(xigm , rbins))
      pylab.xlabel(r"$R$")
      pylab.ylabel(r"$\Sigma(R)$")
      pylab.show()
