@@ -1,17 +1,19 @@
 import numpy as np
-#import matplotlib.pyplot as plt
-#plt.switch_backend("Agg")
 import pylab
 from matplotlib import lines as mlines
 from matplotlib import pyplot as plt
 import numpy as np
-from halotools.empirical_models import PrebuiltHodModelFactory
 
-"""convenience functions for lensing calaculations"""
 
 eps = 1.e-13
 
-def sigma(xigm , rbins):
+def get_sigma(xigm , r):
+
+    """
+    computes projected matter surface density as a function of 
+    comoving radius (Mpc/h)
+    from a tabulated \xi_{gm} and bins of radii
+    """
 
     sig = np.zeros_like((xigm))
 
