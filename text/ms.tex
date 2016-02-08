@@ -46,7 +46,7 @@ assumption, this model has ben widely used in fitting the measurements of galaxy
 
 \section{Galaxy-Galaxy Lensing}
 
-In galaxy-galaxy lensing, the connection between dark matter and galaxies is probed by measuring 
+In g-g lensing, the connection between dark matter and galaxies is probed by measuring 
 the cross correlation between the two. In particular, one can define the galaxy-matter cross correlation 
 as the ensemble average of the product of galaxy over densities and matter overdensities
 \beq
@@ -60,9 +60,16 @@ This cross correlation can be related to the azimuthally-averaged  projected sur
 lenses,
 \begin{eqnarray}
 \Sigma(R) &=& \bar{\rho}_{m}(z)\int_{0}^{\infty} \;  [1 + \xi_{gm}(\sqrt{\chi^2 + R^2})] \; d\chi \nonumber \\
-          &=& 2\bar{\rho}_{m}(z)\int_{R}^{\infty} \; [1 + \xi_{gm}(r)] \; \frac{rdr}{\sqrt{r^{2} - R^{2}}}.
+          &=& 2\bar{\rho}_{m}(z)\int_{R}^{\infty} \; [1 + \xi_{gm}(r)] \; \frac{rdr}{\sqrt{r^{2} - R^{2}}},
 \end{eqnarray}
+where $\chi$ is the projected comoving line-of-sight distance, and $R$ is the projected comoving transverse distance.
 
+Since the galaxy-matter cross correlation falls off rapidly that in practice thre redshoft evolution of $\xi_{gm}$ 
+can be neglected, integrating only out to a line-fo-sight distance of $\chi=$ 50 Mpc is sufficient. 
+The mean excess projected density $\bar{\Sigma}(R)$ can be approximated by the following radial integral,
+\beq
+\bar{\Sigma}(R , z_{l}) = 2 \rho_{c,0}\Omega_{m,0}\int_{0}^{\mathrm{50Mpc}} \; \xi_{gm}\Big(\sqrt{R^{2}+\chi^{2}},z_{L} \Big)d\chi.
+\eeq
 
 \section{Concentration-dependence of galaxy-halo connection}
 

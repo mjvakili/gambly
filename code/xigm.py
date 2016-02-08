@@ -48,4 +48,3 @@ def xigm_tabulated_generator(hod = 'leauthaud11' , threshold = 10.6 , \
     rr , xigm = model.mock.compute_galaxy_matter_cross_clustering(rbins = rbin)
 
     return rr , xigm
-

@@ -13,3 +13,18 @@ A theoretical framework for combining techniques that probe the link between gal
 http://arxiv.org/abs/1103.2077
 
 ------------------------------------------------
+
+Density profiles of galaxy groups and clusters from SDSS galaxy-galaxy weak lensing
+
+http://arxiv.org/abs/astro-ph/0605476
+
+
+-----------------------------------------------
+
+Analytic model for galaxy and dark matter clustering
+
+http://arxiv.org/abs/astro-ph/0001493
+
+-----------------------------------------------
+
+
