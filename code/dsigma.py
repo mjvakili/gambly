@@ -32,9 +32,7 @@ def get_sigma(xigm , r):
 def sigmabar(xigm , rbins):
 
     sigbar = np.zeros_like((xigm))
-    
     sig = sigma(xigm , rbins)
-
     r = .5*(rbins[1:]+rbins[:-1])
     dr = rbins[1:]-rbins[:-1]
 
@@ -60,7 +58,6 @@ def dsigma(xigm , rbins):
 
 
 def dsigmap(xigm , rbins):
-
 
     return sigma(xigm , rbins) - sigmabar(xigm , rbins)   
 
