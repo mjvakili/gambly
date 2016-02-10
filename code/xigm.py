@@ -81,7 +81,7 @@ if  __name__=='__main__':
     print time.time() - a
     pylab.loglog(rr , xigm)
     #pylab.show()
-    rr2 = np.logspace(np.log10(.2) , np.log10(8) , 10)
+    rr2 = np.logspace(np.log10(.2) , np.log10(8) , 5)
     a = time.time()
     xigm2 = xigm_func(rr2, .1 , 10)
     print time.time() - a
