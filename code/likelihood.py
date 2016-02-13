@@ -1,6 +1,7 @@
 import wp_model
 import numpy as np
 from scipy import interpolate 
+import pylab
 """
 {'alphasat': 1.0,
  'bcut': 1.47,
@@ -27,28 +28,32 @@ wp_data = data_table[:,-2]
 wp_error = data_table[:,-1]
 #initial theta
 
-#theta0 = np.array([1. , 1.47 , -.13 , 0.859 , 10.62 , 1. , 0.2 , 0.2 , 0.43 , .18 , 0.56 ,0.18 , 1.54 , 2.52 , 10.72 , 0.59 , 12.35 , 0.3])
-theta0 = np.array([0.5 , 0.5])
+theta0 = np.array([1. , 1.47 , -.13 , 0.859 , 10.62 , 1. , 0.2 , 0.2 , 0.43 , .18 , 0.56 ,0.18 , 1.54 , 2.52 , 10.72 , 0.59 , 12.35 , 0.3])
+#theta0 = np.array([0.5 , 0.5])
 
 
 def lnlike(theta):
 
     rp , wp = wp_model.model(theta , Mstar = 10.6)
+
     
     f_interp = interpolate.interp1d(rp , 
                                     wp,
                                     kind = "cubic")
 
     wp_interp = f_interp(rp_data)
-    #print wp_interp 
-    #print wp_data
+    
+    pylab.errorbar(rp_data , wp_data , yerr = wp_error)
+    pylab.xscale("log")
+    pylab.yscale("log")
+    pylab.loglog(rp_data , wp_interp , "r-")
+    pylab.show()
+    
     return -0.5 * np.sum((wp_data - wp_interp) ** 2. / (wp_error ** 2.))
 
 
 import scipy.optimize as op
 nll = lambda *args: -lnlike(*args)
-result = op.fmin_l_bfgs_b(nll, theta0, fprime = None, args=(), approx_grad = True, bounds = [(-1. , 1.) , (-1. , 1.)], disp = 1)
-print result["x"]
- 
-
-
+result = op.fmin_l_bfgs_b(nll, theta0, fprime = None, args=(), approx_grad = True, disp = 1 ) 
+#bounds = [(-1. , 1.) , (-1. , 1.)], disp = 1)
+print result
