@@ -54,3 +54,13 @@ def load_covariance(Mr=21):
     wpcov = np.loadtxt(data_file)[:12 , :12]
 
     return wpcov
+
+def load_hod_random_guess(Mr=21):
+    ''' load initial positions of MCMC chains,
+        hardcoded for now '''
+    pos = [12.59 , 0.49 , 12.78 , 1.14 , 13.99 , 0.1]
+    
+    return pos
+
+     
+

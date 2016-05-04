@@ -13,3 +13,6 @@ def dat_dir():
     Dat directory
     '''
     return os.path.dirname(os.path.realpath(__file__)).split('code')[0]+'dat/'
+
+def mcmc_dir():
+    return dat_dir()+'mcmc/'
