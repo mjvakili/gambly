@@ -72,7 +72,9 @@ def main():
     halocat = CachedHaloCatalog(simname = 'bolplanck', redshift = 0, halo_finder = 'rockstar')
     model.populate_mock(halocat, enforce_PBC = True)
     pos = three_dim_pos_bundle(model.mock.galaxy_table, 'x', 'y', 'z')
-    
+  
+    print("modelnumber density=" , len(pos)/halocat.Lbox**3.)
+    print("data number density=" , 1.16*10**-3.) 
     x = model.mock.galaxy_table['x']
     y = model.mock.galaxy_table['y']
     z = model.mock.galaxy_table['z']
