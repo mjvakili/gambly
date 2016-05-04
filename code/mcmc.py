@@ -58,7 +58,7 @@ def lnPost(theta, **kwargs):
     return lp + lnlike(theta, **kwargs)
 
 
-def mcmc_mpi(Nwalkers, Nchains, data_dict={'Mr':21}, prior_name = 'first_try'): 
+def mcmc_mpi(Nwalkers, Niters, data_dict={'Mr':21}, prior_name = 'first_try'): 
     '''
     Parameters
     -----------
@@ -85,23 +85,23 @@ def mcmc_mpi(Nwalkers, Nchains, data_dict={'Mr':21}, prior_name = 'first_try'):
     chain_file_name = ''.join([util.mcmc_dir(),'.mcmc_chain.hdf5'])
  
 
-    if os.path.isfile(chain_file) and continue_chain:   
+    if os.path.isfile(chain_file_name) and continue_chain:   
         print 'Continuing previous MCMC chain!'
-        sample = np.loadtxt(chain_file) 
-        Nchain = Niter - (len(sample) / Nwalkers) # Number of chains left to finish 
-        if Nchain > 0: 
+        sample = h5py.File(chain_file_name , "r") 
+        Nchains = Niters - len(sample) # Number of chains left to finish 
+        if Nchains > 0: 
             pass
         else: 
             raise ValueError
-        print Nchain, ' iterations left to finish'
+        print Nchains, ' iterations left to finish'
 
         # Initializing Walkers from the end of the chain 
         pos0 = sample[-Nwalkers:]
     else:
         # new chain 
-        f = open(chain_file, 'w')
-        f.close()
-        Nchain = Niter
+        sample_file = h5py.File(chain_file_name , 'w')
+        sample_file.create_dataset("mcmc",(Niters, Nwalkers, Ndim), data = np.zeros((Niters, Nwalkers , Ndim)))
+        sample_file.close()
          
         # Initializing Walkers
         random_guess = data_hod
@@ -123,13 +123,10 @@ def mcmc_mpi(Nwalkers, Nchains, data_dict={'Mr':21}, prior_name = 'first_try'):
             }
     sampler = emcee.EnsembleSampler(Nwalkers, Ndim, lnPost, pool=pool, kwargs=hod_kwargs)
 
-    sample_file = h5py.File(chain_file_name , 'w')
-    sample_file.create_dataset("mcmc",(Nchain,Nwalkers,Ndim),data = np.zeros((niters, nwalkers , ndims)))
-    sample_file.close()
     cnt = 0
 
     # Initializing Walkers 
-    for result in sampler.sample(pos0, iterations=Nchain, storechain=False):
+    for result in sampler.sample(pos0, iterations = Niters, storechain=False):
         position = result[0]
         sample_file = h5py.File(chain_file_name)
         sample_file["k"][cnt] = position
@@ -145,6 +142,6 @@ if __name__=="__main__":
     continue_chain = False
     Nwalkers = int(sys.argv[1])
     print 'N walkers = ', Nwalkers
-    Niter = int(sys.argv[2])
-    print 'N iterations = ', Niter
-    mcmc_mpi(Nwalkers, Niter)
+    Niters = int(sys.argv[2])
+    print 'N iterations = ', Niters
+    mcmc_mpi(Nwalkers, Niters)
