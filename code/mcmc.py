@@ -4,9 +4,8 @@ import numpy as np
 import emcee
 from numpy.linalg import solve
 from emcee.utils import MPIPool
-import scipy.optimize as op
 from numpy.linalg import solve
-
+import h5py
 # --- Local ---
 import util
 import data as Data
@@ -83,7 +82,8 @@ def mcmc_mpi(Nwalkers, Nchains, data_dict={'Mr':21}, prior_name = 'first_try'):
     prior_range[:,1] = prior_max
     
     # mcmc chain output file 
-    chain_file = ''.join([util.mcmc_dir(),'.mcmc_chain.dat'])
+    chain_file_name = ''.join([util.mcmc_dir(),'.mcmc_chain.hdf5'])
+ 
 
     if os.path.isfile(chain_file) and continue_chain:   
         print 'Continuing previous MCMC chain!'
@@ -107,8 +107,9 @@ def mcmc_mpi(Nwalkers, Nchains, data_dict={'Mr':21}, prior_name = 'first_try'):
         random_guess = data_hod
         pos0 = np.repeat(random_guess, Nwalkers).reshape(Ndim, Nwalkers).T + \
                          5.e-2 * np.random.randn(Ndim * Nwalkers).reshape(Nwalkers, Ndim)
+    print "initial position of the walkers = " , pos0
     # Initializing MPIPool
-    pool = MPIPool()
+    pool = MPIPool(loadbalance=True)
     if not pool.is_master():
         pool.wait()
         sys.exit(0)
@@ -122,16 +123,20 @@ def mcmc_mpi(Nwalkers, Nchains, data_dict={'Mr':21}, prior_name = 'first_try'):
             }
     sampler = emcee.EnsembleSampler(Nwalkers, Ndim, lnPost, pool=pool, kwargs=hod_kwargs)
 
+    sample_file = h5py.File(chain_file_name , 'w')
+    sample_file.create_dataset("mcmc",(Nchain,Nwalkers,Ndim),data = np.zeros((niters, nwalkers , ndims)))
+    sample_file.close()
+    cnt = 0
+
     # Initializing Walkers 
     for result in sampler.sample(pos0, iterations=Nchain, storechain=False):
         position = result[0]
-        #print position
-        f = open(chain_file, 'a')
-        for k in range(position.shape[0]): 
-            output_str = '\t'.join(position[k].astype('str')) + '\n'
-            f.write(output_str)
-        f.close()
-
+        sample_file = h5py.File(chain_file_name)
+        sample_file["k"][cnt] = position
+        sample_file.close()
+        print cnt
+        cnt += 1
+        pass
     pool.close()
 
 
