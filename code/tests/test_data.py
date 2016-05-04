@@ -1,13 +1,14 @@
-import numpy as np
-import matplotlib.pyplot as plt
-
+'''
+testing how the model fits the data
+'''
 from __future__ import (division, print_function, absolute_import,
                         unicode_literals)
+import numpy as np
+import matplotlib.pyplot as plt
 import os.path as path
 import time
 from Corrfunc import _countpairs
 from Corrfunc.utils import read_catalog
-import numpy as np 
 # --- Local ---
 # --- halotools ---
 from halotools.sim_manager import CachedHaloCatalog
@@ -27,6 +28,7 @@ from ChangTools.plotting import prettyplot
 from ChangTools.plotting import prettycolors
 from Corrfunc.utils import read_catalog
 from halotools.empirical_models import NFWPhaseSpace
+from halotools.empirical_models import enforce_periodicity_of_box
 prettyplot()
 
 class AssembiasZheng07Sats(Zheng07Sats, HeavisideAssembias):
@@ -53,26 +55,34 @@ model= HodModelFactory(
         satellites_profile = sats_prof_model)
 def main():
      
-    # Entire MultiDark Volume (Analytic xi) 
-    cov = np.loadtxt("../data/wpxicov_dr72_bright0_mr21.0_z0.159_nj400")
-    #model = PrebuiltHodModelFactory('zheng07', threshold=-21)
+    cov = np.loadtxt("../../data/wpxicov_dr72_bright0_mr21.0_z0.159_nj400")
+    f_MD = (1. + 71.74*10**6. / (1000.)**3.)
+    f_bol = (1. + 71.74*10.**6. / (250.)**3.)
+      
+    print("covariance correction factor=" , f_bol/f_MD)
+    cov = cov*f_bol/f_MD
+   
     model.param_dict['logM0'] =  12.59
     model.param_dict['sigma_logM'] =  0.49
     model.param_dict['logMmin'] =  12.78
     model.param_dict['alpha'] =  1.14
     model.param_dict['logM1'] =  13.99
 
-    model.param_dict['mean_occupation_satellites_assembias_param1'] = 0.5
+    model.param_dict['mean_occupation_satellites_assembias_param1'] = 0.0
     halocat = CachedHaloCatalog(simname = 'bolplanck', redshift = 0, halo_finder = 'rockstar')
     model.populate_mock(halocat, enforce_PBC = True)
     pos = three_dim_pos_bundle(model.mock.galaxy_table, 'x', 'y', 'z')
+    
+    x = model.mock.galaxy_table['x']
+    y = model.mock.galaxy_table['y']
+    z = model.mock.galaxy_table['z']
+    vz = model.mock.galaxy_table['vz']
 
-    #x = model.mock.galaxy_table['x']
-    #y = model.mock.galaxy_table['y']
-    #z = model.mock.galaxy_table['z']
-    #vz = model.mock.galaxy_table['vz']
+    # applying RSD
+    pos = return_xyz_formatted_array(x, y, z, velocity = vz, velocity_distortion_dimension = 'z')
+    # enfprcing PBC
+    pos =  enforce_periodicity_of_box(pos, halocat.Lbox)
 
-    #pos = return_xyz_formatted_array(x, y, z, velocity = vz, velocity_distortion_dimension = 'z')
     tstart = time.time()
     t0 = tstart
     pos = pos.astype(np.float32)
@@ -81,11 +91,11 @@ def main():
     print("Done reading the data - time taken = {0:10.1f} seconds"
           .format(t1 - t0))
     print("Beginning Correlation functions calculations")
-    boxsize = 250
+    boxsize = halocat.Lbox
     nthreads = 4
     pimax = 40.0
     binfile = path.join(path.dirname(path.abspath(__file__)),
-                        "../", "bin")
+                        "../../", "bin")
     autocorr = 1
     numbins_to_print = 12
     
@@ -102,7 +112,7 @@ def main():
               .format(items[0], items[1], items[2], items[3], items[4]))
     print("-----------------------------------------------------------")
     
-    data_wp = np.loadtxt("../data/wpxi_dr72_bright0_mr21.0_z0.159_nj400")[:,1]
+    data_wp = np.loadtxt("../../data/wpxi_dr72_bright0_mr21.0_z0.159_nj400")[:,1]
     print(data_wp.shape)
     data_wp_error = np.sqrt(np.diag(cov)[:12])
     print(data_wp_error.shape) 
