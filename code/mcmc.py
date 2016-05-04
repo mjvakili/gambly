@@ -82,7 +82,7 @@ def mcmc_mpi(Nwalkers, Niters, data_dict={'Mr':21}, prior_name = 'first_try'):
     prior_range[:,1] = prior_max
     
     # mcmc chain output file 
-    chain_file_name = ''.join([util.mcmc_dir(),'.mcmc_chain.hdf5'])
+    chain_file_name = ''.join([util.mcmc_dir(),'mcmc_chain.hdf5'])
  
 
     if os.path.isfile(chain_file_name) and continue_chain:   
@@ -98,7 +98,9 @@ def mcmc_mpi(Nwalkers, Niters, data_dict={'Mr':21}, prior_name = 'first_try'):
         # Initializing Walkers from the end of the chain 
         pos0 = sample[-Nwalkers:]
     else:
-        # new chain 
+        # new chain
+        print "chain_file_name=" , chain_file_name
+ 
         sample_file = h5py.File(chain_file_name , 'w')
         sample_file.create_dataset("mcmc",(Niters, Nwalkers, Ndim), data = np.zeros((Niters, Nwalkers , Ndim)))
         sample_file.close()
@@ -129,13 +131,12 @@ def mcmc_mpi(Nwalkers, Niters, data_dict={'Mr':21}, prior_name = 'first_try'):
     for result in sampler.sample(pos0, iterations = Niters, storechain=False):
         position = result[0]
         sample_file = h5py.File(chain_file_name)
-        sample_file["k"][cnt] = position
+        sample_file["mcmc"][cnt] = position
         sample_file.close()
         print cnt
         cnt += 1
         pass
     pool.close()
-
 
 if __name__=="__main__": 
     generator = MCMC_model(Mr = 21)
