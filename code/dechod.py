@@ -16,11 +16,14 @@ from halotools.empirical_models.factories.mock_helpers import three_dim_pos_bund
 from halotools.mock_observables.catalog_analysis_helpers import return_xyz_formatted_array
 from halotools.empirical_models import NFWPhaseSpace
 
-class AssembiasZheng07Sats(Zheng07Sats, HeavisideAssembias , Mr = 21):
+class AssembiasZheng07Sats(Zheng07Sats, HeavisideAssembias):
+   
+  
 
-    def __init__(self, **kwargs):
-
-        Zheng07Sats.__init__(self, threshold = -1.*Mr)
+    def __init__(self, Mr = 21 , **kwargs):
+        
+        self.Mr = Mr
+        Zheng07Sats.__init__(self, threshold = -1.*self.Mr)
 
         HeavisideAssembias.__init__(self,
             method_name_to_decorate = 'mean_occupation',

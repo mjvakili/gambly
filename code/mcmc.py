@@ -50,7 +50,8 @@ def lnPost(theta, **kwargs):
         res = fake_obs - model_obvs
         f = 1.
         neg_chisq = -0.5*f*np.sum(np.dot(res , solve(fake_obs_icov , res)))
-    	return neg_chi_tot
+    	print "neg_chi_tot" , neg_chisq
+        return neg_chisq
 
     lp = lnprior(theta , **kwargs)
     if not np.isfinite(lp):
