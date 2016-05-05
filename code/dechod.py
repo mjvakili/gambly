@@ -15,6 +15,7 @@ from halotools.empirical_models import PrebuiltHodModelFactory
 from halotools.empirical_models.factories.mock_helpers import three_dim_pos_bundle
 from halotools.mock_observables.catalog_analysis_helpers import return_xyz_formatted_array
 from halotools.empirical_models import NFWPhaseSpace
+from halotools.empirical_models import enforce_periodicity_of_box
 
 class AssembiasZheng07Sats(Zheng07Sats, HeavisideAssembias):
    
@@ -75,13 +76,20 @@ class MCMC_model(object):
         self.model.param_dict['logM1'] = theta[4]
         self.model.param_dict['mean_occupation_satellites_assembias_param1']= theta[5]
         self.model.populate_mock(self.halocat) 
-        pos=three_dim_pos_bundle(self.model.mock.galaxy_table, 'x', 'y', 'z')
+        x = model.mock.galaxy_table['x']
+        y = model.mock.galaxy_table['y']
+        z = model.mock.galaxy_table['z']
+        vz = model.mock.galaxy_table['vz']
+        # applying RSD
+        pos = return_xyz_formatted_array(x, y, z, velocity = vz, velocity_distortion_dimension = 'z')
+        # enforcing PBC
+        pos = enforce_periodicity_of_box(pos, halocat.Lbox)
         pos = pos.astype(np.float32)
         x, y, z = pos[:,0] , pos[:,1] , pos[:,2]
-        
         results_wp = _countpairs.countpairs_wp(self.boxsize, self.pimax, 
                                            self.nthreads,
                                            self.binfile, x, y, z)
         wp = np.array(results_wp)[:,3]
+        nbar = 1.*len(pos)/(self.boxsize)**3.
 
-        return wp
+        return nbar , wp

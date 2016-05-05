@@ -21,6 +21,7 @@ def lnPost(theta, **kwargs):
     	fake_obs_icov = kwargs['data_icov']
     	kwargs.pop('data', None)
     	kwargs.pop('data_icov', None)
+
     	prior_range = kwargs['prior_range']
     	prior_min = prior_range[:,0]
     	prior_max = prior_range[:,1]
@@ -40,16 +41,25 @@ def lnPost(theta, **kwargs):
 
     	fake_obs = kwargs['data']
     	fake_obs_icov = kwargs['data_icov']
+
+        data_nbar , data_wp = fake_obs[0] , fake_obs[1]
+        nbar_var , wp_cov = fake_obs_icov[0] , fake_obs_icov[1]
+
     	kwargs.pop('data', None)
     	kwargs.pop('data_icov', None)
     	prior_range = kwargs['prior_range']
     	# Likelihood
     	model_obvs = generator(theta, prior_range)
-        #print "model=" , model_obvs
-        res = fake_obs - model_obvs
-        f = 1.
-        neg_chisq = -0.5*f*np.sum(np.dot(res , solve(fake_obs_icov , res)))
-    	print "neg_chi_tot" , neg_chisq
+        model_nbar , model_wp = model_obvs[0] , model_obvs[1]
+        
+        res_nbar = model_nbar - data_nbar
+        res_wp = model_wp - data_wp
+
+        neq_chisq_nbar = -0.5*(res_nbar**2.)/(nbar_var)
+        neg_chisq_wp = -0.5*f*np.sum(np.dot(res_wp , solve(wp_cov , res_wp)))
+    	neq_chisq = neg_chisq_nbar + neg_chisq_wp
+
+        print "neg_chi_tot" , neg_chisq
         return neg_chisq
 
     lp = lnprior(theta , **kwargs)
