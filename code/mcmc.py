@@ -55,9 +55,11 @@ def lnPost(theta, **kwargs):
         res_nbar = model_nbar - data_nbar
         res_wp = model_wp - data_wp
 
-        neq_chisq_nbar = -0.5*(res_nbar**2.)/(nbar_var)
-        neg_chisq_wp = -0.5*f*np.sum(np.dot(res_wp , solve(wp_cov , res_wp)))
-    	neq_chisq = neg_chisq_nbar + neg_chisq_wp
+        f_bol = (1. + 71.74*10.**6. / (250.)**3.)
+
+        neg_chisq_nbar = -0.5*(res_nbar**2.)/(nbar_var)
+        neg_chisq_wp = -0.5*np.sum(np.dot(res_wp , solve(wp_cov , res_wp)))
+    	neg_chisq = neg_chisq_nbar + neg_chisq_wp
 
         print "neg_chi_tot" , neg_chisq
         return neg_chisq
@@ -92,7 +94,7 @@ def mcmc_mpi(Nwalkers, Niters, data_dict={'Mr':21}, prior_name = 'first_try'):
     prior_range[:,1] = prior_max
     
     # mcmc chain output file 
-    chain_file_name = ''.join([util.mcmc_dir(),'mcmc_chain.hdf5'])
+    chain_file_name = ''.join([util.mcmc_dir(),'mcmc_chain2.hdf5'])
  
 
     if os.path.isfile(chain_file_name) and continue_chain:   

@@ -76,14 +76,14 @@ class MCMC_model(object):
         self.model.param_dict['logM1'] = theta[4]
         self.model.param_dict['mean_occupation_satellites_assembias_param1']= theta[5]
         self.model.populate_mock(self.halocat) 
-        x = model.mock.galaxy_table['x']
-        y = model.mock.galaxy_table['y']
-        z = model.mock.galaxy_table['z']
-        vz = model.mock.galaxy_table['vz']
+        x = self.model.mock.galaxy_table['x']
+        y = self.model.mock.galaxy_table['y']
+        z = self.model.mock.galaxy_table['z']
+        vz = self.model.mock.galaxy_table['vz']
         # applying RSD
         pos = return_xyz_formatted_array(x, y, z, velocity = vz, velocity_distortion_dimension = 'z')
         # enforcing PBC
-        pos = enforce_periodicity_of_box(pos, halocat.Lbox)
+        pos = enforce_periodicity_of_box(pos, self.boxsize)
         pos = pos.astype(np.float32)
         x, y, z = pos[:,0] , pos[:,1] , pos[:,2]
         results_wp = _countpairs.countpairs_wp(self.boxsize, self.pimax, 
