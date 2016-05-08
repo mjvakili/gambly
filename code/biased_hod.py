@@ -34,7 +34,6 @@ class MCMC_model(object):
     def __init__(self, Mr):
         
         self.Mr = Mr
-        thr = -1. * np.float(Mr)
         self.model = composite_model(Mr)
         self.halocat = CachedHaloCatalog(simname = 'bolplanck', redshift = 0, halo_finder = 'rockstar')
 

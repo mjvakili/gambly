@@ -9,7 +9,8 @@ import h5py
 # --- Local ---
 import util
 import data as Data
-from dechod import MCMC_model
+#from dechod import MCMC_model
+from biased_hod import MCMC_model
 from prior import PriorRange
 
 
@@ -70,7 +71,7 @@ def lnPost(theta, **kwargs):
     return lp + lnlike(theta, **kwargs)
 
 
-def mcmc_mpi(Nwalkers, Niters, data_dict={'Mr':Mr}, prior_name = 'first_try'): 
+def mcmc_mpi(Nwalkers, Niters, Mr, prior_name = 'first_try'): 
     '''
     Parameters
     -----------
@@ -80,21 +81,21 @@ def mcmc_mpi(Nwalkers, Niters, data_dict={'Mr':Mr}, prior_name = 'first_try'):
         Number of MCMC chains   
     '''
     #data and covariance matrix
-    fake_obs_icov = Data.load_covariance(**data_dict)
-    fake_obs = Data.load_data(**data_dict)
+    fake_obs_icov = Data.load_covariance(Mr)
+    fake_obs = Data.load_data(Mr)
         
     # True HOD parameters
-    data_hod = Data.load_dechhod_random_guess(**data_dict)
+    data_hod = Data.load_dechod_random_guess(Mr)
     Ndim = len(data_hod)
 
     # Priors
-    prior_min, prior_max = PriorRange(**data_dict , prior_name)
+    prior_min, prior_max = PriorRange(prior_name , Mr)
     prior_range = np.zeros((len(prior_min),2))
     prior_range[:,0] = prior_min
     prior_range[:,1] = prior_max
     
     # mcmc chain output file 
-    chain_file_name = ''.join([util.mcmc_dir(),'mcmc_chain_Mr',str(**data_dict),'.hdf5'])
+    chain_file_name = ''.join([util.mcmc_dir(),'mcmc_chain_Mr',str(Mr),'.hdf5'])
  
 
     if os.path.isfile(chain_file_name) and continue_chain:   
@@ -133,7 +134,7 @@ def mcmc_mpi(Nwalkers, Niters, data_dict={'Mr':Mr}, prior_name = 'first_try'):
             'prior_range': prior_range, 
             'data': fake_obs, 
             'data_icov': fake_obs_icov, 
-            'Mr': data_dict['Mr']
+            'Mr': Mr
             }
     sampler = emcee.EnsembleSampler(Nwalkers, Ndim, lnPost, pool=pool, kwargs=hod_kwargs)
 
@@ -156,7 +157,7 @@ if __name__=="__main__":
     print 'N walkers = ', Nwalkers
     Niters = int(sys.argv[2])
     print 'N iterations = ', Niters
-    Mr = int(sys.argv[3])
-    print 'Mr = ', Mr
+    Mr = np.float(sys.argv[3])
+    print 'Mr = ', np.float(Mr)
     generator = MCMC_model(Mr)
-    mcmc_mpi(Nwalkers, Niters,data_dict={'Mr':Mr})
+    mcmc_mpi(Nwalkers, Niters, Mr)
