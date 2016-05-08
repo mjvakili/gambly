@@ -17,14 +17,44 @@ def PriorRange(prior_name):
     prior_max = prior_dict['prior_max']
     return [prior_min, prior_max]
 
-def prior_dict_table(): 
+def prior_dict_table(Mr): 
     ''' dictionary table of priors 
     '''
-    dict_table = { 
+    if Mr ==21 :
+      dict_table = { 
             'first_try': {
-                'prior_min': [10.5, 0.2, 11.8, 0.85, 13., -1.],
-                'prior_max': [14.5, 0.8, 13.8, 1.45, 15., 1.]
+                'prior_min': [10.5, 0.1, 11.8, 0.85, 13., -1. , -1.],
+                'prior_max': [14.5, 0.8, 13.8, 1.45, 15., 1. , 1.]
                 }
-            }
+              }
             
+    if Mr ==20.5 :
+      dict_table = { 
+            'first_try': {
+                'prior_min': [10.5, 0.1, 11.8, 0.85, 13., -1. , -1.],
+                'prior_max': [14.5, 0.8, 13.8, 1.45, 15., 1. , 1.]
+                }
+              }
+    if Mr ==20. :
+      dict_table = { 
+            'first_try': {
+                'prior_min': [10.5, 0.1, 11.8, 0.85, 13., -1. , -1.],
+                'prior_max': [14.5, 0.8, 13.8, 1.45, 15., 1. , 1.]
+                }
+              }
+    if Mr ==19.5 :
+      dict_table = { 
+            'first_try': {
+                'prior_min': [10.5, 0.1, 11.8, 0.85, 13., -1. , -1.],
+                'prior_max': [14.5, 0.8, 13.8, 1.45, 15., 1. , 1.]
+                }
+              }
+    if Mr ==19. :
+      dict_table = { 
+            'first_try': {
+                'prior_min': [10.5, 0.1, 11.8, 0.85, 13., -1. , -1.],
+                'prior_max': [14.5, 0.8, 13.8, 1.45, 15., 1. , 1.]
+                }
+              }
+
     return dict_table 

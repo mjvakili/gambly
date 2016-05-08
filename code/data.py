@@ -5,17 +5,17 @@ Module for handling the data anc coavariance matrices
 import numpy as np
 import util
 
-def load_data(Mr=21):
+def load_data(Mr):
     '''loads wp and nbar
     '''
     return [load_nbar(Mr) , load_wp(Mr)]
 
-def load_covariance(Mr=21):
+def load_covariance(Mr):
     '''loads wp and nbar
     '''
     return [load_nbar_variance(Mr) , load_wp_covariance(Mr)]
 
-def load_wp(Mr=21): 
+def load_wp(Mr): 
     ''' loads wp 
     
     Parameters
@@ -42,7 +42,7 @@ def load_wp(Mr=21):
 
     return wp
 
-def load_nbar(Mr=21):
+def load_nbar(Mr):
     '''load the number density of the data
     '''
     if Mr == 21:
@@ -58,7 +58,7 @@ def load_nbar(Mr=21):
 
     return nbar
 
-def load_wp_covariance(Mr=21): 
+def load_wp_covariance(Mr): 
     ''' loads the jackknife covariance matrix associated with  wp
     
     Parameters
@@ -85,7 +85,7 @@ def load_wp_covariance(Mr=21):
 
     return wpcov
 
-def load_nbar_variance(Mr=21):
+def load_nbar_variance(Mr):
     '''load the variance of the number density of the data
     '''
     if Mr == 21:
@@ -101,9 +101,27 @@ def load_nbar_variance(Mr=21):
 
     return nbarerr ** 2.
 
-def load_hod_random_guess(Mr=21):
+def load_hod_random_guess(Mr):
     ''' load initial positions of MCMC chains,
         hardcoded for now '''
     pos = [12.59 , 0.49 , 12.78 , 1.14 , 13.99 , 0.1]
     
+    return pos
+
+def load_dechod_random_guess(Mr):
+    '''random guess for the walkers'''
+
+    if Mr == 21:
+        pos = [12.59 , 0.49 , 12.78 , 1.14 , 13.99 , 0.5 , 0.5]
+    if Mr == 20.5:
+        pos = [11.84 , 0.39 , 12.79 , 1.12 , 13.58 , 0.5 , 0.5]
+    if Mr == 19.5:
+        pos = [12.59 , 0.49 , 12.78 , 1.14 , 13.99 , 0.5 , 0.5]
+    if Mr == 20:
+        pos = [11.38 , 0.26 , 12.02 , 1.06 , 13.31 , 0.5 , 0.5]
+    if Mr == 19.5:
+        pos = [11.69 , 0.28 , 11.75 , 1.05 , 13.01 , 0.5 , 0.5]
+    if Mr == 19:
+        pos = [11.49 , 0.26 , 11.6 , 1.02 , 12.83 , 0.5 , 0.5]
+
     return pos

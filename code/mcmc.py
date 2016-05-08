@@ -70,7 +70,7 @@ def lnPost(theta, **kwargs):
     return lp + lnlike(theta, **kwargs)
 
 
-def mcmc_mpi(Nwalkers, Niters, data_dict={'Mr':21}, prior_name = 'first_try'): 
+def mcmc_mpi(Nwalkers, Niters, data_dict={'Mr':Mr}, prior_name = 'first_try'): 
     '''
     Parameters
     -----------
@@ -84,17 +84,17 @@ def mcmc_mpi(Nwalkers, Niters, data_dict={'Mr':21}, prior_name = 'first_try'):
     fake_obs = Data.load_data(**data_dict)
         
     # True HOD parameters
-    data_hod = Data.load_hod_random_guess(Mr=21)
+    data_hod = Data.load_dechhod_random_guess(**data_dict)
     Ndim = len(data_hod)
 
     # Priors
-    prior_min, prior_max = PriorRange(prior_name)
+    prior_min, prior_max = PriorRange(**data_dict , prior_name)
     prior_range = np.zeros((len(prior_min),2))
     prior_range[:,0] = prior_min
     prior_range[:,1] = prior_max
     
     # mcmc chain output file 
-    chain_file_name = ''.join([util.mcmc_dir(),'mcmc_chain2.hdf5'])
+    chain_file_name = ''.join([util.mcmc_dir(),'mcmc_chain_Mr',str(**data_dict),'.hdf5'])
  
 
     if os.path.isfile(chain_file_name) and continue_chain:   
@@ -121,7 +121,7 @@ def mcmc_mpi(Nwalkers, Niters, data_dict={'Mr':21}, prior_name = 'first_try'):
         random_guess = data_hod
         pos0 = np.repeat(random_guess, Nwalkers).reshape(Ndim, Nwalkers).T + \
                          5.e-2 * np.random.randn(Ndim * Nwalkers).reshape(Nwalkers, Ndim)
-    print "initial position of the walkers = " , pos0
+    print "initial position of the walkers = " , pos0.shape
     # Initializing MPIPool
     pool = MPIPool(loadbalance=True)
     if not pool.is_master():
@@ -151,10 +151,12 @@ def mcmc_mpi(Nwalkers, Niters, data_dict={'Mr':21}, prior_name = 'first_try'):
     pool.close()
 
 if __name__=="__main__": 
-    generator = MCMC_model(Mr = 21)
     continue_chain = False
     Nwalkers = int(sys.argv[1])
     print 'N walkers = ', Nwalkers
     Niters = int(sys.argv[2])
     print 'N iterations = ', Niters
-    mcmc_mpi(Nwalkers, Niters)
+    Mr = int(sys.argv[3])
+    print 'Mr = ', Mr
+    generator = MCMC_model(Mr)
+    mcmc_mpi(Nwalkers, Niters,data_dict={'Mr':Mr})
