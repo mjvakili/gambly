@@ -14,7 +14,7 @@ module load corrfunc/intel/1.0.0
 
 cd /work/mv1003/gambly/run
 
-mpiexec -np 2 python /work/mv1003/gambly/code/mcmc.py 36 500000
+mpiexec -np 2 python /work/mv1003/gambly/code/mcmc.py 36 500000 20.
 
 # leave a blank line at the end
 
