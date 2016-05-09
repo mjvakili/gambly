@@ -19,8 +19,6 @@ from halotools.empirical_models import enforce_periodicity_of_box
 
 class AssembiasZheng07Sats(Zheng07Sats, HeavisideAssembias):
    
-  
-
     def __init__(self, Mr = 21 , **kwargs):
         
         self.Mr = Mr
