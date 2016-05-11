@@ -32,7 +32,8 @@ def lnPost(theta, **kwargs):
             prior_min[2] < theta[2] < prior_max[2] and \
             prior_min[3] < theta[3] < prior_max[3] and \
             prior_min[4] < theta[4] < prior_max[4] and \
-            prior_min[5] < theta[5] < prior_max[5]:
+            prior_min[5] < theta[5] < prior_max[5] and \
+            prior_min[6] < theta[6] < prior_max[6]:
                 return 0
     
         else:
