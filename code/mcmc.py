@@ -58,9 +58,10 @@ def lnPost(theta, **kwargs):
         res_wp = model_wp - data_wp
 
         f_bol = (1. + 71.74*10.**6. / (250.)**3.)
+        f_bias = (400. - len(res_wp) -1.)/(400. - 1.)
 
         neg_chisq_nbar = -0.5*(res_nbar**2.)/(nbar_var)
-        neg_chisq_wp = -0.5*np.sum(np.dot(res_wp , solve(wp_cov , res_wp)))
+        neg_chisq_wp = -0.5 * f_bias * np.sum(np.dot(res_wp , solve(wp_cov , res_wp)))
     	neg_chisq = neg_chisq_nbar + neg_chisq_wp
 
         print "neg_chi_tot" , neg_chisq
