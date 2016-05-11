@@ -125,3 +125,22 @@ def load_dechod_random_guess(Mr):
         pos = [11.49 , 0.26 , 11.6 , 1.02 , 12.83 , 0.5 , 0.5]
 
     return pos
+
+def load_Volume_corrector(Mr):
+    '''calculate the volume correction term of the 
+       covariance matrix'''
+    Vsim = 250. ** 3.
+    
+    if Mr == 21.:
+        Vd = 71.74 * 10**6.
+    if Mr == 20.5:
+        Vd = 41.82 * 10**6.
+    if Mr == 20.:
+        Vd = 22.0 * 10**6.
+    if Mr == 19.5:
+        Vd = 11.44 * 10**6.
+    if Mr == 19.:
+        Vd = 4.87 * 10**6.
+
+    return (1. + Vd / Vsim)
+
