@@ -102,10 +102,21 @@ def load_nbar_variance(Mr):
     return nbarerr ** 2.
 
 def load_hod_random_guess(Mr):
-    ''' load initial positions of MCMC chains,
-        hardcoded for now '''
-    pos = [12.59 , 0.49 , 12.78 , 1.14 , 13.99 , 0.1]
-    
+    '''random guess for the walkers'''
+
+    if Mr == 21.:
+        pos = [12.59 , 0.49 , 12.78 , 1.14 , 13.99]
+    if Mr == 20.5:
+        pos = [11.84 , 0.39 , 12.79 , 1.12 , 13.58]
+    if Mr == 19.5:
+        pos = [12.59 , 0.49 , 12.78 , 1.14 , 13.99]
+    if Mr == 20.:
+        pos = [11.38 , 0.26 , 12.02 , 1.06 , 13.31]
+    if Mr == 19.5:
+        pos = [11.69 , 0.28 , 11.75 , 1.05 , 13.01]
+    if Mr == 19.:
+        pos = [11.49 , 0.26 , 11.6 , 1.02 , 12.83]
+
     return pos
 
 def load_dechod_random_guess(Mr):
