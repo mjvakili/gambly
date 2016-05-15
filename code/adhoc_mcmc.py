@@ -96,7 +96,7 @@ def mcmc_mpi(Nwalkers, Niters, Mr, prior_name = 'first_try'):
     prior_range[:,1] = prior_max
     
     # mcmc chain output file 
-    chain_file_name = ''.join([util.mcmc_dir(),'mcmc_chain_Mr',str(Mr),'.hdf5'])
+    chain_file_name = ''.join([util.mcmc_dir(),'adhoc_mcmc_chain_Mr',str(Mr),'.hdf5'])
  
 
     if os.path.isfile(chain_file_name) and continue_chain:   
