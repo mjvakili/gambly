@@ -9,7 +9,6 @@ import h5py
 # --- Local ---
 import util
 import data as Data
-#from dechod import MCMC_model
 from biased_hod import MCMC_model
 from prior import PriorRange
 
@@ -59,7 +58,7 @@ def lnPost(theta, **kwargs):
 
         f_vol = Data.load_Volume_corrector(Mr)**-1.
 
-        f_bias = (400. - len(res_wp) -1.)/(400. - 1.)
+        f_bias = (400. - len(res_wp) -2.)/(400. - 1.)
 
         neg_chisq_nbar = -0.5*(res_nbar**2.)/(nbar_var)
         neg_chisq_wp = -0.5 * f_bias * f_vol * np.sum(np.dot(res_wp , solve(wp_cov , res_wp)))
