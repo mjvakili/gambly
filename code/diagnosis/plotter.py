@@ -104,7 +104,7 @@ class MCMC_model(object):
         return wp
 
 prior_min = [10., 0.05, 10., 0.85, 12., -1. , -1.]
-prior_max = [14.5, 0.7, 14., 1.45, 15., 1. , 1.]  
+prior_max = [14.5, 1.5, 14., 1.45, 15., 1. , 1.]  
 
 def plot_time_mcmc(Nwalkers, Nchains, filename):
 
@@ -140,16 +140,16 @@ def plot_corner_mcmc(Nchains , Nburns, Mr , filename):
 
     fig = corner.corner(
             sample,
-            #labels=[
-            #    r'$\log\;\mathcal{M}_{0}}$',
-            #    r'$\log\;\sigma_\mathtt{log\;M}}$',
-            #    r'$\log\;\mathcal{M}_\mathtt{min}}$',
-            #    r'$\alpha$',
-            #    r'$\log\;\mathcal{M}_{1}}$'
-            #    r'$\mathcal{A}_{1}}$'
-            #    r'$\mathcal{A}_{2}}$'
-            #    ],
-            #label_kwargs={'fontsize': 25},
+            labels=[
+                r'$\log\;\mathcal{M}_{0}}$',
+                r'$\sigma_\mathtt{log\;M}}$',
+                r'$\log\;\mathcal{M}_\mathtt{min}}$',
+                r'$\alpha$',
+                r'$\log\;\mathcal{M}_{1}}$',
+                r'$\mathcal{A}_{\rm cen}}$',
+                r'$\mathcal{A}_{\rm sat}}$',
+                ],
+            label_kwargs={'fontsize': 25},
             range=prior_range,
             quantiles=[0.16,0.5,0.84],
             show_titles=True,
@@ -158,8 +158,8 @@ def plot_corner_mcmc(Nchains , Nburns, Mr , filename):
             fill_contours=True,
             levels=[0.68, 0.95],
             color='#ee6a50',
-            bins=20,
-            smooth=1.0)
+            bins=25,
+            smooth=0.5)
     fig_name = ''.join(['post',
          str(Mr),  
         '.pdf'])
@@ -167,9 +167,68 @@ def plot_corner_mcmc(Nchains , Nburns, Mr , filename):
     plt.close()
     return None 
 
-def plot_predictions(Mr, nburnins, assembly = True):
+def plot_predictions(Mr, nburnins, nchains, assembly = True, clotter = False):
 
+    if (assembly == True):
+        filename = 'Mr'+str(Mr)+'.hdf5'
+    else:
+        filename = 'adhoc_Mr'+str(Mr)+'.hdf5'
 
+    sample = h5py.File(filename , "r")["mcmc"]
+    npars = sample.shape[2]
+    nwalkers = sample.shape[1]
+    sample = sample[nchains-nburnins:nchains, : , :]
+    sample = sample.reshape(sample.shape[0]*sample.shape[1] , sample.shape[2])
+    print np.percentile(sample , [16,50,84] , axis = 0)
+    if (clotter==False):
+        model = MCMC_model(Mr) 
+    
+        model_wp = []
+        for i in xrange(len(sample) - nwalkers*5 , len(sample)-1):
+            print i
+            model_wp.append(model._sum_stat(sample[i] , prior_range = None))
+            np.savetxt("model_wp_assembly_"+str(Mr)+".dat" , np.array(model_wp)) 
+    else:
+
+        theta_best = np.median(sample, axis = 0)
+        print theta_best
+        model = MCMC_model(Mr)
+        wp_best = model._sum_stat(theta_best , prior_range = None)
+        if Mr == 19.0:
+           cov = np.loadtxt("../../data/wpxicov_dr72_bright0_mr19.0_z0.064_nj400")[:12,:12]
+           data_wp = np.loadtxt("../../data/wpxi_dr72_bright0_mr19.0_z0.064_nj400")[:,1]
+        if Mr == 20.0:
+           cov = np.loadtxt("../../data/wpxicov_dr72_bright0_mr20.0_z0.106_nj400")[:12,:12]
+           data_wp = np.loadtxt("../../data/wpxi_dr72_bright0_mr20.0_z0.106_nj400")[:,1]
+        prettyplot()
+        pretty_colors=prettycolors()
+        fig = plt.figure(1, figsize=(16,12))
+        ax = fig.add_subplot(111)
+        wps = np.loadtxt("model_wp_assembly_"+str(Mr)+".dat")
+        a, b, c, d, e = np.percentile(wps, [2.5, 16, 50, 84, 97.5], axis=0)
+        rbin = np.loadtxt(path.join(path.dirname(path.abspath(__file__)),
+                        "../", "bin"))
+        rbin_center = np.mean(rbin , axis = 1)
+        
+        ax.fill_between(rbin_center, a, e, color=pretty_colors[3], alpha=0.3, edgecolor="none")
+        ax.fill_between(rbin_center, b, d, color=pretty_colors[3], alpha=0.5, edgecolor="none")
+        ax.errorbar(rbin_center, data_wp, np.diag(cov)**.5, markersize=0, lw=0, capsize=3, elinewidth=1.5) 
+        #ax.plot(rbin_center , wp_best , color = "red", lw=1.5) 
+        ax.set_xlabel(r'$r_{p}[\mathtt{Mpc}]$', fontsize=27)
+        ax.set_ylabel(r'$w_{p}(\mathtt{r_{p}})$', fontsize=27)
+        ax.set_title(r"posterior prediction of $w_p$ for $\mathrm{M_r}$<-"+str(Mr))
+        ax.set_yscale('log') 
+        ax.set_xscale('log')
+        ax.set_xticklabels([])
+        ax.set_xlim([0.05, 25.])
+        #ax.set_ylim([0.09, 1000.])
+        fig.savefig("posterior_prediction"+str(Mr)+".pdf", bbox_inches='tight')
+        plt.close()
+        return None
+
+def plot_occupations(Mr, nburnins, nchains, assembly = True , clotter = False):
+
+    model = composite_model(Mr)
     npts = 1e3
     mass = np.logspace(11, 14, npts)
     prettyplot()
@@ -184,23 +243,108 @@ def plot_predictions(Mr, nburnins, assembly = True):
     sample = h5py.File(filename , "r")["mcmc"]
     npars = sample.shape[2]
     nwalkers = sample.shape[1]
-    sample = sample[-nburnins:, : , :]
+    sample = sample[nchains-2:nchains, : , :]
+    print sample.shape 
     sample = sample.reshape(sample.shape[0]*sample.shape[1] , sample.shape[2])
-    model = MCMC_model(Mr) 
+    if (clotter == False):
+    	nsat_old = []
+   	nsat_young = []
+    	ncen_old = []
+    	ncen_young = []
 
-    model_wp = []
-    for i in xrange(len(sample)):
-        print i
-        model_wp.append(model._sum_stat(sample[i] , prior_range = None))
-    np.savetxt("wp_assembly_"+str(Mr)+".dat" , np.array(model_wp)) 
- 
+    	for i in xrange(len(sample)):
+        	print i     
+        	model.param_dict['logM0'] =  sample[i][0]
+		model.param_dict['sigma_logM'] =  sample[i][1]
+		model.param_dict['logMmin'] =  sample[i][2]
+		model.param_dict['alpha'] =  sample[i][3]
+		model.param_dict['logM1'] =  sample[i][4]
+        	model.param_dict['mean_occupation_centrals_assembias_param1'] = sample[i][5]
+        	model.param_dict['mean_occupation_satellites_assembias_param1'] = sample[i][6]
+        	ncen_old.append(model.mean_occupation_centrals(prim_haloprop = mass, sec_haloprop_percentile=0))
+        	ncen_young.append(model.mean_occupation_centrals(prim_haloprop = mass, sec_haloprop_percentile=1))
+        	nsat_old.append(model.mean_occupation_satellites(prim_haloprop = mass, sec_haloprop_percentile=0))
+        	nsat_young.append(model.mean_occupation_satellites(prim_haloprop = mass, sec_haloprop_percentile=1))
+    	nsat_old = np.array(nsat_old)
+    	nsat_young = np.array(nsat_young)
+    	ncen_old = np.array(ncen_old)
+    	ncen_young = np.array(ncen_young)
+    	np.savetxt("nsat_old.dat" , nsat_old)
+    	np.savetxt("nsat_young.dat" , nsat_young)
+    	np.savetxt("ncen_old.dat" , ncen_old)
+    	np.savetxt("ncen_young.dat" , ncen_young)
+
+    else:
+
+       nsat_old = np.loadtxt("nsat_old.dat")
+       nsat_young = np.loadtxt("nsat_young.dat")
+       ncen_old = np.loadtxt("ncen_old.dat")
+       ncen_young = np.loadtxt("ncen_young.dat")
+       
+       a1, b1, c1 = np.percentile(nsat_young, [16, 50, 84], axis=0)
+       a2, b2, c2 = np.percentile(nsat_old, [16, 50, 84], axis=0)
+       a3, b3, c3 = np.percentile(ncen_young, [16, 50, 84], axis=0)
+       a4, b4, c4 = np.percentile(ncen_old, [16, 50, 84], axis=0)
+        
+       fig = plt.figure()
+       ax = fig.add_subplot(111)
+
+       xlabel = ax.set_xlabel(r'$M_{\rm vir} [M_{\odot}]$', fontsize=25)
+       ylabel = ax.set_ylabel(r'$\langle N_{\rm s}\rangle$', fontsize=25)
+       title = ax.set_title(r'$\langle N_{\rm s} \rangle$ for $\mathrm{M_{r}}$ < -19', fontsize=20)
+
+       
+       ax.plot(mass, b1, color='blue', linewidth=3.5)
+       ax.fill_between(mass, a1, c1 , color='blue', alpha = 0.1)
+       ax.plot(mass, b2, color='red', linewidth=3.5)
+       ax.fill_between(mass, a2, c2 , color='red', alpha = 0.1)
+       ax.plot(mass, 0.5*(b1 + b2), '--', color='k', linewidth=2.5)
+
+       plt.loglog()
+       plt.xlim(xmin=1e11, xmax=1e14)
+       plt.ylim(ymin=5e-3, ymax=100)
+       plt.xticks(fontsize=20)
+       plt.yticks(fontsize=20)
+
+       blue_line = mlines.Line2D([], [], ls = '-', c = 'b', linewidth=3, label = 'high-concentration halos')
+       red_line = mlines.Line2D([], [], ls = '-', c = 'r', linewidth=3, label = 'low-concentration halos')
+       black_line = mlines.Line2D([], [], ls = '--', c = 'k', linewidth=3, label = 'all halos')
+       first_legend = plt.legend(handles=[blue_line, red_line, black_line], frameon=False, loc='best', fontsize=17)
+       fig.savefig('nsats.pdf', bbox_extra_artists=[xlabel, ylabel], bbox_inches='tight')
+       
+       fig = plt.figure()
+       ax = fig.add_subplot(111)
+
+       xlabel = ax.set_xlabel(r'$M_{\rm vir} [M_{\odot}]$', fontsize=25)
+       ylabel = ax.set_ylabel(r'$\langle N_{\rm c}\rangle$', fontsize=25)
+       title = ax.set_title(r'$\langle N_{\rm c} \rangle$ for $\mathrm{M_{r}}$ < -19', fontsize=20)
+
+       
+       ax.plot(mass, b3, color='blue', linewidth=3.5)
+       ax.fill_between(mass, a3, c3 , color='blue', alpha = 0.1)
+       ax.plot(mass, b4, color='red', linewidth=3.5)
+       ax.fill_between(mass, a4, c4 , color='red', alpha = 0.1)
+       ax.plot(mass, 0.5*(b3 + b4), '--', color='k', linewidth=2.5)
+
+       plt.loglog()
+       plt.xlim(xmin=1e11, xmax=1e14)
+       plt.ylim(ymin=5e-3, ymax=100)
+       plt.xticks(fontsize=20)
+       plt.yticks(fontsize=20)
+
+       blue_line = mlines.Line2D([], [], ls = '-', c = 'b', linewidth=3, label = 'high-concentration halos')
+       red_line = mlines.Line2D([], [], ls = '-', c = 'r', linewidth=3, label = 'low-concentration halos')
+       black_line = mlines.Line2D([], [], ls = '--', c = 'k', linewidth=3, label = 'all halos')
+       first_legend = plt.legend(handles=[blue_line, red_line, black_line], frameon=False, loc='best', fontsize=17)
+       fig.savefig('ncens.pdf', bbox_extra_artists=[xlabel, ylabel], bbox_inches='tight')
     return None 
 
 if __name__=='__main__':
-
-   filename = "Mr20.0.hdf5"
+   #
+   filename = "Mr19.0.hdf5"
    #filename = "mcmc_chain_Mr20.0.hdf5"
-   #filename = "../../dat/mcmc/mcmc_chain_Mr20.0.hdf5"
-   #plot_time_mcmc(Nwalkers = 24, Nchains = 30000, filename=filename)
-   plot_predictions(20.0 , 1000 , True)
-   #plot_corner_mcmc(Nchains = 21000 , Nburns=17000, Mr = 20, filename=filename)
+   #filename = "../../dat/mcmc/mcmc_chain_Mr19.0.hdf5"
+   #plot_time_mcmc(Nwalkers = 24, Nchains = 50000, filename=filename)
+   plot_predictions(19.0 , 8000 , 20000, True , True)
+   #plot_occupations(19. , 19999 , 20000 , True , True)
+   #plot_corner_mcmc(Nchains = 45000 , Nburns=20000, Mr = 21, filename=filename)
