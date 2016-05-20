@@ -1,8 +1,8 @@
 '''
-Module for handling Age-Matching catalogs
-made by Andrew Hearin
+Module for handling the SHAM catalogs 
+made by ChangHoon Hahn
 '''
-
+import h5py
 import numpy as np
 import util
 from Corrfunc import _countpairs
@@ -12,22 +12,32 @@ from halotools.mock_observables.catalog_analysis_helpers import return_xyz_forma
 from halotools.empirical_models import enforce_periodicity_of_box
 from halotools.mock_observables import jackknife_covariance_matrix
 
+
 def read_catalog():
-    '''read Age-matching catalog
+    '''read SHAM catalog
     '''
 
-    filename =  util.dat_dir()+'Mr19_AM.dat'
-    cat = np.loadtxt(filename)
-
-    return cat
+    filename =  util.dat_dir()+'bolshoi_a1.00231.mag_r.source_blanton.scatter0.2.Vpeak.hdf5'
+    cat = h5py.File(filename, "r")['data']
+    length_file = len(cat['x'][:])
+    cat_file = np.zeros((length_file , 7))
+    cat_file[:,0] = cat['x'][:]
+    cat_file[:,1] = cat['y'][:]
+    cat_file[:,2] = cat['z'][:]
+    cat_file[:,3] = cat['vx'][:]
+    cat_file[:,4] = cat['vy'][:]
+    cat_file[:,5] = cat['vz'][:]
+    cat_file[:,6] = cat['mag_r'][:]
+    
+    return cat_file
 
 def impose_luminosity_threshold(Mr):
     '''divid up the galaxy catalog to different 
        luminosity thresholds, Mr = -19, -20, -21'''
     
     cat = read_catalog()
-    luminosity = cat[:,9]
-    reduced_cat = cat[luminosity<-1.*Mr]
+    luminosity = cat[:,-1]
+    reduced_cat = cat[luminosity > Mr]
 
     return reduced_cat
 
@@ -36,7 +46,7 @@ def save_luminosity_threshold(Mr):
        luminosity threshold'''
 
     reduced_cat = impose_luminosity_threshold(Mr)
-    filename = util.dat_dir()+'AM_Mr'+str(Mr)+'dat'
+    filename = util.dat_dir()+'SHAM_Mr'+str(Mr)+'dat'
     np.savetxt(filename , reduced_cat)
 
     return None
@@ -54,11 +64,11 @@ def measure_nbar_clustering(Mr):
                         "../", "bin")
     autocorr = 1
 
-    filename = util.dat_dir()+'AM_Mr'+str(Mr)+'dat'
+    filename = util.dat_dir()+'SHAM_Mr'+str(Mr)+'dat'
     cat = np.loadtxt(filename)
-    pos = cat[:,1:4]
+    pos = cat[:,0:3]
     x, y, z = pos[:,0], pos[:,1], pos[:,2] 
-    vel = cat[:,4:7]
+    vel = cat[:,3:6]
     vx, vy, vz =  vel[:,0], vel[:,1], vel[:,2] 
     #applying RSD:
     pos = return_xyz_formatted_array(x, y, z, velocity = vz, velocity_distortion_dimension = 'z')
@@ -78,8 +88,8 @@ def save_nbar_clustering(Mr):
     '''save nbar and wp measured for 
        the luminosity threshold Mr'''
 
-    wp_filename = util.dat_dir()+'wp_AM_Mr'+str(Mr)+'.dat'
-    nbar_filename = util.dat_dir()+'nbar_AM_Mr'+str(Mr)+'.dat'
+    wp_filename = util.dat_dir()+'wp_SHAM_Mr'+str(Mr)+'.dat'
+    nbar_filename = util.dat_dir()+'nbar_SHAM_Mr'+str(Mr)+'.dat'
     nbar , wp = measure_nbar_clustering(Mr)
     np.savetxt(nbar_filename ,  np.array([nbar]))
     np.savetxt(wp_filename ,  wp)
@@ -111,7 +121,7 @@ def edge(index , nsub):
     
          
 def mask_catalog(cat , subvol_index , nsub):
-    '''masks the AM catalogs
+    '''masks the SHAM catalogs
     '''
     box_size = 250.
     subbox_size = 1.*box_size / nsub
@@ -128,7 +138,7 @@ def mask_catalog(cat , subvol_index , nsub):
 
 def mask_positions(pos , subvol_index , nsub):
     '''masks the positions of galaxies in
-       AM catalogs'''
+       SHAM catalogs'''
 
     box_size = 250.
     subbox_size = 1.*box_size / nsub
@@ -146,10 +156,10 @@ def mask_positions(pos , subvol_index , nsub):
 def compute_jackknife_covariance(Mr , nsub):
     
     box_size = 250.
-    filename = util.dat_dir()+'AM_Mr'+str(Mr)+'dat'
+    filename = util.dat_dir()+'SHAM_Mr'+str(Mr)+'dat'
     cat = np.loadtxt(filename)
-    pos = cat[:,1:4]  #positions of all galaxies in the box
-    vel = cat[:,4:7]  #velocities of all galaxies
+    pos = cat[:,0:3]  #positions of all galaxies in the box
+    vel = cat[:,3:6]  #velocities of all galaxies
     
     x , y , z = pos[:,0], pos[:,1], pos[:,2]
     vx, vy, vz = vel[:,0], vel[:,1], vel[:,2]
@@ -187,8 +197,8 @@ def compute_jackknife_covariance(Mr , nsub):
 
 def save_jackknife_covariance(Mr , nsub):
 
-    wpcov_filename = util.dat_dir()+'wpcov_AM_Mr'+str(Mr)+'.dat'
-    nbarcov_filename =  util.dat_dir()+'nbarcov_AM_Mr'+str(Mr)+'.dat'
+    wpcov_filename = util.dat_dir()+'wpcov_SHAM_Mr'+str(Mr)+'.dat'
+    nbarcov_filename =  util.dat_dir()+'nbarcov_SHAM_Mr'+str(Mr)+'.dat'
 
     nbarcov , wpcov = compute_jackknife_covariance(Mr , nsub)
 
@@ -200,7 +210,7 @@ def save_jackknife_covariance(Mr , nsub):
 if __name__ == "__main__":
 
      Mr = 19
-     nsub = 3 
+     nsub = 3
      save_luminosity_threshold(Mr)    
      save_nbar_clustering(Mr)
      save_jackknife_covariance(Mr , nsub)   
