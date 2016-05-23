@@ -10,7 +10,6 @@ from Corrfunc.utils import read_catalog
 import os.path as path
 from halotools.mock_observables.catalog_analysis_helpers import return_xyz_formatted_array
 from halotools.empirical_models import enforce_periodicity_of_box
-from halotools.mock_observables import jackknife_covariance_matrix
 
 
 def read_catalog():
@@ -190,8 +189,8 @@ def compute_jackknife_covariance(Mr , nsub):
         nbars[subvol_index] = 1.*len(sub_rsd_pos)/subbox_size**3.
         wps[subvol_index] = np.array(wp_result)[:,3]
            
-    nbar_covar = jackknife_covariance_matrix(nbars)    
-    wp_covar = jackknife_covariance_matrix(wps)    
+    nbar_covar = np.array([np.var(nbars)])    
+    wp_covar = np.cov(wps.T)    
 
     return nbar_covar , wp_covar
 
