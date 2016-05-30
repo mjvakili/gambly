@@ -57,4 +57,18 @@ def prior_dict_table(Mr):
                 }
               }
 
+    if Mr ==18.5 :
+      dict_table = { 
+            'first_try': {
+                'prior_min': [10., 0.05, 10.0, 0.85, 11.5, -1. , -1.],
+                'prior_max': [14.5, 1.5, 14.0, 1.45, 15., 1. , 1.]
+                }
+              }
+    if Mr ==18. :
+      dict_table = { 
+            'first_try': {
+                'prior_min': [10., 0.05, 10.0, 0.85, 11.5, -1. , -1.],
+                'prior_max': [14.5, 1.5, 14.0, 1.45, 15., 1. , 1.]
+                }
+              }
     return dict_table 

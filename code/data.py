@@ -38,6 +38,12 @@ def load_wp(Mr):
     if Mr == 19.:
         data_file = ''.join([util.dat_dir(),
             'wpxi_dr72_bright0_mr19.0_z0.064_nj400'])
+    if Mr == 18.5:
+        data_file = ''.join([util.dat_dir(),
+            'wpxi_dr72_bright0_mr18.5_z0.053_nj400'])
+    if Mr == 18.:
+        data_file = ''.join([util.dat_dir(),
+            'wpxi_dr72_bright0_mr18.0_z0.041_nj400'])
     wp = np.loadtxt(data_file)[:,1]
 
     return wp
@@ -55,7 +61,10 @@ def load_nbar(Mr):
         nbar = 11.64 * 10**-3.
     if Mr == 19.:
         nbar = 15.66 * 10**-3.
-
+    if Mr == 18.5:
+        nbar = 22.25 * 10**-3.
+    if Mr == 18.:
+        nbar = 31.42 * 10**-3.
     return nbar
 
 def load_wp_covariance(Mr): 
@@ -81,6 +90,12 @@ def load_wp_covariance(Mr):
     if Mr == 19.:
         data_file = ''.join([util.dat_dir(),
             'wpxicov_dr72_bright0_mr19.0_z0.064_nj400'])
+    if Mr == 18.5:
+        data_file = ''.join([util.dat_dir(),
+            'wpxicov_dr72_bright0_mr18.5_z0.053_nj400'])
+    if Mr == 18.:
+        data_file = ''.join([util.dat_dir(),
+            'wpxicov_dr72_bright0_mr18.0_z0.041_nj400'])
     wpcov = np.loadtxt(data_file)[:12 , :12]
 
     return wpcov
@@ -98,24 +113,31 @@ def load_nbar_variance(Mr):
         nbarerr = 1.27 * 10**-3.
     if Mr == 19.:
         nbarerr = 2.06 * 10**-3.
-
+    if Mr == 18.5:
+        nbarerr = 2.70 * 10**-3.
+    if Mr == 18.:
+        nbarerr = 4.03 * 10**-3.
     return nbarerr ** 2.
 
 def load_hod_random_guess(Mr):
     '''random guess for the walkers'''
 
     if Mr == 21.:
-        pos = [12.59 , 0.49 , 12.78 , 1.14 , 13.99]
+        pos = [12.78 , 0.49 , 12.59 , 1.14 , 13.99]
     if Mr == 20.5:
-        pos = [11.84 , 0.39 , 12.79 , 1.12 , 13.58]
+        pos = [12.23 , 0.18 , 12.42 , 1.06 , 13.58]
     if Mr == 19.5:
-        pos = [12.59 , 0.49 , 12.78 , 1.14 , 13.99]
+        pos = [11.95 , 0.26 , 12.10 , 1.08 , 13.31]
     if Mr == 20.:
-        pos = [11.38 , 0.26 , 12.02 , 1.06 , 13.31]
+        pos = [11.55 , 0.26 , 11.6 , 1.12 , 13.01]
     if Mr == 19.5:
         pos = [11.69 , 0.28 , 11.75 , 1.05 , 13.01]
     if Mr == 19.:
         pos = [11.49 , 0.26 , 11.6 , 1.02 , 12.83]
+    if Mr == 18.5:
+        pos = [11.38 , 0.26 , 11.73 , 1.02 , 12.71]
+    if Mr == 18.:
+        pos = [11.18 , 0.1 , 11.6 , 0.97 , 12.48]
 
     return pos
 
@@ -125,16 +147,17 @@ def load_dechod_random_guess(Mr):
     if Mr == 21.:
         pos = [12.59 , 0.49 , 12.78 , 1.14 , 13.99 , 0.5 , 0.5]
     if Mr == 20.5:
-        pos = [11.84 , 0.39 , 12.79 , 1.12 , 13.58 , 0.5 , 0.5]
-    if Mr == 19.5:
-        pos = [12.59 , 0.49 , 12.78 , 1.14 , 13.99 , 0.5 , 0.5]
+        pos = [12.42 , 0.18 , 12.23 , 1.06 , 13.58 , 0.5 , 0.5]
     if Mr == 20.:
-        pos = [11.38 , 0.26 , 12.02 , 1.06 , 13.31 , 0.5 , 0.5]
+        pos = [12.10 , 0.26 , 11.95 , 1.08 , 13.31 , 0.5 , 0.5]
     if Mr == 19.5:
-        pos = [11.69 , 0.28 , 11.75 , 1.05 , 13.01 , 0.5 , 0.5]
+        pos = [11.80 , 0.28 , 11.67 , 1.05 , 13.01 , 0.5 , 0.5]
     if Mr == 19.:
-        pos = [11.49 , 0.26 , 11.6 , 1.02 , 12.83 , 0.5 , 0.5]
-
+        pos = [11.6 , 0.26 , 11.58 , 1.12 , 13.04 , 0.5 , 0.5]
+    if Mr == 18.5:
+        pos = [11.73 , 0.26 , 11.38 , 1.02 , 12.71 , 0.5 , 0.5]
+    if Mr == 18.:
+        pos = [11.57 , 0.1 , 11.18 , 0.97 , 12.48 , 0.5 , 0.5]
     return pos
 
 def load_Volume_corrector(Mr):
