@@ -71,26 +71,27 @@ class MCMC_model(object):
         self.model.param_dict['logM1'] = theta[4]
         self.model.param_dict['mean_occupation_centrals_assembias_param1']= theta[5]
         self.model.param_dict['mean_occupation_satellites_assembias_param1']= theta[6]
-
-        self.model.populate_mock(self.halocat) 
-        x = self.model.mock.galaxy_table['x']
-        y = self.model.mock.galaxy_table['y']
-        z = self.model.mock.galaxy_table['z']
-        vz = self.model.mock.galaxy_table['vz']
-        # applying RSD
-        pos = return_xyz_formatted_array(x, y, z, velocity = vz, velocity_distortion_dimension = 'z')
-        # enforcing PBC
-        pos = enforce_periodicity_of_box(pos, self.boxsize)
-        bperp = 0.14
-        bpar = 0.75
-        Lbox = np.array([self.boxsize, self.boxsize, self.boxsize])
-        period = Lbox
-        groups = FoFGroups(pos, b_perp=bperp, b_para=bpar, Lbox = Lbox , period=Lbox) 
+        gmff = []
+        for i in xrange(3):
+          self.model.populate_mock(self.halocat) 
+          x = self.model.mock.galaxy_table['x']
+          y = self.model.mock.galaxy_table['y']
+          z = self.model.mock.galaxy_table['z']
+          vz = self.model.mock.galaxy_table['vz']
+          # applying RSD
+          pos = return_xyz_formatted_array(x, y, z, velocity = vz, velocity_distortion_dimension = 'z')
+          # enforcing PBC
+          pos = enforce_periodicity_of_box(pos, self.boxsize)
+          bperp = 0.14
+          bpar = 0.75
+          Lbox = np.array([self.boxsize, self.boxsize, self.boxsize])
+          period = Lbox
+          groups = FoFGroups(pos, b_perp=bperp, b_para=bpar, Lbox = Lbox , period=Lbox) 
   
-        group_ids = groups.group_ids
-        group_richness = richness(group_ids)
-        gmf = np.histogram(np.array(group_richness) ,self.data_gmf_bin)[0] / (self.data_gmf_bin_width * self.boxsize**3.)
-        
+          group_ids = groups.group_ids
+          group_richness = richness(group_ids)
+          gmff.append(np.histogram(np.array(group_richness) ,self.data_gmf_bin)[0] / (self.data_gmf_bin_width * self.boxsize**3.))
+        gmf = np.mean(np.array(gmff) , axis = 0)
         nbar = 1.*len(pos)/(self.boxsize)**3.
 
         return nbar , gmf
