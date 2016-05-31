@@ -73,7 +73,7 @@ def lnPost(theta, **kwargs):
     return lp + lnlike(theta, **kwargs)
 
 
-def mcmc_mpi(Nwalkers, Niters, Mr, prior_name = 'first_try', pois = False): 
+def mcmc_mpi(Nwalkers, Niters, Mr, prior_name = 'first_try', pois = True): 
     '''
     Parameters
     -----------
@@ -83,7 +83,7 @@ def mcmc_mpi(Nwalkers, Niters, Mr, prior_name = 'first_try', pois = False):
         Number of MCMC chains   
     '''
     #data and covariance matrix
-    fake_obs_icov = Data.load_covariance(Mr , pois = 'False')
+    fake_obs_icov = Data.load_covariance(Mr , pois = 'True')
     fake_obs = Data.load_data(Mr)
         
     # True HOD parameters

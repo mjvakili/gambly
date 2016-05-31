@@ -9,10 +9,10 @@ def load_data(Mr):
     '''
     return [load_nbar(Mr) , load_gmf(Mr)]
 
-def load_covariance(Mr , pois = False):
+def load_covariance(Mr , pois = True):
     '''loads wp and nbar
     '''
-    return [load_nbar_variance(Mr) , load_gmf_covariance(Mr , pois = False)]
+    return [load_nbar_variance(Mr) , load_gmf_covariance(Mr , pois = True)]
 
 def load_gmf(Mr): 
     ''' loads wp 
@@ -47,7 +47,7 @@ def load_nbar(Mr):
         nbar = 0.02434
     return nbar
 
-def load_gmf_covariance(Mr , pois = False): 
+def load_gmf_covariance(Mr , pois = True): 
     ''' loads the jackknife covariance matrix associated with gmf
     
     Parameters
