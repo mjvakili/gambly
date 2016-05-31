@@ -1,8 +1,8 @@
 #!/bin/bash
 
-#PBS -l nodes=3:ppn=20,mem=700GB
+#PBS -l nodes=2:ppn=20,mem=400GB
 #PBS -l walltime=100:00:00
-#PBS -N Mr19
+#PBS -N Mr20-group
 #PBS -M mv1003@nyu.edu,mohammadjavad.vakili@gmail.com
 #PBS -m abe
 #PBS -j oe
@@ -14,7 +14,7 @@ module load corrfunc/intel/1.0.0
 
 cd /scratch/mv1003/projects/gambly/run
 
-mpiexec -np 60 python /scratch/mv1003/projects/gambly/code/mcmc_group.py 140 500000 19.
+mpiexec -np 40 python /scratch/mv1003/projects/group20/gambly/code/mcmc_group.py 140 500000 20.
 
 # leave a blank line at the end
 
