@@ -12,20 +12,28 @@ from numpy import log10, Inf
 from scipy import integrate, interpolate, ndimage
 
 
-def DownloadedCatalog():  
+def DownloadedCatalog(catalog='bolshoi'):  
     ''' Take .list format downloaded catalog and load it into an .hdf5 file format
     so that the halo catalog can be easily read 
     ''' 
     current_dir = os.path.dirname(os.path.realpath(__file__))
     if current_dir != '/home/users/hahn/projects/gambly/code':
         raise ValueError("This function is only meant to be run on Chang's user directory on Sirocco!") 
-
-    list_file = ''.join([
-        '/mount/sirocco1/hahn/bolshoi_rockstar/', 
-        'hlist_1.00231.list'
-        ])
-    a_scale = 1.00231
-    redshift = 0.0  # close enough
+    
+    if catalog == 'bolshoi':        # Bolshoi Box
+        list_file = ''.join([
+            '/mount/sirocco1/hahn/bolshoi_rockstar/', 
+            'hlist_1.00231.list'
+            ])
+        a_scale = 1.00231
+        redshift = 0.0  # close enough
+    elif catalog == 'smdpl':        # Small MultiDark Planck
+        list_file = ''.join([
+            '/mount/sirocco1/hahn/bolshoi_rockstar/', 
+            'smdpl_hlist_1.00000.list'
+            ])
+        a_scale = 1.00
+        redshift = 0.0  # close enough
 
     # read in first few lines of the file to get the columns and column indicies
     f = open(list_file, 'r') 
@@ -40,9 +48,15 @@ def DownloadedCatalog():
     list_data = np.loadtxt(list_file)   # this takes forever
 
     # save all columns to hdf5
-    hdf5_file = ''.join([
-        '/mount/sirocco1/hahn/bolshoi_rockstar/', 
-        'bolshoi_a1.00231.hdf5'])
+    if catalog == 'bolshoi': 
+        hdf5_file = ''.join([
+            '/mount/sirocco1/hahn/bolshoi_rockstar/', 
+            catalog, '_a1.00231.hdf5'])
+    elif catalog == 'smdpl': 
+        hdf5_file = ''.join([
+            '/mount/sirocco1/hahn/bolshoi_rockstar/', 
+            catalog, '_a1.00000.hdf5'])
+
     f = h5py.File(hdf5_file, 'w') 
     grp = f.create_group('data') 
     grp.attrs['a_scale'] = a_scale 
@@ -72,13 +86,18 @@ class Halos(object):
         '''
         '''
         self.column_list = ['id', 'upid', 'x', 'y', 'z', 'vx', 'vy', 'vz', 'Vpeak', 'Mpeak']
+        if catalog not in ['bolshoi', 'smdpl']:
+            raise NotImplementedError("Catalog not included yet") 
         self.catalog = catalog 
    
     def File(self):
         '''
         '''
         file_dir = '/mount/sirocco1/hahn/bolshoi_rockstar/'
-        self.file_name = ''.join([file_dir, 'bolshoi_a1.00231.hdf5']) 
+        if self.catalog == 'bolshoi': 
+            self.file_name = ''.join([file_dir, 'bolshoi_a1.00231.hdf5']) 
+        elif self.catalog == 'smdpl':
+            self.file_name = ''.join([file_dir, 'smdpl_a1.00000.hdf5']) 
         return self.file_name
     
     def Read(self): 
@@ -194,11 +213,12 @@ class shamHalos(object):
         '''
         if self.sham_dict is None: 
             raise ValueError 
+        halocat = Halos(catalog=self.catalog) 
+        halo_file = halocat.File()
+        halo_file = halo_file.rsplit('.hdf5')[0]
 
-        file_dir = '/mount/sirocco1/hahn/bolshoi_rockstar/'
-        sham_file = ''.join([file_dir, 
-            self.catalog, 
-            '_a1.00231', 
+        sham_file = ''.join([
+            halo_file, 
             '.', self.sham_dict['m_kind'], 
             '.source_', self.sham_dict['source'], 
             '.scatter', str(round(self.sham_dict['scat'], 2)), 
@@ -267,6 +287,8 @@ class shamHalos(object):
     def _CatalogBox(self): 
         if self.catalog == 'multidark':
             L_box = 1000. # Mpc/h
+        elif self.catalog == 'smdpl': 
+            L_box = 400. # Mpc/h
         elif self.catalog == 'bolshoi': 
             L_box = 250. # Mpc/h
 
@@ -275,8 +297,11 @@ class shamHalos(object):
     def _little_h(self): 
         if self.catalog == 'bolshoi': 
             h_little = 0.68
+        elif self.catalog == 'smdpl': 
+            h_little = 0.6777
         else: 
             h_little = 0.7
+
         return h_little
 
 
@@ -860,11 +885,12 @@ def intersection_index(arr1, arr2):
 
 
 if __name__=='__main__': 
+    #DownloadedCatalog(catalog='smdpl')
     sham_dict = { 
             'm_kind': 'mag_r', 
-            'scat': 0.0, 
+            'scat': 0.2, 
             'source': 'blanton', 
             'sham_prop': 'Vpeak'
             }
-    shame = shamHalos(sham_dict=sham_dict)
+    shame = shamHalos(catalog='smdpl', sham_dict=sham_dict)
     shame.Write()
