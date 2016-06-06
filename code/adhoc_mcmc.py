@@ -30,7 +30,7 @@ def lnPost(theta, **kwargs):
        	    prior_min[1] < theta[1] < prior_max[1] and \
             prior_min[2] < theta[2] < prior_max[2] and \
             prior_min[3] < theta[3] < prior_max[3] and \
-            prior_min[4] < theta[4] < prior_max[4]
+            prior_min[4] < theta[4] < prior_max[4]:
 
                 return 0
     
@@ -55,7 +55,7 @@ def lnPost(theta, **kwargs):
         res_nbar = model_nbar - data_nbar
         res_wp = model_wp - data_wp
 
-        f_vol = Data.load_Volume_corrector(Mr)**-1.
+        f_vol = 1. #Data.load_Volume_corrector(Mr)**-1.
 
         f_bias = (400. - len(res_wp) -2.)/(400. - 1.)
 
