@@ -8,8 +8,8 @@ from numpy.linalg import solve
 import h5py
 # --- Local ---
 import util
-import data as Data
-from hod import MCMC_model
+import data_group as Data
+from hod_group import MCMC_model
 from prior import PriorRange
 
 
@@ -42,30 +42,30 @@ def lnPost(theta, **kwargs):
     	fake_obs = kwargs['data']
     	fake_obs_icov = kwargs['data_icov']
 
-        data_nbar , data_wp = fake_obs[0] , fake_obs[1]
-        nbar_var , wp_cov = fake_obs_icov[0] , fake_obs_icov[1]
+        data_nbar , data_gmf = fake_obs[0] , fake_obs[1]
+        nbar_var , gmf_cov = fake_obs_icov[0] , fake_obs_icov[1]
 
     	kwargs.pop('data', None)
     	kwargs.pop('data_icov', None)
     	prior_range = kwargs['prior_range']
     	# Likelihood
     	model_obvs = generator(theta, prior_range)
-        model_nbar , model_wp = model_obvs[0] , model_obvs[1]
+        model_nbar , model_gmf = model_obvs[0] , model_obvs[1]
         
         res_nbar = model_nbar - data_nbar
-        res_wp = model_wp - data_wp
+        res_gmf = model_gmf - data_gmf
 
         f_vol = 1. #Data.load_Volume_corrector(Mr)**-1.
 
-        f_bias = (400. - len(res_wp) -2.)/(400. - 1.)
+        f_bias = 1. #(400. - len(res_wp) -2.)/(400. - 1.)
 
         neg_chisq_nbar = -0.5*(res_nbar**2.)/(nbar_var)
-        neg_chisq_wp = -0.5 * f_bias * f_vol * np.sum(np.dot(res_wp , solve(wp_cov , res_wp)))
-    	neg_chisq = neg_chisq_nbar + neg_chisq_wp
+        neg_chisq_gmf = -0.5*f_bias * f_vol * np.sum((res_gmf**2./gmf_cov))
+    	neg_chisq = neg_chisq_nbar + neg_chisq_gmf
 
         print "neg_chi_tot" , neg_chisq
         return neg_chisq
-
+    
     lp = lnprior(theta , **kwargs)
     if not np.isfinite(lp):
         return -np.inf
@@ -82,7 +82,7 @@ def mcmc_mpi(Nwalkers, Niters, Mr, prior_name = 'first_try'):
         Number of MCMC chains   
     '''
     #data and covariance matrix
-    fake_obs_icov = Data.load_covariance(Mr)
+    fake_obs_icov = Data.load_covariance(Mr , pois = 'True')
     fake_obs = Data.load_data(Mr)
         
     # True HOD parameters
@@ -96,7 +96,7 @@ def mcmc_mpi(Nwalkers, Niters, Mr, prior_name = 'first_try'):
     prior_range[:,1] = prior_max
     
     # mcmc chain output file 
-    chain_file_name = ''.join([util.mcmc_dir(),'adhoc_mcmc_chain_Mr',str(Mr),'.hdf5'])
+    chain_file_name = ''.join([util.mcmc_dir(),'adhoc_group_mcmc_chain_Mr',str(Mr),'.hdf5'])
  
 
     if os.path.isfile(chain_file_name) and continue_chain:   

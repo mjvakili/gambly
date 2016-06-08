@@ -1,5 +1,5 @@
 '''
-Central/Satellite galaxy assembly biased model
+model without galaxy assembly bias
 '''
 import numpy as np
 import os.path as path
@@ -18,18 +18,11 @@ from halotools.empirical_models.factories.mock_helpers import three_dim_pos_bund
 from halotools.mock_observables.catalog_analysis_helpers import return_xyz_formatted_array
 from halotools.empirical_models import enforce_periodicity_of_box
 
-def composite_model(Mr):
+def single_model(Mr):
 
-    cens_occ_model =  AssembiasZheng07Cens(threshold = -1.*Mr)
-    cens_prof_model = TrivialPhaseSpace()
-    sats_occ_model =  AssembiasZheng07Sats(threshold = -1.*Mr)
-    sats_prof_model = NFWPhaseSpace()
-    
-    return HodModelFactory(
-               centrals_occupation = cens_occ_model,
-               centrals_profile = cens_prof_model,
-               satellites_occupation = sats_occ_model,
-               satellites_profile = sats_prof_model)
+    model = PrebuiltHodModelFactory("zheng07" , threshold = -1.*Mr)
+
+    return model
 
 def richness(group_id):
     gals = Table()
@@ -44,7 +37,7 @@ class MCMC_model(object):
     def __init__(self, Mr):
         
         self.Mr = Mr
-        self.model = composite_model(Mr)
+        self.model = single_model(Mr)
         self.halocat = CachedHaloCatalog(simname = 'bolplanck', redshift = 0, halo_finder = 'rockstar')
 
         #GMF binning settings
@@ -69,8 +62,6 @@ class MCMC_model(object):
         self.model.param_dict['logMmin'] = theta[2]
         self.model.param_dict['alpha'] = theta[3]
         self.model.param_dict['logM1'] = theta[4]
-        self.model.param_dict['mean_occupation_centrals_assembias_param1']= theta[5]
-        self.model.param_dict['mean_occupation_satellites_assembias_param1']= theta[6]
         gmff = []
         for i in xrange(1):
           self.model.populate_mock(self.halocat) 
@@ -95,3 +86,4 @@ class MCMC_model(object):
         nbar = 1.*len(pos)/(self.boxsize)**3.
 
         return nbar , gmf
+
