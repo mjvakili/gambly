@@ -56,7 +56,7 @@ def lnPost(theta, **kwargs):
         res_nbar = model_nbar - data_nbar
         res_wp = model_wp - data_wp
 
-        f_vol = Data.load_Volume_corrector(Mr)**-1.
+        f_vol = 1. #Data.load_Volume_corrector(Mr)**-1.
 
         f_bias = (400. - len(res_wp) -2.)/(400. - 1.)
 
