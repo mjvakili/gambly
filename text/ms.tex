@@ -1,10 +1,13 @@
 \documentclass[12pt, preprint]{aastex}
+\usepackage[breaklinks,colorlinks, urlcolor=blue,citecolor=blue,linkcolor=blue]{hyperref}
 \usepackage{graphicx}	% For figures
 \usepackage{natbib}	% For citep and citep
 \usepackage{amsmath}	% for \iint
+\usepackage{mathtools}
 \usepackage{bm}
 \usepackage[breaklinks]{hyperref}	% for blackboard bold numbers
 \usepackage{hyperref}
+\usepackage{algorithmic,algorithm}
 \hypersetup{colorlinks}
 \usepackage{color}
 \usepackage{morefloats}
@@ -15,85 +18,126 @@
 linkcolor=darkblue,
 filecolor=darkgreen,
 urlcolor=darkred,
-citecolor=darkblue }
+citecolor=darkblue}
 
 \DeclareMathOperator*{\argmax}{arg\,max}
 
+\newcommand{\todo}[1]{{\em \textcolor{red}{ #1}}}
 \newcommand{\beq}{\begin{equation}}
 \newcommand{\eeq}{\end{equation}}
-
+\newcommand{\lang}{\langle}
+\newcommand{\ra}{\rangle}
+\newcommand{\vep}{\bm{\epsilon}}
+\newcommand{\ep}{\epsilon}
+\newcommand{\pars}{\vec{\theta}}
+\newcommand{\dev}{\mathrm{d}}
 \begin{document}
 
-\title{Searching for galaxy assembly bias with the clustering measurements of Sloan Digital Sky Survey}
+\title{Can we detect galaxy assembly bias with group and clustering statistics of SDSS main sample of galaxies?}
+\author{Mohammadjavad Vakili , others}
 
 \begin{abstract}
+
+The standard halo occupation modeling approach in large scale structure 
+studies assumes that the halo mass alone suffices in characterizing the 
+galaxy-halo connection. Galaxy assembly bias, the hypothesis that properties beyond 
+halo mass influences the galaxy-halo connection, can potentially affect the 
+statistical summaries of galaxy populations. The degree to which, assembly bias can 
+can be constrained with the statistical distribution of galaxies remains largely 
+untested. In this investigation, we make use of the recently proposed assembly bias decoration 
+of the HOD modeling in order to find constraints on the strength of the assembly bias from the most up-to-date and publicly available measurements of the group multiplicity function and the projected two-point correlation function of the Volume-limited luminosity threshold sample of SDSS 
+galaxies. We find that the available GMF measurements cannot constrain galaxy assembly bias in any of the Luminosity thresholds. On the other hand, we find non-zero constraints on the satellite galaxy assembly bias for the $M_{r}<-18$ and $M_{r}<-19$ samples, nonzero constraints on the central galaxy assembly bias for the $M_{r}<-20$ samples, and constraints consistent with zero for the assembly bias of galaxies in the $M_{r}<-21$ sample. Furthermore, we provide a model comparison between the standard HOD approach and the decorated HOD in modeling of the GMF and the projected 2PCF measurements.
 
 \end{abstract}
 
 \section{Introduction}
+The assumption that galaxies reside dark matter halos 
+is the central tenet of the modern cosmology and 
+large-scale structure formation theories. 
+One of the most powerful methods for describing 
+the galaxy-halo connection is the halo occupation modeling. 
+The underlying assumption of the traditional HOD framework is 
+that the halo mass alone is sufficient in determining the
+population of galaxies inside halos. That is, the statistical properties of 
+galaxies is governed by the halo mass. Mathematically, this assumption can be 
+written as $P(N_g|M_h,\{x\})=P(N_g|M_h)$ where $\{x\}$ is the set of all 
+possible halo properties beyond mass $M_{h}$. 
 
+Despite this very simplifying assumption, the galaxy-halo connection models such as HOD and CLF
+have been widely and successfully used in modeling the measurements of a wide range of the 
+statistical properties of galaxies such as . However, the assumption that the statistical 
+distribution of galaxies can be determined by halo mass is not a derived characteristic of 
+accurate and high resolution hydrodynamic simulations, but rather a theoretical assumption 
+that needs to be scrutinized. In recent years, the idea that the   
 
-The assumption that galaxies reside dark matter halos is the central tenent of the modern cosmology and 
-large-scale structure formation theories. One of the most powerfuls model for descibing the galaxy-halo 
-connection is the halo occupation modeling. The underlying assumption of the traditional HOD modeling is 
-that the halo mass alone is sufficient in determining the population of galaxies inside halos. 
-Despite this simplifying assumption, this model has ben widely---and succesfully---utilized in fitting 
-the measurements of galaxy clustering and galaxy-galaxy lensing.
-
-In this investigation, we explore the notion that how the dependence of galaxy-halo connection on 
-halo properties beyond mass---such as concentration, age, etc---
-Throughout this paper, unless stated otherwise, all radii and densities are in comoving units.
-Standard flat $\lambda$CDM is assumed, and all cosmological parameters are set to the planck 
-2015 best-fit estimates.
-
-\section{Galaxy assembly bias}
-
-
-%%%%I'm most likely going to postpone lensing to another manuscript, just wanna focus on clustering
-%%%%because I have better handle on that%%%%%%
-
-%\section{Galaxy-Galaxy Lensing}
-
-%In g-g lensing, the connection between dark matter and galaxies is probed by measuring 
-%the cross correlation between the two. In particular, one can define the galaxy-matter cross correlation 
-%as the ensemble average of the product of galaxy over densities and matter overdensities
-%\beq
-%\xi_{gm}(r) = \langle \delta_{g}(\vec{x}) \delta_{m}(\vec{x}+\vec{r}) \rangle,
-%\eeq
-%where $\delta_g$ and $\delta_m$ are overdensities of matter and galaxies respectively and we have 
-%assumed the cross-corrlation depends only on the radial separation due to isotropy in distribution of matter
-%and galaxies.
-
-%This cross correlation can be related to the azimuthally-averaged  projected surface density of the gravitational
-%lenses,
-%\begin{eqnarray}
-%\Sigma(R) &=& \bar{\rho}_{m}(z)\int_{0}^{\infty} \;  [1 + \xi_{gm}(\sqrt{\chi^2 + R^2})] \; d\chi \nonumber \\
-%          &=& 2\bar{\rho}_{m}(z)\int_{R}^{\infty} \; [1 + \xi_{gm}(r)] \; \frac{rdr}{\sqrt{r^{2} - R^{2}}},
-%\end{eqnarray}
-%where $\chi$ is the projected comoving line-of-sight distance, and $R$ is the projected comoving transverse distance.
-
-%Since the galaxy-matter cross correlation falls off rapidly that in practice thre redshoft evolution of $\xi_{gm}$ 
-%can be neglected, integrating only out to a line-fo-sight distance of $\chi=$ 50 Mpc is sufficient. 
-%The mean excess projected density $\bar{\Sigma}(R)$ can be approximated by the following radial integral,
-%\beq
-%\bar{\Sigma}(R , z_{l}) = 2 \rho_{c,0}\Omega_{m,0}\int_{0}^{\mathrm{50Mpc}} \; \xi_{gm}\Big(\sqrt{R^{2}+\chi^{2}},z_{L} \Big)d\chi.
-%\eeq
-
-\section{Concentration-dependence of galaxy-halo connection}
+In this investigation, we explore the notion that how the dependence of 
+galaxy-halo connection on halo properties beyond mass (e.g. concentration, age).
+Throughout this paper, unless stated otherwise, 
+all radii and densities are in comoving units. Standard flat $\Lambda$CDM is assumed, 
+and all cosmological parameters are set to the Planck 2013 best-fit estimates.
 
 \section{Method}
+For our standard HOD modeling, cite[zheng07] HOD parameterization is assumed according to which, 
+the occupation of the central galaxies follows a nearest-integer distribution, 
+and the occupation of the satellite galaxies follows a Poisson distribution. 
+The expected number of centrals and satellites as a function of the host halo 
+mass of $M_{\rm h}$ given by 
+\begin{eqnarray}
+\langle N_{\rm cen}(M_{\rm h}) \rangle &=& \frac{1}{2}\Big[1+\Big(\frac{\log M_{\rm h} - \log M_{\rm min}}{\sigma_{\log \rm{M}}} \Big) \Big], \\ 
+\langle N_{\rm sat}(M_{\rm h}) \rangle &=& \rangle \Big( \frac{M_{\rm h} - M_{\rm{0}}}{M_{\rm 1}} \Big)^{\alpha}.
+\end{eqnarray}
+For placing galaxies inside halos, we follow the procedure described in CITE[HEARIN ETAL], CITE[CHANG ETAL].
+We refer the readers to those papers for a more comprehensive discussion of the forward modeling of the 
+galaxy mock catalogs. Now let us provide a brief overview of the assembly bias decorated HOD modeling 
+In fixed halo mass $M_{\rm h}$, halos are split into two groups of 0.5 percentile highest-concentration 
+and 0.5 lowest-concentration halos. Following CITE[HEARIN ETAL], the centrals   
 
-\section{SDSS measurements}
+
+For sampling from the likelihood given, we use the affine-invariant MCMC sampler $\mathtt{emcee}$ (CITE[FORMAN-MACKEY]).
+
+
+\section{Data}
+
+In this work, we focus on two sets of measurements made on the volume limited luminosity threshold main sample of galaxies 
+in the SDSS spectroscopic survey. The first set consists of the number density $n_{g}$ (measured in units of $h^{3}\rm{Mpc}^{-3}$) 
+and the projected two point correlation function of galaxies $w_{\rm{p}}(r_{\rm{p}})$ (measured in units of $h^{-1}\rm{Mpc}$), 
+and their corresponding covariance matrices constructed using 400 jackknife sub-samples. 
+The 2PCFs are measured in 12 logarithmic bins (in units of $h^{-1}\rm{Mpc}$) of width $\Delta \log(r_{\rm p}) = 0.2$, 
+starting from $r_{\rm{p}} = 0.1 \; h^{-1}\rm{Mpc}$. $w_{\rm{p}}(r_{\rm{p}})$s are measured by integrating the two dimensional 
+2PCF $\xi(r_{\rm{p}} , \pi)$ along the line-of-sight up to $\pi_{max}=40 h^{-1}\rm{Mpc}$. The advantage of using these measurements 
+is that the effects of fiber collision systematics on the two-point statistics are corrected for, and therefore, they provide very 
+accurate small scale clustering measurements [see CITE GUO 2015].
+
+The Second set of measurements used in our work are the group multiplicity functions described in [CITE BERLIND 2006]. These measurements are made 
+for the three Volume limited samples of the SDSS galaxies with luminosity thresholds of $M_{r}<-18$, $M_{r}<-19$, and $M_{r}<-20$. 
+Group multiplicity function $g(N)$ (with units of $h^{3}\rm{Mpc}^{-3}$) is defined as the abundance of the galaxy groups as a 
+function of group richness (the number of galaxies in groups) per richness width, measured in bins of richness. 
+Galaxy groups in [CITE BERLIND etal] are found by Friends-of-Friends (hereafter FoF) group finder algorithm [CITE FOF]. 
+The FoF group finder places two galaxies in a group if the projected (line-of-sight) distance between the two galaxies 
+is less than a specified projected (line-of-sight) linking length in units of the mean inter-particle distance ($n_{\rm g}^{-1/3}$).
+The projected linking and the line-of-sight linking lengths are denoted by $b_{\perp}$ and $b_{\parallel}$ respectively. 
+In order to minimize the discrepancy between the groups found from the group finder and the halos in a suite of simulations, 
+[CITE BERLIND] set $b_{\perp}$ and $b_{\parallel}$ to 0.15 and 0.74 respectively.
+The measurements are accompanied by two sets of uncertainty measurements. 
+The first one is the error in $g(N)$ measured from dispersion between $g(N)$s 
+of different mock catalogs, and the second source of error is the Poisson error measured 
+from the number of groups in each richness bin. Finally, these two uncertainties are added in quadrature 
+to estimate the total error on $g(N)$ measurements.
+
+\section{Simulation}
+For the simulations used in this work, we make use of the Rockstar (cite[Behroozi]) halo catalogs in the Bolshoi-Planck high 
+resolution $N$-body simulation CITE[Klypin2014]. This simulation was carried out using the adaptive refinement tree code 
+(ART, see cite[Kravstov]) code, following the Planck $\Lambda$CDM cosmological parameters 
+$\Omega_{\rm m} = 0.307$, $\Omega_{\rm b} = 0.048$, $\Omega_{\Lambda} = 0.693$, $\sigma_{8} = 0.823$, $n_{\rm s}=0.96$, 
+$h=0.678$. The Box size for this $N$-body simulation is 250 $h^{-1} \rm{Mpc}$, the number of simulation particles is 2048$^3$, 
+the mass per simulation particle $m_{\rm p}$ is $1.5 \times 10^{8} \; h^{-1} M_{\odot}$, and the gravitational softening length 
+$\epsilon$ is 1 $h^{-1} \rm{kpc}$. 
 
 \section{Results}
 
+
+
 \section{Discussion}
-
-
-\begin{thebibliography}{70}
-
-
-\end{thebibliography}
 
 
 \end{document}
