@@ -77,20 +77,27 @@ all radii and densities are in comoving units. Standard flat $\Lambda$CDM is ass
 and all cosmological parameters are set to the Planck 2013 best-fit estimates.
 
 \section{Method}
-For our standard HOD modeling, cite[zheng07] HOD parameterization is assumed according to which, 
-the occupation of the central galaxies follows a nearest-integer distribution, 
-and the occupation of the satellite galaxies follows a Poisson distribution. 
-The expected number of centrals and satellites as a function of the host halo 
-mass of $M_{\rm h}$ given by 
+For our standard HOD modeling, HOD parameterization of cite[zheng07] is assumed. According to this parameterization, the occupation of the central galaxies follows a nearest-integer distribution, 
+and the occupation of the satellite galaxies follows a Poisson distribution. The expected number of centrals and satellites as a function of the host halo mass of $M_{\rm h}$ are given by the folllowing equations 
 \begin{eqnarray}
-\langle N_{\rm cen}(M_{\rm h}) \rangle &=& \frac{1}{2}\Big[1+\Big(\frac{\log M_{\rm h} - \log M_{\rm min}}{\sigma_{\log \rm{M}}} \Big) \Big], \\ 
-\langle N_{\rm sat}(M_{\rm h}) \rangle &=& \rangle \Big( \frac{M_{\rm h} - M_{\rm{0}}}{M_{\rm 1}} \Big)^{\alpha}.
+\langle N_{\rm cen}(M_{\rm h}) \rangle &=& \frac{1}{2}\Big[1+\Big(\frac{\log M_{\rm h} - \log M_{\rm min}}{\sigma_{\log \rm{M}}} \Big) \Big], \label{hod:central}\\ 
+\langle N_{\rm sat}(M_{\rm h}) \rangle &=& \Big( \frac{M_{\rm h} - M_{\rm{0}}}{M_{\rm 1}} \Big)^{\alpha}. \label{hod:satellite}
 \end{eqnarray}
-For placing galaxies inside halos, we follow the procedure described in CITE[HEARIN ETAL], CITE[CHANG ETAL].
-We refer the readers to those papers for a more comprehensive discussion of the forward modeling of the 
-galaxy mock catalogs. Now let us provide a brief overview of the assembly bias decorated HOD modeling 
-In fixed halo mass $M_{\rm h}$, halos are split into two groups of 0.5 percentile highest-concentration 
-and 0.5 lowest-concentration halos. Following CITE[HEARIN ETAL], the centrals   
+
+For populating the halos with galaxies, we follow the procedure described in CITE[HEARIN ETAL], CITE[CHANG ETAL]. The central galaxies are assumed to be at the center of the host dark matter halos. We place the satellite galaxies are within the virial radius of the halo following an NFW profile [CITE NFW]. The concentration of the NFW profile is given by the empirical mass-concentration relation provided by [CITE MACCIO]. The velocities of the satellite galaxies are given by two components. The first component is the velocity of the host halo. The second component is the velocity of the satellite galaxy with respect to the host halo which is computed following the solution to the NFW profile Jeans equations [CITE MORE]. We refer the readers to [CITE HEARIN 15] and \url{http://halotools.readthedocs.io} for a more comprehensive and detailed discussion of the forward modeling of the galaxy mock catalogs. 
+
+Now let us provide a brief overview of HOD modeling decorated with $\mathtt{Heaviside}$ $\mathtt{Assemblybias}$ introduced in [CITE HEARIN2015]. At a fixed halo mass $M_{\rm h}$, halos are split into two populations: population of halos with the 0.5-percentile of highest concentration, and population of halos with 0.5 percentile of lowest concentration.We call the first population "type 1" halos, and the second population "type 2 halos. Following In the decorated HOD model, the expected number of central and satellite galaxies in the two populations is given by
+
+\begin{eqnarray}
+\langle N_{c,i} | M_{h},c\rangle &=& \langle N_{c} | M_{h}\rangle + \delta N _{c,i}, \; i=1,2 \label{eq:decoratedcentral} \\
+\langle N_{s,i} | M_{h},c\rangle &=& \langle N_{s} | M_{h}\rangle + \delta N _{s,i}, \; i=1,2 \label{eq:decoratedsatellite}
+\end{eqnarray}
+where $\langle N_{c} | M_{h}\rangle$ and $\langle N_{s} | M_{h}\rangle$ are given by Eqs \ref{hod:central} and \ref{hod:satellite} respectively, and we have $\delta N_{s,0} + \delta N_{s,1} = 0$, and $\delta N_{c,0} + \delta N_{c,1} = 0$. These two conditions ensure the conservation of HOD. At a given host hale mass $M_{h}$, the central occupation of the the two populations follows a Nearest-integer distribution with the first moment given by \ref{eq:decoratedcentral}; and the central occupation of the the two populations follows a Poisson distribution with the first moment given by \ref{eq:decoratedsatellite}.
+
+
+
+
+Following CITE[HEARIN ETAL], the centrals   
 
 
 For sampling from the likelihood given, we use the affine-invariant MCMC sampler $\mathtt{emcee}$ (CITE[FORMAN-MACKEY]).
