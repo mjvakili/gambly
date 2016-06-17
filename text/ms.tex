@@ -31,6 +31,18 @@ citecolor=darkblue}
 \newcommand{\ep}{\epsilon}
 \newcommand{\pars}{\vec{\theta}}
 \newcommand{\dev}{\mathrm{d}}
+\newcommand{\wpp}{w_{\rm p}}
+\newcommand{\ngal}{n_{g}}
+\newcommand{\gmf}{g(N)}
+\newcommand{\mr}{M_{\rm r}}
+\newcommand{\rpp}{r_{\rm p}}
+\newcommand{\mzero}{\log M_{0}}
+\newcommand{\mone}{\log M_{1}}
+\newcommand{\mmin}{\log M_{\rm min}}
+\newcommand{\sigmam}{\sigma_{\log \rm M}} 
+\newcommand{\acen}{\mathcal{A}_{\rm cen}}
+\newcommand{\asat}{\mathcal{A}_{\rm sat}}
+
 \begin{document}
 
 \title{Can we constrain galaxy assembly bias with group and clustering statistics of SDSS galaxies?}
@@ -77,7 +89,8 @@ all radii and densities are in comoving units. Standard flat $\Lambda$CDM is ass
 and all cosmological parameters are set to the Planck 2013 best-fit estimates.
 
 \section{Method}
-\subsection{Occupation modeling}
+\subsection{Halo occupation modeling}
+\subsubsection{standard HOD modeling}\label{subsubsec:hod}
 For our standard HOD modeling, HOD parameterization of cite[zheng07] is assumed. According to this parameterization, the occupation of the central galaxies follows a nearest-integer distribution, 
 and the occupation of the satellite galaxies follows a Poisson distribution. The expected number of centrals and satellites as a function of the host halo mass of $M_{\rm h}$ are given by the folllowing equations 
 \begin{eqnarray}
@@ -85,8 +98,9 @@ and the occupation of the satellite galaxies follows a Poisson distribution. The
 \langle N_{\rm sat}(M_{\rm h}) \rangle &=& \Big( \frac{M_{\rm h} - M_{\rm{0}}}{M_{\rm 1}} \Big)^{\alpha}. \label{hod:satellite}
 \end{eqnarray}
 
-For populating the halos with galaxies, we follow the procedure described in CITE[HEARIN ETAL], CITE[CHANG ETAL]. The central galaxies are assumed to be at the center of the host dark matter halos. We place the satellite galaxies are within the virial radius of the halo following an NFW profile [CITE NFW]. The concentration of the NFW profile is given by the empirical mass-concentration relation provided by [CITE MACCIO]. The velocities of the satellite galaxies are given by two components. The first component is the velocity of the host halo. The second component is the velocity of the satellite galaxy with respect to the host halo which is computed following the solution to the NFW profile Jeans equations [CITE MORE]. We refer the readers to [CITE HEARIN 15] and \url{http://halotools.readthedocs.io} for a more comprehensive and detailed discussion of the forward modeling of the galaxy mock catalogs. 
+For populating the halos with galaxies, we follow the procedure described in CITE[HEARIN ETAL], CITE[CHANG ETAL]. The central galaxies are assumed to be at the center of the host dark matter halos. We place the satellite galaxies are within the virial radius of the halo following an NFW profile [CITE NFW]. The concentration of the NFW profile is given by the empirical mass-concentration relation provided by [CITE MACCIO]. The velocities of the satellite galaxies are given by two components. The first component is the velocity of the host halo. The second component is the velocity of the satellite galaxy with respect to the host halo which is computed following the solution to the NFW profile Jeans equations [CITE MORE]. We refer the readers to [CITE HEARIN 15] and \url{http://halotools.readthedocs.io} for a more comprehensive and detailed discussion of the forward modeling of the galaxy mock catalogs.
 
+\subsubsection{Assembly bias HOD modeling}\label{subsubsec:decorated}
 Now let us provide a brief overview of HOD modeling decorated with $\mathtt{Heaviside}$ $\mathtt{Assemblybias}$ introduced in [CITE HEARIN2015]. At a fixed halo mass $M_{\rm h}$, halos are split into two populations: population of halos with the 0.5-percentile of highest concentration, and population of halos with 0.5 percentile of lowest concentration.We call the first population "type 1" halos, and the second population "type 2 halos. Following In the decorated HOD model, the expected number of central and satellite galaxies in the two populations is given by
 
 \begin{eqnarray}
@@ -106,42 +120,31 @@ Afterwards, CITE[HEARIN2015] defines the assembly bias parameter $\mathcal{A}$ i
 \delta N_{\alpha , 1}(M_{h}) &=& \mathcal{A_\alpha} \delta N_{\alpha , 1}^{\rm max}(M_{h}) \; \; \rm{if} \; \mathcal{A_\alpha} > 0,  \\
 \delta N_{\alpha , 1}(M_{h}) &=& \mathcal{A_\alpha} \delta N_{\alpha , 1}^{\rm min}(M_{h}) \; \; \rm{if} \; \mathcal{A_\alpha} < 0,
 \end{eqnarray}
-where the subscript $\alpha = c , s$ for the centrals and satellites respectively, and $\delta N_{\alpha , 1}^{\rm max}(M_{h})$, $\delta N_{\alpha , 1}^{\rm min}(M_{h})$ are given by Eqs. \ref{eq:cen-bounds} and \ref{eq:sat-bounds}.  
-\subsection{Observables}
+where the subscript $\alpha = c , s$ for the centrals and satellites respectively, and $\delta N_{\alpha , 1}^{\rm max}(M_{h})$, $\delta N_{\alpha , 1}^{\rm min}(M_{h})$ are given by Eqs. \ref{eq:cen-bounds} and \ref{eq:sat-bounds}. 
 
-\subsection{}
-For sampling from the likelihood given, we use the affine-invariant MCMC sampler $\mathtt{emcee}$ (CITE[FORMAN-MACKEY]).
+At a given halo mass $M_{h}$, once the first moments of occupation statistics for the $type$-1 and $type$-2 halos are determined, the same procedure described in \ref{subsubsec:hod} is done to populate the halos with mock galaxies.
 
+\subsubsection{Redshift-space distortion}
 
-\section{Data}
+Once the halo catalogs are populated with galaxies, the real-space positions and velocities of all mock galaxies are obtained. The next step is applying a redshift-space distortion transformation. Assuming the $\hat{z}$ axis for the direction of the RSD, the transformation $(x,y,z) \rightarrow (s_x,s_y,s_z) = (x , y ,z + v_z/cH_{0})$ is done to obtain the redshift-space coordinate of the produced mock galaxies.   
 
-In this work, we focus on two sets of measurements made on the volume limited luminosity threshold main sample of galaxies 
-in the SDSS spectroscopic survey. The first set consists of the number density $n_{g}$ (measured in units of $h^{3}\rm{Mpc}^{-3}$) 
-and the projected two point correlation function of galaxies $w_{\rm{p}}(r_{\rm{p}})$ (measured in units of $h^{-1}\rm{Mpc}$), 
-and their corresponding covariance matrices constructed using 400 jackknife sub-samples. 
-The 2PCFs are measured in 12 logarithmic bins (in units of $h^{-1}\rm{Mpc}$) of width $\Delta \log(r_{\rm p}) = 0.2$, 
-starting from $r_{\rm{p}} = 0.1 \; h^{-1}\rm{Mpc}$. $w_{\rm{p}}(r_{\rm{p}})$s are measured by integrating the two dimensional 
-2PCF $\xi(r_{\rm{p}} , \pi)$ along the line-of-sight up to $\pi_{max}=40 h^{-1}\rm{Mpc}$. The advantage of using these measurements 
-is that the effects of fiber collision systematics on the two-point statistics are corrected for, and therefore, they provide very 
-accurate small scale clustering measurements [see CITE GUO 2015].
-
-The Second set of measurements used in our work are the group multiplicity functions described in [CITE BERLIND 2006]. These measurements are made 
-for the three Volume limited samples of the SDSS galaxies with luminosity thresholds of $M_{r}<-18$, $M_{r}<-19$, and $M_{r}<-20$. 
-Group multiplicity function $g(N)$ (with units of $h^{3}\rm{Mpc}^{-3}$) is defined as the abundance of the galaxy groups as a 
+\subsection{Model Observables}
+\subsubsection{group multiplicity function}
+Group multiplicity function $g(N)$ is defined as the abundance of the galaxy groups as a 
 function of group richness (the number of galaxies in groups) per richness width, measured in bins of richness. 
-Galaxy groups in [CITE BERLIND etal] are found by Friends-of-Friends (hereafter FoF) group finder algorithm [CITE FOF]. 
-The FoF group finder places two galaxies in a group if the projected (line-of-sight) distance between the two galaxies 
-is less than a specified projected (line-of-sight) linking length in units of the mean inter-particle distance ($n_{\rm g}^{-1/3}$).
-The projected linking and the line-of-sight linking lengths are denoted by $b_{\perp}$ and $b_{\parallel}$ respectively. 
-In order to minimize the discrepancy between the groups found from the group finder and the halos in a suite of simulations, 
-[CITE BERLIND] set $b_{\perp}$ and $b_{\parallel}$ to 0.15 and 0.74 respectively.
-The measurements are accompanied by two sets of uncertainty measurements. 
-The first one is the error in $g(N)$ measured from dispersion between $g(N)$s 
-of different mock catalogs, and the second source of error is the Poisson error measured 
-from the number of groups in each richness bin. Finally, these two uncertainties are added in quadrature 
-to estimate the total error on $g(N)$ measurements.
+Galaxy groups in are found by Friends-of-Friends (hereafter FoF) group finder algorithm [CITE FOF]. 
+The FoF group finder algorithm links to galaxy $i$ and galaxy $j$ to each other, if the projected distance between the two galaxies $D_{\perp , i,j}$ is less than a specified projected linking length $b{_\perp}$, and the line-of-sight distance between the two galaxies $D_{\parallel, i,j}$ is less than a specified line-of-sight linking length $b{_\parallel}$. These linking lengths are measured in units of the mean inter-particle distance ($n_{\rm g}^{-1/3}$). In order to be consistent with the [CITE BERLIND] measurements, the linking lengths $b_{\perp}$ and $b_{\parallel}$ are set to to 0.15 and 0.74 respectively. 
 
-\section{Simulation}
+After populating the dark matter halo catalogs with galaxies, we use the $\mathtt{Halotools}$ implementation of the FoF group-finder algorithm to identify the FoF groups with the mentioned linking lengths. Afterwards, we compute the number density of the galaxy groups in bins of richness to measure the group multiplicity function. Note that $g(N)$ is measured in units of $h^{3}\rm{Mpc}^{-3}$.
+\subsubsection{projected two-point correlation function}
+The projected two point correlation function $w_{\rm{p}}(r_{\rm{p}})$ can be computed by integrating the 3D redshift space 2PCF $\xi(r_{\rm{p}} , \pi)$ along the line-of-sight
+\beq
+w_{\rm{p}}(r_{\rm{p}}) = 2 \int_{0}^{\infty} d\pi \;\xi(r_{\rm{p}} , \pi)
+\eeq
+For our 2PCF calculations, we use the $w_{\rm p}$ measurement functionality of the fast and publicly available pair-counter code $\mathtt{CorrFunc}$ [CITE CORRFUNC].  To be consistent with the SDSS measurements described in \ref{sec:data}, $w_{\rm{p}}(r_{\rm{p}})$ is obtained by the line-of-sight integration to $\pi_{max}=40 \; h^{-1}\rm{Mpc}$. Note that $w_{\rm{p}}(r_{\rm{p}})$ is measured in units of $h^{-1}\rm{Mpc}$.
+
+\subsection{Simulation}
+
 For the simulations used in this work, we make use of the Rockstar (cite[Behroozi]) halo catalogs in the Bolshoi-Planck high 
 resolution $N$-body simulation CITE[Klypin2014]. This simulation was carried out using the adaptive refinement tree code 
 (ART, see cite[Kravstov]) code, following the Planck $\Lambda$CDM cosmological parameters 
@@ -149,6 +152,63 @@ $\Omega_{\rm m} = 0.307$, $\Omega_{\rm b} = 0.048$, $\Omega_{\Lambda} = 0.693$, 
 $h=0.678$. The Box size for this $N$-body simulation is 250 $h^{-1} \rm{Mpc}$, the number of simulation particles is 2048$^3$, 
 the mass per simulation particle $m_{\rm p}$ is $1.5 \times 10^{8} \; h^{-1} M_{\odot}$, and the gravitational softening length 
 $\epsilon$ is 1 $h^{-1} \rm{kpc}$. 
+
+
+\section{Data}\label{sec:data}
+
+We focus on two sets of measurements made on the volume limited luminosity threshold main sample of galaxies in the SDSS spectroscopic survey. In this section, we briefly describe the measurements used in our study for finding constraints on the assembly bias parameters.
+
+\subsection{group multiplicity function}
+
+The first set of measurements consists of the galaxy number densities $n_{g}$ and the group multiplicity functions $g(N)$ described in [CITE BERLIND 2006]. These measurements are made 
+for the three Volume limited samples of the SDSS galaxies with luminosity thresholds of $M_{r}<-18$, $M_{r}<-19$, and $M_{r}<-20$. Galaxy groups in [CITE BERLIND etal] are found by Friends-of-Friends (hereafter FoF) group finder algorithm [CITE FOF]. [CITE BERLIND ETAL] sets $b_{\perp}$ to 0.15 and $b_{\parallel}$ to 0.74 to minimize the discrepancy between the multiplicity function, projected size, and the number of FoF groups and those of the halos in a suite of simulations.
+
+The measurements are accompanied by two sets of uncertainty measurements. The first one is the error on $g(N)$ that stems from the dispersion between $g(N)$ measurements of different mock catalogs. The second source of error is the Poisson error that results from the number of groups in each richness bin. Finally, these two uncertainties are added in quadrature 
+to estimate the total error on [CITE BERLIND ETAL] $g(N)$ measurements.
+
+\subsection{projected 2PCF}
+
+The second set consists of the number density $n_{g}$ and the projected 2PCF $w_{\rm{p}}(r_{\rm{p}})$. The project 2PCFs are measured in 12 logarithmic $r_{\rm p}$ bins (in units of $h^{-1}\rm{Mpc}$) of width $\Delta \log(r_{\rm p}) = 0.2$, starting from $r_{\rm{p}} = 0.1 \; h^{-1}\rm{Mpc}$. These measurements are accompanied by their corresponding covariance matrices constructed using 400 jackknife sub-samples of the data. The advantage of using these measurements is that the effects of fiber collision systematics on the two-point statistics are corrected for, and therefore, they provide very accurate small scale clustering measurements [see CITE GUO 2015]. As [CITE HEARIN2015] demonstrates the satellite assembly bias $\mathcal{A}_{\rm sat}$ can have 10 $\%$ level impact on the small scale galaxy clustering.  
+
+\section{Analysis and Results}
+
+We aim to constrain the parameters of the HOD model described in \ref{subsubsec:hod}, and the parameters of the assembly bias HOD model described in \ref{subsubsec:decorated}, given two sets of SDSS measurements described in \ref{sec:data}. We sample from the posterior probability distribution $p(\theta|d) \propto p(d|\theta).\pi(\theta)$. Here, $\theta$ denotes $\{ \log M_{\rm min}, \sigma_{\log M}, \log M_{0}, \alpha, \log M_{1} \}$ in the HOD modeling, and $\{ \log M_{\rm min}, \sigma_{\log M}, \log M_{0}, \alpha, \log M_{1}, \mathcal{A}_{\rm cen}, \mathcal{A}_{\rm sat}\}$ in the assembly bias HOD modeling. Furthermore, $d$ denotes the combination $[n_{g},g(N)]$ when the group multiplicity function is used, and $[n_{g}, w_{\rm{p}}(r_{\rm{p}})]$ when 2PCF is used.
+
+Now we need to specify the likelihood function $p(d|\theta)$. In the case where the observables are the number density and the GMF are used the negative log-likelihood is given by
+\begin{eqnarray}
+-2\ln p(d|\theta) &=& \frac{[n^{\rm data}_{g}-n^{\rm model}_{g}]^{2}}{\sigma_{n}^{2}} \nonumber \\ &+& \sum_{N} \frac{[ g^{\rm data}(N)-g^{\rm model}(N)]^{2}}{\sigma^{2}_{N}} \; + \; \rm{const.},
+\end{eqnarray}
+where the summation is over the group richness bins, and $\sigma_{N}$ is the uncertainty associated with the richness bin $N$. In the case, where the number density and 2PCF are used, the negative log-likelihood is given by
+\begin{eqnarray}
+-2\ln p(d|\theta) &=& \frac{[n^{\rm data}_{g}-n^{\rm model}_{g}]^{2}}{\sigma_{n}^{2}} \nonumber \\  
+&+&  \sum_{\rm p} \Delta \wpp^{\rm T}C^{-1}\Delta \wpp \; + \; \rm{const.},
+\end{eqnarray}
+where $\Delta \wpp(\rpp) = \wpp^{\rm data}(\rpp)-\wpp^{\rm model}(\rpp)$, and  $C^{-1}$ is inverse of the estimate of the jackknife covariance matrix provided by [CITE GUO2015]. 
+Another important ingradient of our analysis is specification of the prior probabilities over the parameters of the two halo occupation models. For both model, we use uniform flat priors for all the parameters. 
+
+\begin{table*}
+\begin{center}
+  \label{tab:prior}
+  \caption{{\bf Prior Specifications}: The prior probability distribution 
+  and its range for each of the parameters. 
+  All mass parameters are in unit of $h^{-1}M_\odot$}
+\begin{tabular}{@{}lllll}
+\\ \hline 
+    HOD Parameter & & Prior & & Range \\ \hline
+  $\alpha$ & & Uniform & & [0.8, 1.3] \\
+  $\sigma_{\rm \log M}$ & & Uniform & &  [0.1, 0.7] \\
+   $\log M_{0}$   & & Uniform & &  [10.0, 13.0] \\
+  $\log M_{min}$ & &   Uniform & &  [11.02, 13.02] \\
+  $\log M_{1}$ & & Uniform & & [13.0, 14.0] \\
+  $\acen$ & & Uniform & & [-1.0, 1.0] \\
+  $\asat$ & & Uniform & & [-1.0, 1.0] \\
+ \hline
+  \end{tabular}
+\end{center}
+\end{table*}
+
+For sampling from the posterior probability, we use the affine-invariant ensemble MCMC sampler $\mathtt{emcee}$ (CITE[FORMAN-MACKEY]).
+
 
 \section{Results}
 
