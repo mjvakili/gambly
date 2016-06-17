@@ -33,7 +33,7 @@ citecolor=darkblue}
 \newcommand{\dev}{\mathrm{d}}
 \begin{document}
 
-\title{Can we detect galaxy assembly bias with group and clustering statistics of SDSS main sample of galaxies?}
+\title{Can we constrain galaxy assembly bias with group and clustering statistics of SDSS galaxies?}
 \author{Mohammadjavad Vakili , others}
 
 \begin{abstract}
@@ -77,6 +77,7 @@ all radii and densities are in comoving units. Standard flat $\Lambda$CDM is ass
 and all cosmological parameters are set to the Planck 2013 best-fit estimates.
 
 \section{Method}
+\subsection{Occupation modeling}
 For our standard HOD modeling, HOD parameterization of cite[zheng07] is assumed. According to this parameterization, the occupation of the central galaxies follows a nearest-integer distribution, 
 and the occupation of the satellite galaxies follows a Poisson distribution. The expected number of centrals and satellites as a function of the host halo mass of $M_{\rm h}$ are given by the folllowing equations 
 \begin{eqnarray}
@@ -92,14 +93,23 @@ Now let us provide a brief overview of HOD modeling decorated with $\mathtt{Heav
 \langle N_{c,i} | M_{h},c\rangle &=& \langle N_{c} | M_{h}\rangle + \delta N _{c,i}, \; i=1,2 \label{eq:decoratedcentral} \\
 \langle N_{s,i} | M_{h},c\rangle &=& \langle N_{s} | M_{h}\rangle + \delta N _{s,i}, \; i=1,2 \label{eq:decoratedsatellite}
 \end{eqnarray}
-where $\langle N_{c} | M_{h}\rangle$ and $\langle N_{s} | M_{h}\rangle$ are given by Eqs \ref{hod:central} and \ref{hod:satellite} respectively, and we have $\delta N_{s,0} + \delta N_{s,1} = 0$, and $\delta N_{c,0} + \delta N_{c,1} = 0$. These two conditions ensure the conservation of HOD. At a given host hale mass $M_{h}$, the central occupation of the the two populations follows a Nearest-integer distribution with the first moment given by \ref{eq:decoratedcentral}; and the central occupation of the the two populations follows a Poisson distribution with the first moment given by \ref{eq:decoratedsatellite}.
+where $\langle N_{c} | M_{h}\rangle$ and $\langle N_{s} | M_{h}\rangle$ are given by Eqs \ref{hod:central} and \ref{hod:satellite} respectively, and we have $\delta N_{s,0} + \delta N_{s,1} = 0$, and $\delta N_{c,0} + \delta N_{c,1} = 0$. These two conditions ensure the conservation of HOD. At a given host hale mass $M_{h}$, the central occupation of the the two populations follows a Nearest-integer distribution with the first moment given by \ref{eq:decoratedcentral}; and the central occupation of the the two populations follows a Poisson distribution with the first moment given by \ref{eq:decoratedsatellite}. 
 
+In this decorated occupation model, the allowable range for the quantities $\delta N_{c,1}$ and $\delta N_{s,1}$ is given by 
+\begin{eqnarray}
+-\langle N_{c} | M_{h}\rangle \leq \delta N_{c} \leq \langle N_{c} | M_{h}\rangle
+ , \label{eq:cen-bounds} \\
+-\langle N_{s} | M_{h}\rangle \leq \delta N_{s} \leq \langle N_{s} | M_{h}\rangle. \label{eq:sat-bounds}
+\end{eqnarray}
+Afterwards, CITE[HEARIN2015] defines the assembly bias parameter $\mathcal{A}$ in the following way:
+\begin{eqnarray}
+\delta N_{\alpha , 1}(M_{h}) &=& \mathcal{A_\alpha} \delta N_{\alpha , 1}^{\rm max}(M_{h}) \; \; \rm{if} \; \mathcal{A_\alpha} > 0,  \\
+\delta N_{\alpha , 1}(M_{h}) &=& \mathcal{A_\alpha} \delta N_{\alpha , 1}^{\rm min}(M_{h}) \; \; \rm{if} \; \mathcal{A_\alpha} < 0,
+\end{eqnarray}
+where the subscript $\alpha = c , s$ for the centrals and satellites respectively, and $\delta N_{\alpha , 1}^{\rm max}(M_{h})$, $\delta N_{\alpha , 1}^{\rm min}(M_{h})$ are given by Eqs. \ref{eq:cen-bounds} and \ref{eq:sat-bounds}.  
+\subsection{Observables}
 
-
-
-Following CITE[HEARIN ETAL], the centrals   
-
-
+\subsection{}
 For sampling from the likelihood given, we use the affine-invariant MCMC sampler $\mathtt{emcee}$ (CITE[FORMAN-MACKEY]).
 
 
