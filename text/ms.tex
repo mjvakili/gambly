@@ -145,14 +145,13 @@ For our 2PCF calculations, we use the $w_{\rm p}$ measurement functionality of t
 
 \subsection{Simulation}
 
-For the simulations used in this work, we make use of the Rockstar (cite[Behroozi]) halo catalogs in the Bolshoi-Planck high 
+For the simulations used in this work, we make use of the Rockstar (cite[Behroozi]) halo catalogs in the $z=0$ Bolshoi-Planck high 
 resolution $N$-body simulation CITE[Klypin2014]. This simulation was carried out using the adaptive refinement tree code 
 (ART, see cite[Kravstov]) code, following the Planck $\Lambda$CDM cosmological parameters 
 $\Omega_{\rm m} = 0.307$, $\Omega_{\rm b} = 0.048$, $\Omega_{\Lambda} = 0.693$, $\sigma_{8} = 0.823$, $n_{\rm s}=0.96$, 
 $h=0.678$. The Box size for this $N$-body simulation is 250 $h^{-1} \rm{Mpc}$, the number of simulation particles is 2048$^3$, 
 the mass per simulation particle $m_{\rm p}$ is $1.5 \times 10^{8} \; h^{-1} M_{\odot}$, and the gravitational softening length 
 $\epsilon$ is 1 $h^{-1} \rm{kpc}$. 
-
 
 \section{Data}\label{sec:data}
 
@@ -172,34 +171,48 @@ The second set consists of the number density $n_{g}$ and the projected 2PCF $w_
 
 \section{Analysis and Results}
 
-We aim to constrain the parameters of the HOD model described in \ref{subsubsec:hod}, and the parameters of the assembly bias HOD model described in \ref{subsubsec:decorated}, given two sets of SDSS measurements described in \ref{sec:data}. We sample from the posterior probability distribution $p(\theta|d) \propto p(d|\theta).\pi(\theta)$. Here, $\theta$ denotes $\{ \log M_{\rm min}, \sigma_{\log M}, \log M_{0}, \alpha, \log M_{1} \}$ in the HOD modeling, and $\{ \log M_{\rm min}, \sigma_{\log M}, \log M_{0}, \alpha, \log M_{1}, \mathcal{A}_{\rm cen}, \mathcal{A}_{\rm sat}\}$ in the assembly bias HOD modeling. Furthermore, $d$ denotes the combination $[n_{g},g(N)]$ when the group multiplicity function is used, and $[n_{g}, w_{\rm{p}}(r_{\rm{p}})]$ when 2PCF is used.
+\subsection{Inference setup}
+
+We aim to constrain the parameters of the HOD model described in \ref{subsubsec:hod}, and the parameters of the assembly bias HOD model described in \ref{subsubsec:decorated}, given two sets of SDSS measurements described in \ref{sec:data}. For the tests with group multiplicity function as observable, we use measurements with maximum absolute luminosity $M_{\rm r , max}$ of -18, -19, and -20. Finally, for the tests with the projected 2PCF, we use measurements with $M_{\rm r , max}$ of -18, -19, -20, and -21.  
+
+We sample from the posterior probability distribution $p(\theta|d) \propto p(d|\theta) \pi(\theta)$. In the standard HOD modeling 
+\beq
+\theta = \{ \mmin, \sigmam, \mzero, \alpha, \mone \},
+\eeq
+and in the Heaviside assembly bias modeling we have 
+\beq
+\theta = \{ \mmin, \sigmam, \mzero, \alpha, \mone, \acen, \asat \},
+\eeq
+Furthermore, data (denoted by $d$) is the combination $[n_{g},g(N)]$ when GMF is used, and $[n_{g}, w_{\rm{p}}(r_{\rm{p}})]$ when 2PCF is used.
 
 Now we need to specify the likelihood function $p(d|\theta)$. In the case where the observables are the number density and the GMF are used the negative log-likelihood is given by
 \begin{eqnarray}
 -2\ln p(d|\theta) &=& \frac{[n^{\rm data}_{g}-n^{\rm model}_{g}]^{2}}{\sigma_{n}^{2}} \nonumber \\ &+& \sum_{N} \frac{[ g^{\rm data}(N)-g^{\rm model}(N)]^{2}}{\sigma^{2}_{N}} \; + \; \rm{const.},
+\label{eq:lnlike_group}
 \end{eqnarray}
 where the summation is over the group richness bins, and $\sigma_{N}$ is the uncertainty associated with the richness bin $N$. In the case, where the number density and 2PCF are used, the negative log-likelihood is given by
 \begin{eqnarray}
 -2\ln p(d|\theta) &=& \frac{[n^{\rm data}_{g}-n^{\rm model}_{g}]^{2}}{\sigma_{n}^{2}} \nonumber \\  
 &+&  \sum_{\rm p} \Delta \wpp^{\rm T}C^{-1}\Delta \wpp \; + \; \rm{const.},
+\label{eq:lnlike_wp}
 \end{eqnarray}
 where $\Delta \wpp(\rpp) = \wpp^{\rm data}(\rpp)-\wpp^{\rm model}(\rpp)$, and  $C^{-1}$ is inverse of the estimate of the jackknife covariance matrix provided by [CITE GUO2015]. 
-Another important ingradient of our analysis is specification of the prior probabilities over the parameters of the two halo occupation models. For both model, we use uniform flat priors for all the parameters. 
+Another important ingredient of our analysis is specification of the prior probabilities over the parameters of the two halo occupation models. For both model, we use uniform flat priors for all the parameters. The prior ranges are specified in the Table \ref{tab:prior}. 
 
 \begin{table*}
 \begin{center}
   \label{tab:prior}
   \caption{{\bf Prior Specifications}: The prior probability distribution 
   and its range for each of the parameters. 
-  All mass parameters are in unit of $h^{-1}M_\odot$}
+  All mass parameters are in unit of $h^{-1}M_\odot$. The first five rows are the only parameters of the standard HOD modeling.}
 \begin{tabular}{@{}lllll}
 \\ \hline 
     HOD Parameter & & Prior & & Range \\ \hline
-  $\alpha$ & & Uniform & & [0.8, 1.3] \\
-  $\sigma_{\rm \log M}$ & & Uniform & &  [0.1, 0.7] \\
-   $\log M_{0}$   & & Uniform & &  [10.0, 13.0] \\
-  $\log M_{min}$ & &   Uniform & &  [11.02, 13.02] \\
-  $\log M_{1}$ & & Uniform & & [13.0, 14.0] \\
+  $\alpha$ & & Uniform & & [0.85, 1.45] \\
+  $\sigmam$ & & Uniform & &  [0.05, 1.5] \\
+   $\mzero$   & & Uniform & &  [10.0, 14.5] \\
+  $\mmin$ & &   Uniform & &  [10.0, 14.0] \\
+  $\mone$ & & Uniform & & [11.5, 15.0] \\ 
   $\acen$ & & Uniform & & [-1.0, 1.0] \\
   $\asat$ & & Uniform & & [-1.0, 1.0] \\
  \hline
@@ -207,14 +220,30 @@ Another important ingradient of our analysis is specification of the prior proba
 \end{center}
 \end{table*}
 
-For sampling from the posterior probability, we use the affine-invariant ensemble MCMC sampler $\mathtt{emcee}$ (CITE[FORMAN-MACKEY]).
+For sampling from the posterior probability, given the likelihood function (see Eqs. \ref{eq:lnlike_group}, \ref{eq:lnlike_wp}) and the prior probability distributions (see Table \ref{tab:prior}), we use the affine-invariant ensemble MCMC sampler $\mathtt{emcee}$ (CITE[FORMAN-MACKEY]). In particular, we run the $\mathtt{emcee}$ code with 140 walkers and we run the chains for at least 15000 iterations until the convergence of the MCMC chains is ensured. For testing the convergence of the chains, we perform Gelman-Rubin convergence test [CITE GELMANANDRUBIN and the other paper].
+
+\subsection{results}
 
 
-\section{Results}
+\subsection{model comparison}
 
+Now that we have presented constraints on the parameters of the Heaviside assembly bias HOD model and those of the standard HOD model using the group and clustering measurements of the SDSS galaxies, it is necessary to make comparison between the the two models in terms of the goodness of fit. There are various methods for model comparison. In this work we make use of two information criteria: \emph{Akaike Information Criteria} (AIC), and \emph{Bayesian Information Criteria} (BIC). AIC and BIC are two widely used methods for assessing the relative quality of models given a set of observations.
 
+Suppose that $\mathcal{L}_{\rm max}$ is the maximum likelihood of the data given a model, $N_{\rm par}$ is the number of parameters of a given model, and $N_{\rm data}$ is the number of data points. Then we have
+
+\begin{eqnarray}
+AIC&=& -2\ln \mathcal{L}_{\rm max} + 2N_{\rm par}, \\
+BIC&=& -2\ln \mathcal{L}_{\rm max} + N_{\rm par}.\ln N_{\rm data}
+\end{eqnarray}
 
 \section{Discussion}
+
+
+
+%%%%%%%%%%%FIGURES%%%%%%%%%%%%%%%
+
+
+
 
 
 \end{document}
