@@ -73,7 +73,7 @@ def lnPost(theta, **kwargs):
     return lp + lnlike(theta, **kwargs)
 
 
-def mcmc_mpi(Nwalkers, Niters, Mr, prior_name = 'first_try', pois = True): 
+def mcmc_mpi(Nwalkers, Niters, Mr, prior_name = 'first_try', pois = False): 
     '''
     Parameters
     -----------
@@ -83,7 +83,7 @@ def mcmc_mpi(Nwalkers, Niters, Mr, prior_name = 'first_try', pois = True):
         Number of MCMC chains   
     '''
     #data and covariance matrix
-    fake_obs_icov = Data.load_covariance(Mr , pois = 'True')
+    fake_obs_icov = Data.load_covariance(Mr , pois = False)
     fake_obs = Data.load_data(Mr)
         
     # True HOD parameters
@@ -97,7 +97,7 @@ def mcmc_mpi(Nwalkers, Niters, Mr, prior_name = 'first_try', pois = True):
     prior_range[:,1] = prior_max
     
     # mcmc chain output file 
-    chain_file_name = ''.join([util.mcmc_dir(),'group_mcmc_chain_Mr',str(Mr),'.hdf5'])
+    chain_file_name = ''.join([util.mcmc_dir(),'group_nopoisson_mcmc_chain_Mr',str(Mr),'.hdf5'])
  
 
     if os.path.isfile(chain_file_name) and continue_chain:   
