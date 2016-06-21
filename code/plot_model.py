@@ -43,29 +43,27 @@ from ChangTools.plotting import prettyplot
 from ChangTools.plotting import prettycolors
 plt.switch_backend("Agg")
 
-import hod_group.MCMC_model as hod_gmf 
-import hod.MCMC_model as hod_wp
-import biased_hod_group.MCMC_model as dec_gmf
-import biased_hod.MCMC_model as dec_wp 
+from hod_group import MCMC_model as hod_gmf 
+from hod import MCMC_model as hod_wp
+from biased_hod_group import MCMC_model as dec_gmf
+from biased_hod import MCMC_model as dec_wp 
 
 def model_predictions(filename, Mr, nburnins, nchains , obs = "wp", model = "dec"):
 
     if obs == "wp":
        if model == "dec":
           mod = dec_wp(Mr)
-       if mdoel == "hod":
+       if model == "hod":
           mod = dec_gmf(Mr)
     
     if obs == "gmf":
        if model == "dec":
           mod = dec_wp(Mr)
-       if mdoel == "hod":
+       if model == "hod":
           mod = hod_gmf(Mr)
 
-    sample = h5py.File(filename , "r")["mcmc"][nburnins:nchains].flatten()
-    npars = sample.shape[2]
-    nwalkers = sample.shape[1]
-   
+    sample = h5py.File(filename , "r")["mcmc"][nburnins:nchains]
+    sample = sample.reshape(sample.shape[0]*sample.shape[1] , sample.shape[2]) 
     model_obs = []
  
     for i in xrange(len(sample)):
@@ -310,7 +308,7 @@ if __name__=='__main__':
    directory = "/export/bbq2/mj/chains/"
    filename = "mcmc_chain_Mr19.0.hdf5"
    filename = directory+filename
-   Mr = 19.
+   Mr = 19.0
    obs , model = "wp" , "dec"
    nchains = 22000
    nburnins = 21998
