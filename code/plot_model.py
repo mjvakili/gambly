@@ -3,7 +3,7 @@ Plotting modules
 '''
 from halotools.sim_manager import CachedHaloCatalog
 import os.path as path
-
+import util as ut
 from Corrfunc import _countpairs
 from Corrfunc.utils import read_catalog
 from halotools.empirical_models.factories.mock_helpers import three_dim_pos_bundle
@@ -26,6 +26,13 @@ from ChangTools.plotting import prettycolors
 from Corrfunc.utils import read_catalog
 from halotools.empirical_models import NFWPhaseSpace
 from matplotlib import lines as mlines
+import matplotlib.pyplot as plt
+from matplotlib import lines as mlines
+from matplotlib import gridspec
+from scipy.stats import norm
+from matplotlib.colors import colorConverter
+from ChangTools.plotting import prettyplot
+from ChangTools.plotting import prettycolors
 
 halocat = CachedHaloCatalog(simname = 'bolplanck', redshift = 0, halo_finder = 'rockstar')
 import os
@@ -47,18 +54,19 @@ from hod_group import MCMC_model as hod_gmf
 from hod import MCMC_model as hod_wp
 from biased_hod_group import MCMC_model as dec_gmf
 from biased_hod import MCMC_model as dec_wp 
-
+import data
+import data_group
 def model_predictions(filename, Mr, nburnins, nchains , obs = "wp", model = "dec"):
 
     if obs == "wp":
        if model == "dec":
           mod = dec_wp(Mr)
        if model == "hod":
-          mod = dec_gmf(Mr)
+          mod = hod_wp(Mr)
     
     if obs == "gmf":
        if model == "dec":
-          mod = dec_wp(Mr)
+          mod = dec_gmf(Mr)
        if model == "hod":
           mod = hod_gmf(Mr)
 
@@ -68,8 +76,8 @@ def model_predictions(filename, Mr, nburnins, nchains , obs = "wp", model = "dec
  
     for i in xrange(len(sample)):
         print i
-        model_obs.append(mod._sum_stat(sample[i] , prior_range = None))
-    np.savetxt(obs+"_"+model+"_"+str(Mr)+".dat" , np.array(model_obs)) 
+        model_obs.append(mod._sum_stat(sample[i] , prior_range = None)[1])
+    np.savetxt("results/"+obs+"_"+model+"_"+str(Mr)+".dat" , np.array(model_obs)) 
  
     return None 
 
@@ -83,17 +91,21 @@ def plot_model_prediction(obs = "wp", model= "dec", clotter = True):
 
         #### loading the model predictions for the observables ######         
 
-        file18 = np.loadtxt(obs+"_"+model+"_"+"18.dat")
-        file19 = np.loadtxt(obs+"_"+model+"_"+"19.dat")
-        file20 = np.loadtxt(obs+"_"+model+"_"+"20.dat")
+        file18 = np.loadtxt("results/"+obs+"_"+model+"_"+"18.0.dat")
+        file19 = np.loadtxt("results/"+obs+"_"+model+"_"+"19.0.dat")
+        file20 = np.loadtxt("results/"+obs+"_"+model+"_"+"20.0.dat")
 
         #### loading the observables in Mr 18,19,20
 
         if obs == "wp":
 
-            rbin18 = np.loadtxt(bin)    
-            rbin19 = np.loadtxt(bin)    
-            rbin20 = np.loadtxt(bin)
+            rbin18 = np.loadtxt("bin.dat")    
+            rbin19 = np.loadtxt("bin.dat")    
+            rbin20 = np.loadtxt("bin.dat")
+
+            rbin18 = np.mean(rbin18, axis = 1)             
+            rbin19 = np.mean(rbin19, axis = 1)             
+            rbin20 = np.mean(rbin20, axis = 1)             
 
 	    wbin18 = 1.
 	    wbin19 = 1.
@@ -103,9 +115,9 @@ def plot_model_prediction(obs = "wp", model= "dec", clotter = True):
             data19 = data.load_wp(19.)    
             data20 = data.load_wp(20.)
             
-            err18 = np.diag(data.load_wp_covariance(18.)) 
-            err19 = np.diag(data.load_wp_covariance(19.)) 
-            err20 = np.diag(data.load_wp_covariance(20.)) 
+            err18 = np.diag(data.load_wp_covariance(18.))**.5 
+            err19 = np.diag(data.load_wp_covariance(19.))**.5 
+            err20 = np.diag(data.load_wp_covariance(20.))**.5 
     
         if obs == "gmf":
  
@@ -117,7 +129,11 @@ def plot_model_prediction(obs = "wp", model= "dec", clotter = True):
             rbin19 = np.hstack([cat19[:,0], cat19[-1,1]])
             rbin20 = np.hstack([cat20[:,0], cat20[-1,1]])
            
-	    wbin18 = rbin18[1:] - rbin18[:-1]
+            rbin18 = 0.5 * (rbin18[1:] + rbin18[:-1])	    
+            rbin19 = 0.5 * (rbin19[1:] + rbin19[:-1])	    
+            rbin20 = 0.5 * (rbin20[1:] + rbin20[:-1])	    
+
+            wbin18 = rbin18[1:] - rbin18[:-1]
 	    wbin19 = rbin19[1:] - rbin19[:-1]
 	    wbin20 = rbin20[1:] - rbin20[:-1]
  
@@ -125,60 +141,90 @@ def plot_model_prediction(obs = "wp", model= "dec", clotter = True):
             data19 = data_group.load_gmf(19.)    
             data20 = data_group.load_gmf(20.)
             
-            err18 = data_group.load_gmf_covariance(18., pois=True) 
-            err19 = data_group.load_gmf_covariance(19., pois=True) 
-            err20 = data_group.load_gmf_covariance(20., pois=True)
+            err18 = data_group.load_gmf_covariance(18., pois=True)**.5 
+            err19 = data_group.load_gmf_covariance(19., pois=True)**.5 
+            err20 = data_group.load_gmf_covariance(20., pois=True)**.5
 
-	prettyplot()
+	#prettyplot()
     	pretty_colors=prettycolors()
-    	fig = plt.figure(1, figsize=(16,12))
-    	gs = gridspec.GridSpec(3, 1, height_ratios=[1, 1], width_ratios=[1,1])  
+    	fig = plt.figure(1, figsize=(24,8))
+    	gs = gridspec.GridSpec(1,3)#, height_ratios=[1, 1], width_ratios=[1,1])  
 
         ax = plt.subplot(gs[0])
         a, b, c, d, e = np.percentile(file18, [2.5, 16, 50, 84, 97.5], axis=0) 
-        ax.fill_between(rbin18, a, e, color=pretty_colors[3], alpha=0.3, edgecolor="none") 
-        ax.fill_between(rbin18, b, d, color=pretty_colors[3], alpha=0.5, edgecolor="none")
+        
+        print a.shape
+        ax.fill_between(rbin18, a, e, color=pretty_colors[1], alpha=0.4, edgecolor="none") 
+        ax.fill_between(rbin18, b, d, color=pretty_colors[1], alpha=0.7, edgecolor="none")
 
-        ax.errorbar(rbin18, data18, err18, fmt="o", color='k', markersize=0, lw=0, capsize=3, elinewidth=1.5)
-
+        ax.errorbar(rbin18, data18, yerr=err18, fmt="o", color='k', markersize=0, lw=0, capsize=3, elinewidth=1.5)
         ax.scatter(rbin18, data18, c='k', s=10, lw=0)
-        ax.set_ylabel(r'$w_{\rm p}(r_{\rm p}) \; [rm{Mpc}h^{-1}]$', fontsize=27)
-        ax.set_yscale('log') 
-        ax.set_xscale('log')
-        ax.set_xticklabels([])
-        ax.set_xlim([0.05, 25.])
-        ax.set_ylim([0.09, 1000.])
-
-
+        if obs == "wp":
+          ax.set_xlabel(r'$r_{p} \; [\mathrm{Mpc}\; h^{-1}]$', fontsize=27)
+          ax.set_ylabel(r'$w_{p}(r_{p}) \; [\mathrm{Mpc} \; h^{-1}]$', fontsize=27)
+          ax.set_yscale('log') 
+          ax.set_xscale('log')
+          #ax.set_xticklabels([])
+          ax.set_xlim([0.05, 30.])
+          ax.set_ylim([0.5, 1000.])
+          ax.text(6, 600, r'$M_{r}<-18$', fontsize=18) 
+        if obs == "gmf":
+          ax.set_xlabel(r'$N$', fontsize=27)
+          ax.set_ylabel(r'$g(N)$', fontsize=27)
+          ax.set_yscale('log') 
+          ax.set_xscale('log')
+          ax.set_xlim([1.5, 100.])
+          ax.set_ylim([10**-8., 10**-2.])
+          ax.text(40, .002, r'$M_{r}<-18$', fontsize=18) 
         ax = plt.subplot(gs[1])
         a, b, c, d, e = np.percentile(file19, [2.5, 16, 50, 84, 97.5], axis=0) 
-        ax.fill_between(rbin19, a, e, color=pretty_colors[3], alpha=0.3, edgecolor="none") 
-        ax.fill_between(rbin19, b, d, color=pretty_colors[3], alpha=0.5, edgecolor="none")
+        ax.fill_between(rbin19, a, e, color=pretty_colors[1], alpha=0.4, edgecolor="none") 
+        ax.fill_between(rbin19, b, d, color=pretty_colors[1], alpha=0.7, edgecolor="none")
 
-        ax.errorbar(rbin19, data19, err19, fmt="o", color='k', markersize=0, lw=0, capsize=3, elinewidth=1.5)
+        ax.errorbar(rbin19, data19, yerr=err19, fmt="o", color='k', markersize=0, lw=0, capsize=3, elinewidth=1.5)
 
         ax.scatter(rbin19, data19, c='k', s=10, lw=0)
-        ax.set_yscale('log') 
-        ax.set_xscale('log')
-        ax.set_xticklabels([])
-        ax.set_xlim([0.05, 25.])
-        ax.set_ylim([0.09, 1000.])
-        
+        if obs == "wp":
+          ax.set_xlabel(r'$r_{p} \; [\mathrm{Mpc}\; h^{-1}]$', fontsize=27)
+          ax.set_yscale('log') 
+          ax.set_xscale('log')
+          ax.set_yticklabels([])
+          ax.set_xlim([0.05, 30.])
+          ax.set_ylim([0.5, 1000.])
+          ax.text(6, 600, r'$M_{r}<-19$', fontsize=18) 
+        if obs == "gmf":
+          ax.set_xlabel(r'$N$', fontsize=27)
+          ax.set_yscale('log') 
+          ax.set_xscale('log')
+          ax.set_yticklabels([])
+          ax.set_xlim([1.5, 100.])
+          ax.set_ylim([10**-8., 10**-2.])
+          ax.text(40, .002, r'$M_{r}<-19$', fontsize=18) 
         ax = plt.subplot(gs[2])
         a, b, c, d, e = np.percentile(file20, [2.5, 16, 50, 84, 97.5], axis=0) 
-        ax.fill_between(rbin20, a, e, color=pretty_colors[3], alpha=0.3, edgecolor="none") 
-        ax.fill_between(rbin20, b, d, color=pretty_colors[3], alpha=0.5, edgecolor="none")
+        ax.fill_between(rbin20, a, e, color=pretty_colors[1], alpha=0.4, edgecolor="none") 
+        ax.fill_between(rbin20, b, d, color=pretty_colors[1], alpha=0.7, edgecolor="none")
 
-        ax.errorbar(rbin20, data20, err20, fmt="o", color='k', markersize=0, lw=0, capsize=3, elinewidth=1.5)
+        ax.errorbar(rbin20, data20, yerr=err20, fmt="o", color='k', markersize=0, lw=0, capsize=3, elinewidth=1.5)
 
-        ax.scatter(r_bin, xi_data, c='k', s=10, lw=0)
-        ax.set_yscale('log') 
-        ax.set_xscale('log')
-        ax.set_xticklabels([])
-        ax.set_xlim([0.05, 25.])
-        ax.set_ylim([0.09, 1000.])
-
-        fig.subplots_adjust(wspace=0.05, hspace=0.0)
+        ax.scatter(rbin20, data20, c='k', s=10, lw=0)
+        if obs == "wp":
+          ax.set_xlabel(r'$r_{p} \; [\mathrm{Mpc}\; h^{-1}]$', fontsize=27)
+          ax.set_yscale('log') 
+          ax.set_xscale('log')
+          ax.set_yticklabels([])
+          ax.set_xlim([0.05, 30.])
+          ax.set_ylim([0.5, 1000.])
+          ax.text(6, 600, r'$M_{r}<-20$', fontsize=18) 
+        if obs == "gmf":
+          ax.set_xlabel(r'$N$', fontsize=27)
+          ax.set_yscale('log') 
+          ax.set_xscale('log')
+          ax.set_yticklabels([])
+          ax.set_xlim([1.5, 100.])
+          ax.set_ylim([10**-8., 10**-2.])
+          ax.text(40, .002, r'$M_{r}<-20$', fontsize=18) 
+        fig.subplots_adjust(wspace=0.0, hspace=0.0)
         fig_name = ''.join([ut.fig_dir(), 
         'paper', 
         '.model.',
@@ -306,11 +352,11 @@ def plot_occupations(filename, Mr, nburnins, nchains, assembly = True , clotter 
 if __name__=='__main__':
 
    directory = "/export/bbq2/mj/chains/"
-   filename = "mcmc_chain_Mr19.0.hdf5"
+   filename = "group_mcmc_chain_Mr18.0.hdf5"
    filename = directory+filename
-   Mr = 19.0
-   obs , model = "wp" , "dec"
-   nchains = 22000
-   nburnins = 21998
-   model_predictions(filename, Mr, nburnins, nchains, obs, model)   
-
+   Mr = 18.
+   obs , model = "gmf" , "dec"
+   nchains = 2100
+   nburnins = 2090
+   #model_predictions(filename, Mr, nburnins, nchains, obs, model)   
+   plot_model_prediction(obs = "gmf", model= "dec", clotter = True)
