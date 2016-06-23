@@ -125,6 +125,185 @@ def occupation_predictions(filename, Mr, nburnins, nchains , obs = "wp", model =
     return None 
 
 
+def total_occupation_predictions(filename, Mr, nburnins, nchains , obs = "wp", model = "dec"):
+
+    npts = 2e3
+    mass = np.logspace(10, 14, npts)
+    
+    if model == "dec":
+          mod = hod_model(Mr)
+    if model == "hod":
+          mod = hod_model(Mr)
+    
+    sample = h5py.File(filename , "r")["mcmc"][nburnins:nchains]
+    sample = sample.reshape(sample.shape[0]*sample.shape[1] , sample.shape[2]) 
+    
+    if model == "dec":
+        
+    	ntot_dec = []
+        #nsat_dec = []
+        #ncen_dec = [] 
+
+        for i in xrange(len(sample)):
+         
+          print i
+       
+          mod.param_dict['logM0'] =  sample[i][0]
+          mod.param_dict['sigma_logM'] =  sample[i][1]
+          mod.param_dict['logMmin'] =  sample[i][2]
+	  mod.param_dict['alpha'] =  sample[i][3]
+	  mod.param_dict['logM1'] =  sample[i][4]
+          
+          ntot_dec.append(mod.mean_occupation_centrals(prim_haloprop = mass) + mod.mean_occupation_satellites(prim_haloprop = mass))
+          #ncen_dec.append(mod.mean_occupation_centrals(prim_haloprop = mass))
+          #nsat_dec.append(mod.mean_occupation_satellites(prim_haloprop = mass))
+         
+        np.savetxt("results/ntot_"+obs+"_"+model+"_"+str(Mr)+".dat" , np.array(ntot_dec)) 
+        #np.savetxt("results/ncen_"+obs+"_"+model+"_"+str(Mr)+".dat" , np.array(ncen_dec)) 
+        #np.savetxt("results/nsat_"+obs+"_"+model+"_"+str(Mr)+".dat" , np.array(nsat_dec)) 
+
+    if model == "hod":
+
+    	ntot_hod = []
+        #nsat_hod = []
+        #ncen_hod = [] 
+
+        for i in xrange(len(sample)):
+         
+          print i
+       
+          mod.param_dict['logM0'] =  sample[i][0]
+          mod.param_dict['sigma_logM'] =  sample[i][1]
+          mod.param_dict['logMmin'] =  sample[i][2]
+	  mod.param_dict['alpha'] =  sample[i][3]
+	  mod.param_dict['logM1'] =  sample[i][4]
+          
+          ntot_hod.append(mod.mean_occupation_centrals(prim_haloprop = mass) + mod.mean_occupation_satellites(prim_haloprop = mass))
+          #ncen_hod.append(mod.mean_occupation_centrals(prim_haloprop = mass))
+          #nsat_hod.append(mod.mean_occupation_satellites(prim_haloprop = mass))
+         
+        np.savetxt("results/ntot_"+obs+"_"+model+"_"+str(Mr)+".dat" , np.array(ntot_hod)) 
+        #np.savetxt("results/ncen_"+obs+"_"+model+"_"+str(Mr)+".dat" , np.array(ncen_hod)) 
+        #np.savetxt("results/nsat_"+obs+"_"+model+"_"+str(Mr)+".dat" , np.array(nsat_hod)) 
+ 
+    return None 
+
+
+
+def plot_occupations_total(obs = "gmf", clotter = True):
+
+    npts = 2e3
+    mass = np.logspace(10, 14, npts)
+    pretty_color = prettycolors()
+    if clotter == False:
+
+        print "running compute_occupation_prediction first"
+
+    else:
+
+
+       ylabel = r'$\langle N_{\rm g}(M_{h})\rangle$'
+       xlabel = r'$M_{h}\; [h^{-1} \; M_{\odot}]$'
+
+
+       totdec_18 = np.loadtxt("results/ntot_"+obs+"_dec_18.0.dat")
+       totdec_19 = np.loadtxt("results/ntot_"+obs+"_dec_19.0.dat")
+       totdec_20 = np.loadtxt("results/ntot_"+obs+"_dec_20.0.dat") 
+         
+       tothod_18 = np.loadtxt("results/ntot_"+obs+"_hod_18.0.dat")
+       tothod_19 = np.loadtxt("results/ntot_"+obs+"_hod_19.0.dat")
+       tothod_20 = np.loadtxt("results/ntot_"+obs+"_hod_20.0.dat") 
+       
+       fig = plt.figure(1, figsize=(15,5))
+       gs = gridspec.GridSpec(1, 3)# height_ratios=[2.5, 1], width_ratios=[1,1])  
+       pretty_colors=prettycolors()
+      
+       ##### MR18 DECvsHOD ######
+
+       ax = plt.subplot(gs[0])
+
+       a_dec, b_dec, c_dec = np.percentile(totdec_18, [16, 50, 84], axis=0) 
+       a_hod, b_hod, c_hod = np.percentile(tothod_18, [16, 50, 84], axis=0) 
+
+       ax.plot(mass, b_dec, color=pretty_colors[1], linewidth=2.) 
+       ax.plot(mass, b_hod, color=pretty_colors[7], linewidth=2.)
+       ax.fill_between(mass, a_dec, c_dec, color=pretty_colors[1], alpha=0.3, edgecolor=pretty_colors[1] ) 
+       ax.fill_between(mass, a_hod, c_hod, color=pretty_colors[7], alpha=0.3, edgecolor=pretty_colors[7]) 
+ 
+       blue_line = mlines.Line2D([], [], ls = '-', c = pretty_color[1], linewidth=2, label = '$Heaviside$ $AB$')
+       red_line = mlines.Line2D([], [], ls = '-', c = pretty_color[7], linewidth=2, label = '$Standard$ $HOD$')
+       import matplotlib as mpl
+       #mpl.rc('font',family='serif')
+       plt.legend(handles=[blue_line, red_line], frameon=False, loc= 2 , fontsize=15) 
+       ax.set_ylabel(ylabel, fontsize=27)
+       ax.set_xlabel(xlabel, fontsize=27)
+       ax.set_yscale('log') 
+       ax.set_xscale('log')
+       ax.set_xlim([10**10, 8. * 10**13]) 
+       ax.set_ylim([0.1,100])
+       ax.text(4 * 10**12. , 50, r'$M_{r}<-18$', fontsize=18) 
+
+       ##### Mr19 DECvsHOD ######
+
+       ax = plt.subplot(gs[1])
+
+       a_dec, b_dec, c_dec = np.percentile(totdec_19, [16, 50, 84], axis=0) 
+       a_hod, b_hod, c_hod = np.percentile(tothod_19, [16, 50, 84], axis=0) 
+
+       ax.plot(mass, b_dec, color=pretty_colors[1], linewidth=2.) 
+       ax.plot(mass, b_hod, color=pretty_colors[7], linewidth=2.)
+       ax.fill_between(mass, a_dec, c_dec, color=pretty_colors[1], alpha=0.3, edgecolor=pretty_colors[1] ) 
+       ax.fill_between(mass, a_hod, c_hod, color=pretty_colors[7], alpha=0.3, edgecolor=pretty_colors[7]) 
+ 
+       blue_line = mlines.Line2D([], [], ls = '-', c = pretty_color[1], linewidth=2, label = '$Heaviside$ $AB$ ')
+       red_line = mlines.Line2D([], [], ls = '-', c = pretty_color[7], linewidth=2, label = '$Standard$ $HOD$')
+       import matplotlib as mpl
+       #mpl.rc('font',family='serif')
+       #plt.legend(handles=[blue_line, red_line], frameon=False, loc= 2 , fontsize=15) 
+       ax.set_xlabel(xlabel, fontsize=27)
+       ax.set_yscale('log') 
+       ax.set_xscale('log')
+       ax.set_xlim([10**10, 8. * 10**13]) 
+       ax.set_ylim([0.1,100])
+       ax.text(4 * 10**12. , 50, r'$M_{r}<-19$', fontsize=18) 
+       ax.set_yticklabels([])
+
+       ##### Mr20 DECvsHOD #######      
+ 
+       ax = plt.subplot(gs[2])
+       a_dec, b_dec, c_dec = np.percentile(totdec_20, [16, 50, 84], axis=0) 
+       a_hod, b_hod, c_hod = np.percentile(tothod_20, [16, 50, 84], axis=0) 
+
+       ax.plot(mass, b_dec, color=pretty_colors[1], linewidth=2.) 
+       ax.plot(mass, b_hod, color=pretty_colors[7], linewidth=2.)
+       ax.fill_between(mass, a_dec, c_dec, color=pretty_colors[1], alpha=0.3, edgecolor=pretty_colors[1] ) 
+       ax.fill_between(mass, a_hod, c_hod, color=pretty_colors[7], alpha=0.3, edgecolor=pretty_colors[7]) 
+ 
+       blue_line = mlines.Line2D([], [], ls = '-', c = pretty_color[1], linewidth=2, label = '$Heaviside$ $AB$')
+       red_line = mlines.Line2D([], [], ls = '-', c = pretty_color[7], linewidth=2, label = '$Standard$ $HOD$')
+       import matplotlib as mpl
+       #mpl.rc('font',family='serif')
+       #plt.legend(handles=[blue_line, red_line], frameon=False, loc= 2 , fontsize=15) 
+       ax.set_xlabel(xlabel, fontsize=27)
+       ax.set_yscale('log') 
+       ax.set_xscale('log')
+       ax.set_xlim([10**10, 8. * 10**13]) 
+       ax.set_ylim([0.1,100])
+       ax.text(4 * 10**12. , 50, r'$M_{r}<-20$', fontsize=18) 
+       ax.set_yticklabels([])
+       
+       fig.subplots_adjust(wspace=0.0, hspace=0.0)
+       fig_name = ''.join([ut.fig_dir(), 
+        'paper', 
+        '.abvshod.',
+        obs,
+        '.pdf'])
+       fig.savefig(fig_name, bbox_inches='tight')
+       plt.close()
+       
+    return None 
+
+
 def plot_occupations_decs(obs = "gmf", galtype = "ncen", clotter = True):
 
     npts = 2e3
@@ -247,11 +426,13 @@ def plot_occupations_decs(obs = "gmf", galtype = "ncen", clotter = True):
 if __name__=='__main__':
 
    directory = "/export/bbq2/mj/chains/"
-   filename = "group_mcmc_chain_Mr18.0.hdf5"
+   filename = "mcmc_chain_Mr20.0.hdf5"
    filename = directory+filename
-   Mr = 18.0
-   obs , model = "gmf" , "dec"
-   nchains = 2050
-   nburnins = 2040
+   Mr = 20.0
+   obs , model = "wp" , "dec"
+   nchains = 19000
+   nburnins = 18990
    #occupation_predictions(filename, Mr, nburnins, nchains , obs , model) 
-   plot_occupations_decs(obs = "gmf", galtype = "nsat", clotter = True)
+   #plot_occupations_decs(obs = "gmf", galtype = "nsat", clotter = True)
+   #total_occupation_predictions(filename, Mr, nburnins, nchains , obs , model)
+   plot_occupations_total(obs = "wp", clotter = True)
