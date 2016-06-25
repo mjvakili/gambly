@@ -1,5 +1,11 @@
 '''
-Plotting modules
+Genrating posterior model prediction figures for the paper
+
+author: MJ
+
+pretty_colors[1] for decorated model and 
+pretty_colors[5] for standard hod models
+
 '''
 from halotools.sim_manager import CachedHaloCatalog
 import os.path as path
@@ -157,8 +163,8 @@ def plot_model_prediction(obs = "wp", model= "dec", clotter = True):
         a, b, c, d, e = np.percentile(file18, [2.5, 16, 50, 84, 97.5], axis=0) 
         
         print a.shape
-        ax.fill_between(rbin18, a, e, color=pretty_colors[5], alpha=0.4, edgecolor="none") 
-        ax.fill_between(rbin18, b, d, color=pretty_colors[5], alpha=0.7, edgecolor="none")
+        ax.fill_between(rbin18, a, e, color=pretty_colors[1], alpha=0.4, edgecolor="none") 
+        ax.fill_between(rbin18, b, d, color=pretty_colors[1], alpha=0.7, edgecolor="none")
 
         ax.errorbar(rbin18, data18, yerr=err18, fmt="o", color='k', markersize=0, lw=0, capsize=3, elinewidth=1.5)
         ax.scatter(rbin18, data18, c='k', s=10, lw=0)
@@ -178,15 +184,15 @@ def plot_model_prediction(obs = "wp", model= "dec", clotter = True):
           ax.set_ylabel(r'$g(N) \; [\mathrm{Mpc}^{-3}\; h^{3}]$', fontsize=27)
           ax.set_yscale('log') 
           ax.set_xscale('log')
-          ax.set_xlim([1., 99.])
+          ax.set_xlim([1.5, 99.])
           ax.set_ylim([10**-8., 10**-2.])
-          plt.xticks(fontsize=20)
+          plt.xticks([2 , 10, 50],[2,10,50],fontsize=20)
           plt.yticks(fontsize=20)
           ax.text(20, .002, r'$M_{r}<-18$', fontsize=25) 
         ax = plt.subplot(gs[1])
         a, b, c, d, e = np.percentile(file19, [2.5, 16, 50, 84, 97.5], axis=0) 
-        ax.fill_between(rbin19, a, e, color=pretty_colors[5], alpha=0.4, edgecolor="none") 
-        ax.fill_between(rbin19, b, d, color=pretty_colors[5], alpha=0.7, edgecolor="none")
+        ax.fill_between(rbin19, a, e, color=pretty_colors[1], alpha=0.4, edgecolor="none") 
+        ax.fill_between(rbin19, b, d, color=pretty_colors[1], alpha=0.7, edgecolor="none")
 
         ax.errorbar(rbin19, data19, yerr=err19, fmt="o", color='k', markersize=0, lw=0, capsize=3, elinewidth=1.5)
 
@@ -205,14 +211,15 @@ def plot_model_prediction(obs = "wp", model= "dec", clotter = True):
           ax.set_yscale('log') 
           ax.set_xscale('log')
           ax.set_yticklabels([])
+          plt.xticks([2 , 10, 50],[2,10,50],fontsize=20)
           plt.xticks(fontsize=20)
-          ax.set_xlim([1., 99.])
+          ax.set_xlim([1.5, 99.])
           ax.set_ylim([10**-8., 10**-2.])
           ax.text(20, .002, r'$M_{r}<-19$', fontsize=25) 
         ax = plt.subplot(gs[2])
         a, b, c, d, e = np.percentile(file20, [2.5, 16, 50, 84, 97.5], axis=0) 
-        ax.fill_between(rbin20, a, e, color=pretty_colors[5], alpha=0.4, edgecolor="none") 
-        ax.fill_between(rbin20, b, d, color=pretty_colors[5], alpha=0.7, edgecolor="none")
+        ax.fill_between(rbin20, a, e, color=pretty_colors[1], alpha=0.4, edgecolor="none") 
+        ax.fill_between(rbin20, b, d, color=pretty_colors[1], alpha=0.7, edgecolor="none")
 
         ax.errorbar(rbin20, data20, yerr=err20, fmt="o", color='k', markersize=0, lw=0, capsize=3, elinewidth=1.5)
 
@@ -231,8 +238,9 @@ def plot_model_prediction(obs = "wp", model= "dec", clotter = True):
           ax.set_yscale('log') 
           ax.set_xscale('log')
           ax.set_yticklabels([])
+          plt.xticks([2 , 10, 50],[2,10,50],fontsize=20)
           plt.xticks(fontsize=20)
-          ax.set_xlim([1., 99.])
+          ax.set_xlim([1.5, 99.])
           ax.set_ylim([10**-8., 10**-2.])
           ax.text(20, .002, r'$M_{r}<-20$', fontsize=25) 
         fig.subplots_adjust(wspace=0.0, hspace=0.0)
@@ -410,7 +418,7 @@ def plot_wp_prediction(obs = "wp", model= "dec", clotter = True):
           ax.set_ylabel(r'$g(N) \; [\mathrm{Mpc}^{-3}\; h^{3}]$', fontsize=27)
           ax.set_yscale('log') 
           ax.set_xscale('log')
-          ax.set_xlim([1., 99.])
+          ax.set_xlim([.5, 99.])
           ax.set_ylim([10**-8., 10**-2.])
           plt.xticks(fontsize=20)
           plt.yticks(fontsize=20)
@@ -501,4 +509,5 @@ if __name__=='__main__':
    nchains = 19000
    nburnins = 18993
    #model_predictions(filename, Mr, nburnins, nchains, obs, model)   
-   plot_model_prediction(obs = "gmf", model= "hod", clotter = True)
+   plot_model_prediction(obs = "gmf", model= "dec", clotter = True)
+   plot_wp_prediction(obs = "wp", model= "dec", clotter = True)
