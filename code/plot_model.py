@@ -43,7 +43,7 @@ from ChangTools.plotting import prettycolors
 halocat = CachedHaloCatalog(simname = 'bolplanck', redshift = 0, halo_finder = 'rockstar')
 import os
 import os.path as path 
-
+from numpy.linalg import solve
 import h5py
 import corner
 import numpy as np
@@ -398,8 +398,8 @@ def plot_wp_prediction(obs = "wp", model= "dec", clotter = True):
         ax = plt.subplot(gs[0,2]) #Mr19.
 
         a, b, c, d, e = np.percentile(file19, [2.5, 16, 50, 84, 97.5], axis=0) 
-        ax.fill_between(rbin19, a, e, color=pretty_colors[5], alpha=0.4, edgecolor="none") 
-        ax.fill_between(rbin19, b, d, color=pretty_colors[5], alpha=0.7, edgecolor="none")
+        ax.fill_between(rbin19, a, e, color=pretty_colors[1], alpha=0.4, edgecolor="none") 
+        ax.fill_between(rbin19, b, d, color=pretty_colors[1], alpha=0.7, edgecolor="none")
         ax.errorbar(rbin19, data19, yerr=err19, fmt="o", color='k', markersize=0, lw=0, capsize=3, elinewidth=1.5)
         ax.scatter(rbin19, data19, c='k', s=10, lw=0)
         if obs == "wp":
@@ -427,8 +427,8 @@ def plot_wp_prediction(obs = "wp", model= "dec", clotter = True):
         ax = plt.subplot(gs[1,0]) #Mr19.5
 
         a, b, c, d, e = np.percentile(file195, [2.5, 16, 50, 84, 97.5], axis=0) 
-        ax.fill_between(rbin195, a, e, color=pretty_colors[5], alpha=0.4, edgecolor="none") 
-        ax.fill_between(rbin195, b, d, color=pretty_colors[5], alpha=0.7, edgecolor="none")
+        ax.fill_between(rbin195, a, e, color=pretty_colors[1], alpha=0.4, edgecolor="none") 
+        ax.fill_between(rbin195, b, d, color=pretty_colors[1], alpha=0.7, edgecolor="none")
         ax.errorbar(rbin195, data195, yerr=err195, fmt="o", color='k', markersize=0, lw=0, capsize=3, elinewidth=1.5)
         ax.scatter(rbin195, data195, c='k', s=10, lw=0)
         if obs == "wp":
@@ -457,8 +457,8 @@ def plot_wp_prediction(obs = "wp", model= "dec", clotter = True):
         ax = plt.subplot(gs[1,1]) #Mr20.0
 
         a, b, c, d, e = np.percentile(file20, [2.5, 16, 50, 84, 97.5], axis=0) 
-        ax.fill_between(rbin20, a, e, color=pretty_colors[5], alpha=0.4, edgecolor="none") 
-        ax.fill_between(rbin20, b, d, color=pretty_colors[5], alpha=0.7, edgecolor="none")
+        ax.fill_between(rbin20, a, e, color=pretty_colors[1], alpha=0.4, edgecolor="none") 
+        ax.fill_between(rbin20, b, d, color=pretty_colors[1], alpha=0.7, edgecolor="none")
         ax.errorbar(rbin20, data20, yerr=err20, fmt="o", color='k', markersize=0, lw=0, capsize=3, elinewidth=1.5)
         ax.scatter(rbin20, data20, c='k', s=10, lw=0)
         if obs == "wp":
@@ -498,16 +498,109 @@ def plot_wp_prediction(obs = "wp", model= "dec", clotter = True):
     plt.close()
     return None 
 
+def compute_chisq_aic_bic(filename, nchains, nburnins, Mr, obs, model):
 
+    import data as data_wp
+    import data_group as data_group
+
+    sample = h5py.File(filename , "r")["mcmc"][nburnins:nchains]
+    sample = sample.reshape(sample.shape[0]*sample.shape[1] , sample.shape[2])
+    bestfit = np.median(sample, axis = 0)
+    print bestfit
+
+    for i in range(sample.shape[1]):
+        n, b, patches = plt.hist(sample[:,i], 20)
+        bin_max = np.argmax(n)
+        print bin_max
+        print b[bin_max]
+        #bin_max = np.where(n == n.max())
+        #print 'maxbin', b[bin_max][0]
+        bestfit[i] = b[bin_max]
+    #bestfit = np.mean(sample, axis = 0)
+    #print bestfit
+    
+    bestfit = np.median(sample, axis = 0)
+    
+    if obs == "wp":
+
+       data_obs = data_wp.load_data(Mr)
+       cov_obs = data_wp.load_covariance(Mr)
+
+       if model == "dec":
+          mod = dec_wp(Mr)
+          npar = 7
+       if model == "hod":
+          mod = hod_wp(Mr)
+          npar = 5
+ 
+    if obs == "gmf":
+
+       data_obs = data_group.load_data(Mr)
+       cov_obs = data_group.load_covariance(Mr, pois = True)
+
+       if model == "dec":
+          mod = dec_gmf(Mr)
+          npar = 7
+       if model == "hod":
+          mod = hod_gmf(Mr)
+          npar = 5
+
+    n_ens , w_ens = [] , []
+
+    for i in range(21):
+
+        a , b = mod._sum_stat(bestfit , prior_range = None)
+        n_ens.append(a)
+        w_ens.append(b)
+    n_opt , w_opt = np.mean(np.array(n_ens) , axis=0) , np.mean(np.array(w_ens) , axis=0)
+    model_obs = [n_opt , w_opt]
+
+    if obs == "gmf":
+  
+       model_nbar , model_gmf = model_obs[0] , model_obs[1]
+       data_nbar , data_gmf = data_obs[0] , data_obs[1]
+       nbar_var , gmf_cov = cov_obs[0] , cov_obs[1]
+       res_nbar = model_nbar - data_nbar
+       res_gmf = model_gmf - data_gmf
+       chisq_nbar = (res_nbar**2.)/(nbar_var)
+       chisq_gmf = np.sum((res_gmf**2./gmf_cov))
+       chisq = chisq_nbar + chisq_gmf
+       ndata = 1. + len(res_gmf)      
+ 
+    if obs == "wp":
+
+       model_nbar , model_wp = model_obs[0] , model_obs[1]
+       data_nbar , data_wp = data_obs[0] , data_obs[1]
+       nbar_var , wp_cov = cov_obs[0] , cov_obs[1]
+       res_nbar = model_nbar - data_nbar
+       res_wp = model_wp - data_wp
+       f_bias = (400. - len(res_wp) -2.)/(400. - 1.)
+       chisq_nbar = (res_nbar**2.)/(nbar_var)
+       chisq_wp = f_bias * np.sum(np.dot(res_wp , solve(wp_cov , res_wp)))
+       chisq = chisq_nbar + chisq_wp
+       ndata = 1. + len(res_wp)
+
+    aic1 = chisq + 2. * npar
+    aic2 = chisq + (2. * npar * ndata)/(ndata - npar -1.)    
+    bic = chisq + npar * np.log(ndata)
+    print chisq , aic1 , aic2 , bic
+ 
+    goodness = np.array([chisq, aic1, aic2, bic])
+    np.savetxt("results/goodness_"+obs+"_"+model+"_"+str(Mr)+".dat" , goodness) 
+
+    return None
+
+ 
 if __name__=='__main__':
 
    directory = "/export/bbq2/mj/chains/"
-   filename = "mcmc_chain_Mr19.5.hdf5"
+   filename = "mcmc_chain_Mr18.5.hdf5"
    filename = directory+filename
-   Mr = 19.5
+   Mr = 18.5
    obs , model = "wp" , "dec"
-   nchains = 19000
-   nburnins = 18993
+   nchains = 2000
+   nburnins = 800
+   compute_chisq_aic_bic(filename , nchains, nburnins, Mr, obs, model)
    #model_predictions(filename, Mr, nburnins, nchains, obs, model)   
-   plot_model_prediction(obs = "gmf", model= "dec", clotter = True)
-   plot_wp_prediction(obs = "wp", model= "dec", clotter = True)
+   #plot_model_prediction(obs = "gmf", model= "dec", clotter = True)
+   #plot_wp_prediction(obs = "wp", model= "dec", clotter = True)
