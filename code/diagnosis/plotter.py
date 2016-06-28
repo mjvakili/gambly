@@ -115,7 +115,7 @@ def plot_time_mcmc(Nwalkers, Nchains, filename):
     for i in xrange(npars):
         axes[i].plot(sample[:, :, i], color="b", alpha=.4 , lw = .5)
 	axes[i].yaxis.set_major_locator(MaxNLocator(5))
-        #axes[i].set_ylim([plot_range[i,0], plot_range[i,1]])
+        axes[i].set_ylim([prior_min[i], prior_max[i]])
         axes[i].set_xlim(0, Nchains)
         #axes[i].set_ylabel(labels[i], fontsize=25)
 
@@ -125,7 +125,83 @@ def plot_time_mcmc(Nwalkers, Nchains, filename):
     plt.savefig(fig_file)
     plt.close()
 
-def plot_corner_mcmc(Nchains , Nburns, Mr , filename):
+def plot_overlay_corner(Nchains1 , Nchains2, Nburns1, Nburns2, Mr , style , filename1, filename2):
+
+
+    sample1 = h5py.File(filename1 , "r")["mcmc"]
+    sample1 = sample1[Nburns1:Nchains1, : , :]
+    sample1 = sample1.reshape(sample1.shape[0]*sample1.shape[1] , sample1.shape[2])
+   
+    sample2 = h5py.File(filename2 , "r")["mcmc"]
+    sample2 = sample2[Nburns2:Nchains2, : , :]
+    sample2 = sample2.reshape(sample2.shape[0]*sample2.shape[1] , sample2.shape[2])
+
+    sample3 = np.zeros((sample2.shape[0] , sample1.shape[1]))
+    sample3[:,0:5] = sample2
+    sample3[:,5:7] += 110 
+    prior_range = np.zeros((len(prior_min),2))
+    prior_range[:,0] = np.array(prior_min)
+    prior_range[:,1] = np.array(prior_max) 
+    prior_range2 = prior_range.copy()
+    prior_range2[5,0] = 100
+    prior_range2[5,1] = 120
+    prior_range2[6,0] = 100
+    prior_range2[6,1] = 120
+    
+    fig = corner.corner(
+            sample3,
+            labels=[
+                r'$\log\;\mathcal{M}_{0}}$',
+                r'$\sigma_\mathtt{log\;M}}$',
+                r'$\log\;\mathcal{M}_\mathtt{min}}$',
+                r'$\alpha$',
+                r'$\log\;\mathcal{M}_{1}}$',
+                r'$\mathcal{A}_{\rm cen}}$',
+                r'$\mathcal{A}_{\rm sat}}$'
+                ],
+            label_kwargs={'fontsize': 25},
+            range=prior_range2,
+            quantiles=[0.5],
+            title_args={"fontsize": 12},
+            plot_datapoints=False,
+            fill_contours=True,
+            levels=[0.68, 0.95],
+            color='darkorchid',
+            scale_hist = False,
+            bins=20,
+            smooth = 1.)
+
+    corner.corner(
+            sample1,
+            labels=[
+                r'$\log\;\mathcal{M}_{0}}$',
+                r'$\sigma_\mathtt{log\;M}}$',
+                r'$\log\;\mathcal{M}_\mathtt{min}}$',
+                r'$\alpha$',
+                r'$\log\;\mathcal{M}_{1}}$',
+                r'$\mathcal{A}_{\rm cen}}$',
+                r'$\mathcal{A}_{\rm sat}}$'
+                ],
+            label_kwargs={'fontsize': 25},
+            range=prior_range,
+            quantiles=[0.5],
+            title_args={"fontsize": 12},
+            plot_datapoints=False,
+            fill_contours=True,
+            levels=[0.68, 0.95],
+            color='darkcyan',
+            scale_hist = False,
+            bins=20,
+            smooth=1. , fig = fig)
+
+    fig_name = ''.join(['post',
+         str(Mr),str(style),  
+        '.pdf'])
+    fig.savefig(fig_name, bbox_inches='tight', dpi=150) 
+    plt.close()
+    return None
+ 
+def plot_corner_mcmc(Nchains , Nburns, Mr , style , filename):
 
     sample = h5py.File(filename , "r")["mcmc"]
     npars = sample.shape[2]
@@ -159,13 +235,54 @@ def plot_corner_mcmc(Nchains , Nburns, Mr , filename):
             levels=[0.68, 0.95],
             color='#ee6a50',
             bins=25,
-            smooth=0.5)
+            smooth=1.)
     fig_name = ''.join(['post',
-         str(Mr),  
+         str(Mr),str(style),  
         '.pdf'])
     fig.savefig(fig_name, bbox_inches='tight', dpi=150) 
     plt.close()
     return None 
+
+def plot_corner_mcmc_hod(Nchains , Nburns, Mr , style , filename):
+
+    sample = h5py.File(filename , "r")["mcmc"]
+    npars = sample.shape[2]
+    nwalkers = sample.shape[1]
+    sample = sample[Nburns:Nchains, : , :]
+    sample = sample.reshape(sample.shape[0]*sample.shape[1] , sample.shape[2])
+    print sample.shape    
+    #prior_min, prior_max = PriorRange('first_try' , Mr)
+    prior_range = np.zeros((len(prior_min)-2,2))
+    prior_range[:,0] = np.array(prior_min)[:-2]
+    prior_range[:,1] = np.array(prior_max)[:-2] 
+
+    fig = corner.corner(
+            sample,
+            labels=[
+                r'$\log\;\mathcal{M}_{0}}$',
+                r'$\sigma_\mathtt{log\;M}}$',
+                r'$\log\;\mathcal{M}_\mathtt{min}}$',
+                r'$\alpha$',
+                r'$\log\;\mathcal{M}_{1}}$'
+                ],
+            label_kwargs={'fontsize': 25},
+            range=prior_range,
+            quantiles=[0.16,0.5,0.84],
+            show_titles=True,
+            title_args={"fontsize": 12},
+            plot_datapoints=False,
+            fill_contours=True,
+            levels=[0.68, 0.95],
+            color='#ee6a50',
+            bins=25,
+            smooth=1.)
+    fig_name = ''.join(['post',
+         str(Mr),str(style),  
+        '.pdf'])
+    fig.savefig(fig_name, bbox_inches='tight', dpi=150) 
+    plt.close()
+    return None 
+
 
 def plot_predictions(Mr, nburnins, nchains, assembly = True, clotter = False):
 
@@ -226,7 +343,7 @@ def plot_predictions(Mr, nburnins, nchains, assembly = True, clotter = False):
         plt.close()
         return None
 
-def plot_occupations(Mr, nburnins, nchains, assembly = True , clotter = False):
+def plot_occupations(Mr, nburnins, nchains, assembly = True , clotter = False , style = 'sdss'):
 
     model = composite_model(Mr)
     npts = 1e3
@@ -236,7 +353,7 @@ def plot_occupations(Mr, nburnins, nchains, assembly = True , clotter = False):
     fig = plt.figure(1, figsize=(16,12))
 
     if (assembly == True):
-        filename = 'Mr'+str(Mr)+'.hdf5'
+        filename = 'mcmc_chain_Mr'+str(Mr)+'_style_'+str(style)+'.hdf5'
     else:
         filename = 'adhoc_Mr'+str(Mr)+'.hdf5'
 
@@ -269,17 +386,17 @@ def plot_occupations(Mr, nburnins, nchains, assembly = True , clotter = False):
     	nsat_young = np.array(nsat_young)
     	ncen_old = np.array(ncen_old)
     	ncen_young = np.array(ncen_young)
-    	np.savetxt("nsat_old.dat" , nsat_old)
-    	np.savetxt("nsat_young.dat" , nsat_young)
-    	np.savetxt("ncen_old.dat" , ncen_old)
-    	np.savetxt("ncen_young.dat" , ncen_young)
+    	np.savetxt("nsat_old"+str(Mr)+"_"+str(style)+".dat" , nsat_old)
+    	np.savetxt("nsat_young"+str(Mr)+"_"+str(style)+".dat" , nsat_young)
+    	np.savetxt("ncen_old"+str(Mr)+"_"+str(style)+".dat" , ncen_old)
+    	np.savetxt("ncen_young"+str(Mr)+"_"+str(style)+".dat" , ncen_young)
 
     else:
 
-       nsat_old = np.loadtxt("nsat_old.dat")
-       nsat_young = np.loadtxt("nsat_young.dat")
-       ncen_old = np.loadtxt("ncen_old.dat")
-       ncen_young = np.loadtxt("ncen_young.dat")
+       nsat_old = np.loadtxt("nsat_old"+str(Mr)+"_"+str(style)+".dat")
+       nsat_young = np.loadtxt("nsat_young"+str(Mr)+"_"+str(style)+".dat")
+       ncen_old = np.loadtxt("ncen_old"+str(Mr)+"_"+str(style)+".dat")
+       ncen_young = np.loadtxt("ncen_young"+str(Mr)+"_"+str(style)+".dat")
        
        a1, b1, c1 = np.percentile(nsat_young, [16, 50, 84], axis=0)
        a2, b2, c2 = np.percentile(nsat_old, [16, 50, 84], axis=0)
@@ -291,7 +408,7 @@ def plot_occupations(Mr, nburnins, nchains, assembly = True , clotter = False):
 
        xlabel = ax.set_xlabel(r'$M_{\rm vir} [M_{\odot}]$', fontsize=25)
        ylabel = ax.set_ylabel(r'$\langle N_{\rm s}\rangle$', fontsize=25)
-       title = ax.set_title(r'$\langle N_{\rm s} \rangle$ for $\mathrm{M_{r}}$ < -19', fontsize=20)
+       title = ax.set_title(r'$\langle N_{\rm s} \rangle$ for $\mathrm{M_{r}}$ < -'+str(Mr)+',catalog='+str(style) , fontsize=20)
 
        
        ax.plot(mass, b1, color='blue', linewidth=3.5)
@@ -310,14 +427,14 @@ def plot_occupations(Mr, nburnins, nchains, assembly = True , clotter = False):
        red_line = mlines.Line2D([], [], ls = '-', c = 'r', linewidth=3, label = 'low-concentration halos')
        black_line = mlines.Line2D([], [], ls = '--', c = 'k', linewidth=3, label = 'all halos')
        first_legend = plt.legend(handles=[blue_line, red_line, black_line], frameon=False, loc='best', fontsize=17)
-       fig.savefig('nsats.pdf', bbox_extra_artists=[xlabel, ylabel], bbox_inches='tight')
+       fig.savefig("nsats"+str(Mr)+"_"+str(style)+".pdf", bbox_extra_artists=[xlabel, ylabel], bbox_inches='tight')
        
        fig = plt.figure()
        ax = fig.add_subplot(111)
 
        xlabel = ax.set_xlabel(r'$M_{\rm vir} [M_{\odot}]$', fontsize=25)
        ylabel = ax.set_ylabel(r'$\langle N_{\rm c}\rangle$', fontsize=25)
-       title = ax.set_title(r'$\langle N_{\rm c} \rangle$ for $\mathrm{M_{r}}$ < -19', fontsize=20)
+       title = ax.set_title(r'$\langle N_{\rm c} \rangle$ for $\mathrm{M_{r}}$ < -'+str(Mr)+',catalog='+str(style), fontsize=20)
 
        
        ax.plot(mass, b3, color='blue', linewidth=3.5)
@@ -336,15 +453,26 @@ def plot_occupations(Mr, nburnins, nchains, assembly = True , clotter = False):
        red_line = mlines.Line2D([], [], ls = '-', c = 'r', linewidth=3, label = 'low-concentration halos')
        black_line = mlines.Line2D([], [], ls = '--', c = 'k', linewidth=3, label = 'all halos')
        first_legend = plt.legend(handles=[blue_line, red_line, black_line], frameon=False, loc='best', fontsize=17)
-       fig.savefig('ncens.pdf', bbox_extra_artists=[xlabel, ylabel], bbox_inches='tight')
+       fig.savefig("ncens"+str(Mr)+"_"+str(style)+".pdf", bbox_extra_artists=[xlabel, ylabel], bbox_inches='tight')
     return None 
 
 if __name__=='__main__':
-   #
-   filename = "Mr19.0.hdf5"
-   #filename = "mcmc_chain_Mr20.0.hdf5"
-   #filename = "../../dat/mcmc/mcmc_chain_Mr19.0.hdf5"
-   #plot_time_mcmc(Nwalkers = 24, Nchains = 50000, filename=filename)
-   plot_predictions(19.0 , 8000 , 20000, True , True)
-   #plot_occupations(19. , 19999 , 20000 , True , True)
-   #plot_corner_mcmc(Nchains = 45000 , Nburns=20000, Mr = 21, filename=filename)
+ 
+   dire = "/export/bbq2/mj/chains/"
+   #filename = "mcmc_chain_Mr19.0_style_AM.hdf5"
+   #filename = "Mr19.0-f.hdf5"
+   #filename = "Mr20.0-group.hdf5"
+
+   filename1 = dire+"mcmc_chain_Mr18.0.hdf5"
+   filename2 = dire+"adhoc_mcmc_chain_Mr18.0.hdf5"
+
+   Nchains1 , Nburns1 = 6500 , 4500
+   Nchains2 , Nburns2 = 2500 , 500
+   
+   Mr = 18.0
+   style = "over"
+   #plot_time_mcmc(Nwalkers = 140, Nchains = 2200, filename=filename)
+   #plot_predictions(19.0 , 8000 , 20000, True , True)
+   #plot_occupations(20. , 2000 , 2100 , True , True , "SHAM")
+   #plot_corner_mcmc_hod(Nchains = 3000 , Nburns = 500, Mr = 18.5, style = "wp-hod", filename=filename)
+   plot_overlay_corner(Nchains1 , Nchains2, Nburns1, Nburns2, Mr , style , filename1, filename2) 
