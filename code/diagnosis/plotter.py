@@ -127,6 +127,9 @@ def plot_time_mcmc(Nwalkers, Nchains, filename):
 
 def plot_overlay_corner(Nchains1 , Nchains2, Nburns1, Nburns2, Mr , style , filename1, filename2):
 
+    from truth import truth
+
+    
 
     sample1 = h5py.File(filename1 , "r")["mcmc"]
     sample1 = sample1[Nburns1:Nchains1, : , :]
@@ -166,7 +169,7 @@ def plot_overlay_corner(Nchains1 , Nchains2, Nburns1, Nburns2, Mr , style , file
             plot_datapoints=False,
             fill_contours=True,
             levels=[0.68, 0.95],
-            color='darkorchid',
+            color='#FF7F0E' ,
             scale_hist = False,
             bins=20,
             smooth = 1.)
@@ -189,10 +192,18 @@ def plot_overlay_corner(Nchains1 , Nchains2, Nburns1, Nburns2, Mr , style , file
             plot_datapoints=False,
             fill_contours=True,
             levels=[0.68, 0.95],
-            color='darkcyan',
+            color = '#1F77B4',
             scale_hist = False,
             bins=20,
             smooth=1. , fig = fig)
+ 
+    import matplotlib.lines as mlines
+
+    blue_line = mlines.Line2D([], [], color='#1F77B4' , label=r'$Heaviside \; \; AB$')
+    red_line = mlines.Line2D([], [], color='#FF7F0E' , label=r'$Standard \; \; HOD$')
+
+    #plt.legend(handles=[blue_line,red_line], bbox_to_anchor=(0., 2.0, 2., .0), loc= 5 )
+
 
     fig_name = ''.join(['post',
          str(Mr),str(style),  
@@ -463,14 +474,14 @@ if __name__=='__main__':
    #filename = "Mr19.0-f.hdf5"
    #filename = "Mr20.0-group.hdf5"
 
-   filename1 = dire+"mcmc_chain_Mr18.0.hdf5"
-   filename2 = dire+"adhoc_mcmc_chain_Mr18.0.hdf5"
+   filename1 = dire+"group_mcmc_chain_Mr20.0.hdf5"
+   filename2 = dire+"adhoc_group_mcmc_chain_Mr20.0.hdf5"
 
-   Nchains1 , Nburns1 = 6500 , 4500
-   Nchains2 , Nburns2 = 2500 , 500
+   Nchains1 , Nburns1 = 3100 , 1100
+   Nchains2 , Nburns2 = 2300 , 300
    
-   Mr = 18.0
-   style = "over"
+   Mr = 20.0
+   style = "gmf"
    #plot_time_mcmc(Nwalkers = 140, Nchains = 2200, filename=filename)
    #plot_predictions(19.0 , 8000 , 20000, True , True)
    #plot_occupations(20. , 2000 , 2100 , True , True , "SHAM")
