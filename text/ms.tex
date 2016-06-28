@@ -1,4 +1,5 @@
-\documentclass[12pt, preprint]{aastex}
+%%\documentclass[12pt, preprint]{aastex}
+\documentclass[12pt, preprint]{emulateapj}
 \usepackage[breaklinks,colorlinks, urlcolor=blue,citecolor=blue,linkcolor=blue]{hyperref}
 \usepackage{graphicx}	% For figures
 \usepackage{natbib}	% For citep and citep
@@ -92,7 +93,7 @@ and all cosmological parameters are set to the Planck 2013 best-fit estimates.
 \subsection{Halo occupation modeling}
 \subsubsection{standard HOD modeling}\label{subsubsec:hod}
 For our standard HOD modeling, HOD parameterization of cite[zheng07] is assumed. According to this parameterization, the occupation of the central galaxies follows a nearest-integer distribution, 
-and the occupation of the satellite galaxies follows a Poisson distribution. The expected number of centrals and satellites as a function of the host halo mass of $M_{\rm h}$ are given by the folllowing equations 
+and the occupation of the satellite galaxies follows a Poisson distribution. The expected number of centrals and satellites as a function of the host halo mass of $M_{\rm h}$ are given by the following equations 
 \begin{eqnarray}
 \langle N_{\rm cen}(M_{\rm h}) \rangle &=& \frac{1}{2}\Big[1+\Big(\frac{\log M_{\rm h} - \log M_{\rm min}}{\sigma_{\log \rm{M}}} \Big) \Big], \label{hod:central}\\ 
 \langle N_{\rm sat}(M_{\rm h}) \rangle &=& \Big( \frac{M_{\rm h} - M_{\rm{0}}}{M_{\rm 1}} \Big)^{\alpha}. \label{hod:satellite}
@@ -177,11 +178,11 @@ We aim to constrain the parameters of the HOD model described in \ref{subsubsec:
 
 We sample from the posterior probability distribution $p(\theta|d) \propto p(d|\theta) \pi(\theta)$. In the standard HOD modeling 
 \beq
-\theta = \{ \mmin, \sigmam, \mzero, \alpha, \mone \},
+\theta = \{ \mmin, \; \sigmam, \; \mzero, \; \alpha, \; \mone \},
 \eeq
 and in the Heaviside assembly bias modeling we have 
 \beq
-\theta = \{ \mmin, \sigmam, \mzero, \alpha, \mone, \acen, \asat \},
+\theta = \{ \mmin, \; \sigmam, \; \mzero, \; \alpha, \; \mone, \; \acen, \; \asat \},
 \eeq
 Furthermore, data (denoted by $d$) is the combination $[n_{g},g(N)]$ when GMF is used, and $[n_{g}, w_{\rm{p}}(r_{\rm{p}})]$ when 2PCF is used.
 
@@ -220,6 +221,41 @@ Another important ingredient of our analysis is specification of the prior proba
 \end{center}
 \end{table*}
 
+\begin{table*}
+\begin{center}
+  \label{tab:prior}
+  \caption{{\bf Constraints}: The prior probability distribution 
+  and its range for each of the parameters. 
+  All mass parameters are in unit of $h^{-1}M_\odot$. The first five rows are the only parameters of the standard HOD modeling.}
+\begin{tabular}{@{}lllllllllllllllllllllllll}
+\\ \hline 
+    Model & & Observables & $\mr$ & $\mmin$ & $\sigmam$ & $\mzero$ & $\alpha$ &  $\mone$ & $\acen$ & $\asat$ & $\chi^{2}/\rm{dof}$ & $\rm{AIC}$ & $\rm{BIC}$\\  \hline
+  \\
+  Standard HOD & & $\gmf$, $\bar{n}$ & 18 & $11.58^{+0.27}_{-0.22}$ &  $0.75^{+0.51}_{-0.48}$ & $10.93^{+0.68}_{-0.64}$ & $0.94^{+0.10}_{-0.07}$ &  $12.46^{+0.10}_{-0.09}$ & $-$ & $-$ \\ \\
+   Heaviside-AB & & $\gmf$, $\bar{n}$ & 18 & $11.57^{+0.26}_{-0.20}$ &  $0.76^{+0.50}_{-0.50}$ & $10.83^{+0.65}_{-0.57}$ & $0.94^{+0.10}_{-0.06}$ &  $12.47^{+0.12}_{-0.09}$ & $-$ & $-$ \\ \\
+   
+Standard HOD & & $\gmf$, $\bar{n}$ & 19 & $11.88^{+0.31}_{-0.23}$ &  $0.74^{+0.50}_{-0.47}$ & $10.90^{+0.75}_{-0.62}$ & $0.97^{+0.10}_{-0.08}$ &  $12.73^{+0.07}_{-0.07}$ & $-$ & $-$ \\ \\
+    
+      Heaviside-AB & & $\gmf$, $\bar{n}$ & 19 & $11.58^{+0.27}_{-0.22}$ &  $0.75^{+0.51}_{-0.48}$ & $10.93^{+0.68}_{-0.64}$ & $0.94^{+0.10}_{-0.07}$ &  $12.46^{+0.10}_{-0.09}$ & $-$ & $-$ \\ \\
+Standard HOD & & $\gmf$, $\bar{n}$ & 20 & $11.58^{+0.27}_{-0.22}$ &  $0.75^{+0.51}_{-0.48}$ & $10.93^{+0.68}_{-0.64}$ & $0.94^{+0.10}_{-0.07}$ &  $12.46^{+0.10}_{-0.09}$ & $-$ & $-$ \\ \\
+       Heaviside-AB & & $\gmf$, $\bar{n}$ & 20 & $11.58^{+0.27}_{-0.22}$ &  $0.75^{+0.51}_{-0.48}$ & $10.93^{+0.68}_{-0.64}$ & $0.94^{+0.10}_{-0.07}$ &  $12.46^{+0.10}_{-0.09}$ & $-$ & $-$ \\ \\
+Standard HOD & & $\wpp$, $\bar{n}$ & 18 & $11.58^{+0.27}_{-0.22}$ &  $0.75^{+0.51}_{-0.48}$ & $10.93^{+0.68}_{-0.64}$ & $0.94^{+0.10}_{-0.07}$ &  $12.46^{+0.10}_{-0.09}$ & $-$ & $-$ \\ \\
+         Heaviside-AB & & $\wpp$, $\bar{n}$ & 18 & $11.58^{+0.27}_{-0.22}$ &  $0.75^{+0.51}_{-0.48}$ & $10.93^{+0.68}_{-0.64}$ & $0.94^{+0.10}_{-0.07}$ &  $12.46^{+0.10}_{-0.09}$ & $-$ & $-$ \\ \\
+Standard HOD & & $\wpp$, $\bar{n}$ & 18.5 & $11.58^{+0.27}_{-0.22}$ &  $0.75^{+0.51}_{-0.48}$ & $10.93^{+0.68}_{-0.64}$ & $0.94^{+0.10}_{-0.07}$ &  $12.46^{+0.10}_{-0.09}$ & $-$ & $-$ \\ \\
+           Heaviside-AB & & $\wpp$, $\bar{n}$ & 18.5 & $11.58^{+0.27}_{-0.22}$ &  $0.75^{+0.51}_{-0.48}$ & $10.93^{+0.68}_{-0.64}$ & $0.94^{+0.10}_{-0.07}$ &  $12.46^{+0.10}_{-0.09}$ & $-$ & $-$ \\ \\
+Standard HOD & & $\wpp$, $\bar{n}$ & 19 & $11.58^{+0.27}_{-0.22}$ &  $0.75^{+0.51}_{-0.48}$ & $10.93^{+0.68}_{-0.64}$ & $0.94^{+0.10}_{-0.07}$ &  $12.46^{+0.10}_{-0.09}$ & $-$ & $-$ \\ \\
+             Heaviside-AB & & $\wpp$, $\bar{n}$ & 19 & $11.58^{+0.27}_{-0.22}$ &  $0.75^{+0.51}_{-0.48}$ & $10.93^{+0.68}_{-0.64}$ & $0.94^{+0.10}_{-0.07}$ &  $12.46^{+0.10}_{-0.09}$ & $-$ & $-$ \\ \\
+Standard HOD & & $\wpp$, $\bar{n}$ & 19.5 & $11.58^{+0.27}_{-0.22}$ &  $0.75^{+0.51}_{-0.48}$ & $10.93^{+0.68}_{-0.64}$ & $0.94^{+0.10}_{-0.07}$ &  $12.46^{+0.10}_{-0.09}$ & $-$ & $-$ \\ \\
+Heaviside-AB & & $\wpp$, $\bar{n}$ & 19.5 & $11.58^{+0.27}_{-0.22}$ &  $0.75^{+0.51}_{-0.48}$ & $10.93^{+0.68}_{-0.64}$ & $0.94^{+0.10}_{-0.07}$ &  $12.46^{+0.10}_{-0.09}$ & $-$ & $-$ \\ \\
+Standard HOD & & $\wpp$, $\bar{n}$ & 20 & $11.58^{+0.27}_{-0.22}$ &  $0.75^{+0.51}_{-0.48}$ & $10.93^{+0.68}_{-0.64}$ & $0.94^{+0.10}_{-0.07}$ &  $12.46^{+0.10}_{-0.09}$ & $-$ & $-$ \\ \\
+Heaviside-AB & & $\wpp$, $\bar{n}$ & 20 & $11.58^{+0.27}_{-0.22}$ &  $0.75^{+0.51}_{-0.48}$ & $10.93^{+0.68}_{-0.64}$ & $0.94^{+0.10}_{-0.07}$ &  $12.46^{+0.10}_{-0.09}$ & $-$ & $-$ \\ 
+                 
+ \hline
+  \end{tabular}
+\end{center}
+\end{table*}
+
+
 For sampling from the posterior probability, given the likelihood function (see Eqs. \ref{eq:lnlike_group}, \ref{eq:lnlike_wp}) and the prior probability distributions (see Table \ref{tab:prior}), we use the affine-invariant ensemble MCMC sampler $\mathtt{emcee}$ (CITE[FORMAN-MACKEY]). In particular, we run the $\mathtt{emcee}$ code with 140 walkers and we run the chains for at least 15000 iterations until the convergence of the MCMC chains is ensured. For testing the convergence of the chains, we perform Gelman-Rubin convergence test [CITE GELMANANDRUBIN and the other paper].
 
 \subsection{results}
@@ -227,14 +263,19 @@ For sampling from the posterior probability, given the likelihood function (see 
 
 \subsection{model comparison}
 
-Now that we have presented constraints on the parameters of the Heaviside assembly bias HOD model and those of the standard HOD model using the group and clustering measurements of the SDSS galaxies, it is necessary to make comparison between the the two models in terms of the goodness of fit. There are various methods for model comparison. In this work we make use of two information criteria: \emph{Akaike Information Criteria} (AIC), and \emph{Bayesian Information Criteria} (BIC). AIC and BIC are two widely used methods for assessing the relative quality of models given a set of observations.
+Now that we have presented constraints on the parameters of the Heaviside assembly bias HOD model and those found from the standard HOD model using the group and clustering measurements of the SDSS galaxies, it is necessary to make comparison between the the two models in terms of the goodness of fit. Evidently, the Heaviside Assembly bias model has more complexity for modeling the halo occupation. The question that arises is whether this higher level of model complexity is more preferable by the group statistics and the clustering data used in this study. 
 
+There are various methods for model comparison. In this work we make use of two model comparison criteria: \emph{Akaike Information Criterion} (AIC, see CITE ... ), and \emph{Bayesian Information Criteria} (BIC, see CITE ....). AIC and BIC are two widely used methods for assessing the relative quality of models given a set of observations.
 Suppose that $\mathcal{L}_{\rm max}$ is the maximum likelihood of the data given a model, $N_{\rm par}$ is the number of parameters of a given model, and $N_{\rm data}$ is the number of data points. Then we have
 
 \begin{eqnarray}
-AIC&=& -2\ln \mathcal{L}_{\rm max} + 2N_{\rm par}, \\
-BIC&=& -2\ln \mathcal{L}_{\rm max} + N_{\rm par}.\ln N_{\rm data}
+AIC&=& -2\;\ln \mathcal{L}_{\rm max} + 2N_{\rm par} + 2\;\frac{N_{\rm par}(N_{\rm par}+1)}{N_{\rm data}-N_{\rm par}-1} \; , \label{eq:aic}\\
+BIC&=& -2\;\ln \mathcal{L}_{\rm max} + N_{\rm par}\;\ln N_{\rm data} \; . \label{eq:bic}
 \end{eqnarray}
+Models that deliver lower values of information criteria are more favorable. In Eqs. (\ref{eq:aic}) and (\ref{eq:bic}) $N_{\rm par}$ is 5 when the standard HOD model is used, and 7 when the Heaviside assembly bias model is used. When the observables are $\ngal$ and $\wpp$, $N_{\rm data}$ is 13 for all luminosity thresholds, and when the observables are $\ngal$ and $\gmf$, $N_{\rm data}$ is 16 for the $\mr < -18$ luminosity threshold, 23 for the $\mr < -19$ luminosity threshold, and 25 for the $\mr < -20$ luminosity threshold. 
+
+
+
 
 \section{Discussion}
 
@@ -242,8 +283,180 @@ BIC&=& -2\ln \mathcal{L}_{\rm max} + N_{\rm par}.\ln N_{\rm data}
 
 %%%%%%%%%%%FIGURES%%%%%%%%%%%%%%%
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% gmf-Mr18-posterior 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{figure*}
+\begin{center}
+\includegraphics[width=\textwidth]{post18_0gmf.pdf}
+\caption{hello world}
+\label{fig:abc_converge}
+\end{center}
+\end{figure*}
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% gmf-Mr19-posterior 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{figure*}
+\begin{center}
+\includegraphics[width=\textwidth]{post19_0gmf.pdf}
+\caption{hello world}
+\label{fig:abc_converge}
+\end{center}
+\end{figure*}
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% gmf-Mr20-posterior 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{figure*}
+\begin{center}
+\includegraphics[width=\textwidth]{post20_0gmf.pdf}
+\caption{hello world}
+\label{fig:abc_converge}
+\end{center}
+\end{figure*}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% wp-Mr18-posterior 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{figure*}
+\begin{center}
+\includegraphics[width=\textwidth]{post18_0wp.pdf}
+\caption{hello world}
+\label{fig:abc_converge}
+\end{center}
+\end{figure*}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% wp-Mr19-posterior 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{figure*}
+\begin{center}
+\includegraphics[width=\textwidth]{post19_0wp.pdf}
+\caption{hello world}
+\label{fig:abc_converge}
+\end{center}
+\end{figure*}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% wp-Mr20-posterior 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{figure*}
+\begin{center}
+\includegraphics[width=\textwidth]{post20_0wp.pdf}
+\caption{hello world}
+\label{fig:abc_converge}
+\end{center}
+\end{figure*}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% gmf-abhod-prediction
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{figure*}
+\begin{center}
+\includegraphics[width=\textwidth]{paper_model_decgmf.pdf}
+\caption{hello world}
+\label{fig:abc_converge}
+\end{center}
+\end{figure*}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% gmf-hod-prediction
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{figure*}
+\begin{center}
+\includegraphics[width=\textwidth]{paper_model_hodgmf.pdf}
+\caption{hello world}
+\label{fig:abc_converge}
+\end{center}
+\end{figure*}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% gmf-ncen
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{figure*}
+\begin{center}
+\includegraphics[width=\textwidth]{paper_abhod_ncengmf.pdf}
+\caption{hello world}
+\label{fig:abc_converge}
+\end{center}
+\end{figure*}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% gmf-nsat
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{figure*}
+\begin{center}
+\includegraphics[width=\textwidth]{paper_abhod_nsatgmf.pdf}
+\caption{hello world}
+\label{fig:abc_converge}
+\end{center}
+\end{figure*}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% gmf-all
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{figure*}
+\begin{center}
+\includegraphics[width=\textwidth]{paper_abvshod_gmf.pdf}
+\caption{hello world}
+\label{fig:abc_converge}
+\end{center}
+\end{figure*}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% wp-abhod-prediction
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{figure*}
+\begin{center}
+\includegraphics[width=\textwidth]{paper_model_decwp.pdf}
+\caption{hello world}
+\label{fig:abc_converge}
+\end{center}
+\end{figure*}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% wp-hod-prediction
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{figure*}
+\begin{center}
+\includegraphics[width=\textwidth]{paper_model_hodwp.pdf}
+\caption{hello world}
+\label{fig:abc_converge}
+\end{center}
+\end{figure*}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% wp-ncen
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{figure*}
+\begin{center}
+\includegraphics[width=\textwidth]{paper_abhod_ncenwp.pdf}
+\caption{hello world}
+\label{fig:abc_converge}
+\end{center}
+\end{figure*}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% wp-nsat
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{figure*}
+\begin{center}
+\includegraphics[width=\textwidth]{paper_abhod_nsatwp.pdf}
+\caption{hello world}
+\label{fig:abc_converge}
+\end{center}
+\end{figure*}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% wp-all
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{figure*}
+\begin{center}
+\includegraphics[width=\textwidth]{paper_abvshod_wp.pdf}
+\caption{hello world}
+\label{fig:abc_converge}
+\end{center}
+\end{figure*}
+\section*{Acknowledgments}
+We would like to thank Michael R. Blanton,  
+Boris Leidstadt, Geoffrey~S.~Ryan, and the Blanton-Hogg group meeting for insightful discussions. MV was supported by NSF grant AST-1517237. DWH was supported 
+by NSF (grants IIS-1124794 and AST-1517237), NASA (grant NNX12AI50G), and the Moore-Sloan 
+Data Science Environment at NYU. Computations 
+were performed using computational resources at NYU-HPC. We thank Shenglong Wang, the 
+administrator of NYU-HPC computational facility, for his consistent and continuous support 
+throughout the development of this project. We also thanks Dan Foreman-Mackey for providing some of the computational resources at the early stages of this work.
 
 
 \end{document}
