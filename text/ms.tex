@@ -1,5 +1,6 @@
 %%\documentclass[12pt, preprint]{aastex}
 \documentclass[14pt, preprint]{emulateapj}
+\usepackage{microtype}
 \usepackage[breaklinks,colorlinks, urlcolor=blue,citecolor=blue,linkcolor=blue]{hyperref}
 \usepackage{graphicx}	% For figures
 \usepackage{natbib}	% For citep and citep
@@ -47,8 +48,10 @@ citecolor=darkblue}
 \begin{document}
 
 \title{Can we constrain galaxy assembly bias with group and clustering statistics of SDSS galaxies?}
-\author{Mohammadjavad Vakili , others}
-
+\author{Mohammadjavad Vakili \altaffilmark{1,$\dagger$}, David W. Hogg, ChangHoon~Hahn, Unspecified contributors}
+\altaffiltext{$\dagger$}{\url{mjvakili@nyu.edu}}
+\altaffiltext{1}{Center for Cosmology and Particle Physics, 
+                 Department of Physics, New York University, 4 Washington Pl., New York, NY} 
 \begin{abstract}
 
 The standard halo occupation modeling approach in large scale structure 
@@ -74,11 +77,9 @@ that the halo mass alone is sufficient in determining the
 population of galaxies inside halos. That is, the statistical properties of 
 galaxies is governed by the halo mass. Mathematically, this assumption can be 
 written as $P(N_g|M_h,\{x\})=P(N_g|M_h)$ where $\{x\}$ is the set of all 
-possible halo properties beyond mass $M_{h}$. 
+possible halo properties beyond mass $M_{h}$. HOD provides an analytical prescription for the  
 
-Despite this very simplifying assumption, the galaxy-halo connection models such as HOD and CLF
-have been widely and successfully used in modeling the measurements of a wide range of the 
-statistical properties of galaxies such as . However, the assumption that the statistical 
+Despite this very simplifying assumption, the galaxy-halo connection models such as HOD and CLF have been widely and successfully used in modeling the measurements of a wide range of the statistical properties of galaxies such as . However, the assumption that the statistical 
 distribution of galaxies can be determined by halo mass is not a derived characteristic of 
 accurate and high resolution hydrodynamic simulations, but rather a theoretical assumption 
 that needs to be scrutinized. In recent years, the idea that the   
@@ -99,7 +100,7 @@ and the occupation of the satellite galaxies follows a Poisson distribution. The
 \langle N_{\rm sat}(M_{\rm h}) \rangle &=& \Big( \frac{M_{\rm h} - M_{\rm{0}}}{M_{\rm 1}} \Big)^{\alpha}. \label{hod:satellite}
 \end{eqnarray}
 
-For populating the halos with galaxies, we follow the procedure described in CITE[HEARIN ETAL], CITE[CHANG ETAL]. The central galaxies are assumed to be at the center of the host dark matter halos. We place the satellite galaxies are within the virial radius of the halo following an NFW profile [CITE NFW]. The concentration of the NFW profile is given by the empirical mass-concentration relation provided by [CITE MACCIO]. The velocities of the satellite galaxies are given by two components. The first component is the velocity of the host halo. The second component is the velocity of the satellite galaxy with respect to the host halo which is computed following the solution to the NFW profile Jeans equations [CITE MORE]. We refer the readers to [CITE HEARIN 15] and \url{http://halotools.readthedocs.io} for a more comprehensive and detailed discussion of the forward modeling of the galaxy mock catalogs.
+For populating the halos with galaxies, we follow the procedure described in CITE[HEARIN ETAL], CITE[CHANG ETAL]. The central galaxies are assumed to be at the center of the host dark matter halos. We place the satellite galaxies are within the virial radius of the halo following an NFW profile [CITE NFW]. The concentration of the NFW profile is given by the empirical mass-concentration relation provided by [CITE MACCIO]. The velocities of the satellite galaxies are given by two components. The first component is the velocity of the host halo. The second component is the velocity of the satellite galaxy with respect to the host halo which is computed following the solution to the NFW profile Jeans equations [CITE MORE]. We refer the readers to [CITE HEARIN 15] for a more comprehensive and detailed discussion of the forward modeling of the galaxy mock catalogs.
 
 \subsubsection{Assembly bias HOD modeling}\label{subsubsec:decorated}
 Now let us provide a brief overview of HOD modeling decorated with $\mathtt{Heaviside}$ $\mathtt{Assemblybias}$ introduced in [CITE HEARIN2015]. At a fixed halo mass $M_{\rm h}$, halos are split into two populations: population of halos with the 0.5-percentile of highest concentration, and population of halos with 0.5 percentile of lowest concentration.We call the first population "type 1" halos, and the second population "type 2 halos. Following In the decorated HOD model, the expected number of central and satellite galaxies in the two populations is given by
@@ -140,7 +141,7 @@ After populating the dark matter halo catalogs with galaxies, we use the $\matht
 \subsubsection{projected two-point correlation function}
 The projected two point correlation function $w_{\rm{p}}(r_{\rm{p}})$ can be computed by integrating the 3D redshift space 2PCF $\xi(r_{\rm{p}} , \pi)$ along the line-of-sight
 \beq
-w_{\rm{p}}(r_{\rm{p}}) = 2 \int_{0}^{\infty} d\pi \;\xi(r_{\rm{p}} , \pi)
+w_{\rm{p}}(r_{\rm{p}}) = 2 \int_{0}^{\pi_{max}} d\pi \;\xi(r_{\rm{p}} , \pi)
 \eeq
 For our 2PCF calculations, we use the $w_{\rm p}$ measurement functionality of the fast and publicly available pair-counter code $\mathtt{CorrFunc}$ [CITE CORRFUNC].  To be consistent with the SDSS measurements described in \ref{sec:data}, $w_{\rm{p}}(r_{\rm{p}})$ is obtained by the line-of-sight integration to $\pi_{max}=40 \; h^{-1}\rm{Mpc}$. Note that $w_{\rm{p}}(r_{\rm{p}})$ is measured in units of $h^{-1}\rm{Mpc}$.
 
@@ -304,8 +305,8 @@ Models that deliver lower values of information criteria are more favorable. In 
 \begin{figure*}
 \begin{center}
 \includegraphics[width=\textwidth]{post18_0gmf.pdf}
-\caption{hello world}
-\label{fig:abc_converge}
+\caption{We present the constraints on the Heaviside assembly bias HOD model parameters (blue) and the standard HOD model parameters (yellow) obtained from our analysis using $\bar{n}$ and $\gmf$ measurements of galaxies with $\mr < -18$. The diagonal panels plot the marginalized posterior distribution of each parameter with vertical dashed lines marking the $50\%$ quantile and of the distribution. The off-diagonal panels plot the degeneracies between parameter pairs. The range of each panel corresponds to the range of our prior choice. The parameters $\acen$ and $\asat$ are only defined for the Assembly bias model. For both models, the parameter $\sigmam$ remains unconstrained. In The assembly bias model, $\acen$ and $\asat$ remain largely unconstrained. The parameter $\alpha$ does not have a  lower bound constraint in both models. The constraints on the parameters $\mzero$, $\mmin$, $\alpha$, $\mone$ found from the two models are in strong agreement.}
+\label{fig:post_gmf_18}
 \end{center}
 \end{figure*}
 
@@ -315,8 +316,8 @@ Models that deliver lower values of information criteria are more favorable. In 
 \begin{figure*}
 \begin{center}
 \includegraphics[width=\textwidth]{post19_0gmf.pdf}
-\caption{hello world}
-\label{fig:abc_converge}
+\caption{Same as Figure \ref{fig:post_gmf_18} but for $\bar{n}$ and $\gmf$ measurements of galaxies with $\mr < -19$. Again, For both models, the parameter $\sigmam$ remains unconstrained. In The assembly bias model, $\acen$ and $\asat$ remain largely unconstrained. The  marginalized posterior pdf over the parameter $\alpha$ found from the standard HOD model is peaked at a slightly higher value of $\alpha$ than the one found from the assembly bias HOD model. The constraints on the parameters $\mzero$, $\mmin$, and $\mone$ found from the two models are in strong agreement.}
+\label{fig:post_gmf_19}
 \end{center}
 \end{figure*}
 
@@ -326,8 +327,8 @@ Models that deliver lower values of information criteria are more favorable. In 
 \begin{figure*}
 \begin{center}
 \includegraphics[width=\textwidth]{post20_0gmf.pdf}
-\caption{hello world}
-\label{fig:abc_converge}
+\caption{Same as Figure \ref{fig:post_gmf_20} but for $\bar{n}$ and $\gmf$ measurements of galaxies with $\mr < -20$. In The assembly bias model, $\acen$ and $\asat$ remain largely unconstrained. The  marginalized posterior pdf over the parameter $\alpha$ found from the standard HOD model is peaked at a slightly higher value of $\alpha$ than the one found from the assembly bias HOD model. The constraints on the parameters $\sigmam$, $\mzero$, $\mmin$, and $\mone$ found from the two models are in strong agreement.}
+\label{fig:post_gmf_20}
 \end{center}
 \end{figure*}
 
@@ -337,8 +338,8 @@ Models that deliver lower values of information criteria are more favorable. In 
 \begin{figure*}
 \begin{center}
 \includegraphics[width=\textwidth]{post18_0wp.pdf}
-\caption{hello world}
-\label{fig:abc_converge}
+\caption{We present the constraints on the Heaviside assembly bias HOD model parameters (blue) and the standard HOD model parameters (yellow) obtained from our analysis using $\bar{n}$ and $\wpp$ measurements of galaxies with $\mr < -18$. The diagonal panels plot the marginalized posterior distribution of each parameter with vertical dashed lines marking the $50\%$ quantile and of the distribution. The off-diagonal panels plot the degeneracies between parameter pairs. The range of each panel corresponds to the range of our prior choice. The parameters $\acen$ and $\asat$ are only defined for the Assembly bias model. For both models, the parameter $\sigmam$ remains unconstrained. In The assembly bias model, $\asat$ remains largely unconstrained. The constraint on the parameter $\acen$ however, indicates that negative values of this parameter are strongly favored. Specifically the best-fit value of $\acen$ is -0.82 with its 68$\%$ confidence interval being less than -0.55. The constraints on $\mzero$ and $\mmin$ found from the two models strongly agree. The constraints on $\alpha$ and $\mone$ found from the two model in overall agreement with a slightly higher value of $\alpha$ and a slightly lower value of $\mone$ in the standard HOD model.}
+\label{fig:post_wp_18}
 \end{center}
 \end{figure*}
 
@@ -348,8 +349,8 @@ Models that deliver lower values of information criteria are more favorable. In 
 \begin{figure*}
 \begin{center}
 \includegraphics[width=\textwidth]{post19_0wp.pdf}
-\caption{hello world}
-\label{fig:abc_converge}
+\caption{Same as Figure \ref{fig:post_wp_18} but for $\bar{n}$ and $\gmf$ measurements of galaxies with $\mr < -19$. Once again, the parameter $\sigmam$ remains unconstrained. $\acen$ is not constrained in the assembly bias model, but constraints on $\asat$ show that positive values of $\asat$ are strongly favored. The best-fit value of $\asat$ is 0.52 and its 68$\%$ confidence interval is larger than 0.08. The constraints on $\mzero$, $\mmin$, $\alpha$, and $\mone$ found from the two models are in good agreement, with $\alpha$ being slightly higher and $\mone$ being slightly lower in the standard HOD model.}
+\label{fig:post_wp_19}
 \end{center}
 \end{figure*}
 
@@ -359,111 +360,61 @@ Models that deliver lower values of information criteria are more favorable. In 
 \begin{figure*}
 \begin{center}
 \includegraphics[width=\textwidth]{post20_0wp.pdf}
-\caption{hello world}
-\label{fig:abc_converge}
+\caption{Same as Figure \ref{fig:post_wp_18} but for $\bar{n}$ and $\gmf$ measurements of galaxies with $\mr < -20$. For this sample of galaxies, the parameter $\sigmam$ is better constrained by the two models, with the constraints coming from the standard HOD model being tighter. $\asat$ is not constrained in the assembly bias model and is consistent with zero, but constraints on $\acen$ show that positive values of $\acen$ are strongly favored. The best-fit value of $\acen$ is 0.71 and its 68$\%$ confidence interval is larger than 0.30. The constraints on $\mzero$ and $\mone$ found from the two models are in good agreement. There is some discrepancy between the constraints on $\mmin$ and $\alpha$ from the standard HOD model and  the ones from the HOD model with assembly bias. In the standard HOD model, the constraints on $\alpha$ are slightly narrower and favor larger values of $\alpha$. The best-fit and the 1-sigma uncertainties of $\alpha$ are 1.17$^{+0.04}_{-0.04}$ and 1.11$^{+0.06}_{-0.06}$ for the standard and the assembly bias model respectively. In the standard model, the constraint on $\mmin$ is narrower and favors smaller values of $\mmin$. The best-fit and the 1-sigma uncertainties of $\mmin$ are 11.99$^{+0.15}_{-0.08}$ and 12.13$^{+0.39}_{-0.18}$ for the standard and the assembly bias model respectively.}
+\label{fig:post_wp_20}
 \end{center}
 \end{figure*}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% gmf-abhod-prediction
+% gmf-prediction
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 \begin{figure*}
-\begin{center}
 \includegraphics[width=\textwidth]{paper_model_decgmf.pdf}
-\caption{hello world}
-\label{fig:abc_converge}
-\end{center}
-\end{figure*}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% gmf-hod-prediction
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\begin{figure*}
-\begin{center}
 \includegraphics[width=\textwidth]{paper_model_hodgmf.pdf}
-\caption{hello world}
-\label{fig:abc_converge}
-\end{center}
+\caption{We compare the posterior prediction for the observable $\gmf$ to the Berlind+06 measurements in three Luminosity threshold samples: $\mr<-18$, $\mr<-19$, and $\mr<-20$. The darker and the lighter shaded regions represent the 68$\%$ and the 95$\%$ confidence regions of the posterior predictions. $\bf{Top \; panel}$: 1-sigma and 2-sigma posterior prediction of the Heaviside Assembly bias HOD model. $\bf{Bottom \; panel}$: 1-sigma and 2-sigma posterior predictions of the the standard HOD model.}
+\label{fig:gmf-predictions}
 \end{figure*}
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% gmf-ncen
+% gmf-occupation-prediction
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 \begin{figure*}
-\begin{center}
 \includegraphics[width=\textwidth]{paper_abhod_ncengmf.pdf}
-\caption{hello world}
-\label{fig:abc_converge}
-\end{center}
-\end{figure*}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% gmf-nsat
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\begin{figure*}
-\begin{center}
 \includegraphics[width=\textwidth]{paper_abhod_nsatgmf.pdf}
-\caption{hello world}
-\label{fig:abc_converge}
-\end{center}
-\end{figure*}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% gmf-all
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\begin{figure*}
-\begin{center}
 \includegraphics[width=\textwidth]{paper_abvshod_gmf.pdf}
-\caption{hello world}
-\label{fig:abc_converge}
-\end{center}
+
+\caption{We demonstrate the posterior predictions for the expected occupation statistics of galaxies. The shaded regions mark the 68 $\%$ confidence region of the posterior predictions. The observables used in fitting are $\bar{n}$ and $\gmf$. $\bf{Top \; panel}$: posterior predictions for the expected number of centrals as a function of halos for the two population of halos: $type$-1 (high concentration, sown with blue) and $type$-2 (low concentration, shown with yellow) halos. }
+\label{fig:gmf-hod-predictions}
 \end{figure*}
+
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% wp-abhod-prediction
+% wp-prediction
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{figure*}
 \begin{center}
-\includegraphics[width=\textwidth]{paper_model_decwp.pdf}
-\caption{hello world}
-\label{fig:abc_converge}
+\includegraphics[scale = 0.3]{paper_model_decwp.pdf} \\
+\includegraphics[scale = 0.3]{paper_model_hodwp.pdf}
+\caption{We compare the posterior prediction for the observable $\wpp$ to the Guo+15 measurements in five Luminosity threshold samples: $\mr<-18$, $\mr<-18.5$, $\mr<-19$, $\mr<-19.5$, and $\mr<-20$. The darker and the lighter shaded regions represent the 68$\%$ and the 95$\%$ confidence regions of the posterior predictions. $\bf{Top\;panel}$: 1-sigma and 2-sigma posterior prediction of the Heaviside Assembly bias HOD model. $\bf{Bottom\;panel}$: 1-sigma and 2-sigma predictions of the the standard HOD model.}
+\label{fig:wp-predictions}
 \end{center}
 \end{figure*}
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% wp-hod-prediction
+% wp-occupation-prediction
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 \begin{figure*}
-\begin{center}
-\includegraphics[width=\textwidth]{paper_model_hodwp.pdf}
-\caption{hello world}
-\label{fig:abc_converge}
-\end{center}
-\end{figure*}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% wp-ncen
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\begin{figure*}
-\begin{center}
 \includegraphics[width=\textwidth]{paper_abhod_ncenwp.pdf}
-\caption{hello world}
-\label{fig:abc_converge}
-\end{center}
-\end{figure*}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% wp-nsat
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\begin{figure*}
-\begin{center}
 \includegraphics[width=\textwidth]{paper_abhod_nsatwp.pdf}
-\caption{hello world}
-\label{fig:abc_converge}
-\end{center}
-\end{figure*}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% wp-all
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\begin{figure*}
-\begin{center}
 \includegraphics[width=\textwidth]{paper_abvshod_wp.pdf}
-\caption{hello world}
-\label{fig:abc_converge}
-\end{center}
+
+\caption{}
+\label{fig:wp-hod-predictions}
 \end{figure*}
+
 \section*{Acknowledgments}
 We would like to thank Michael R. Blanton,  
 Boris Leidstadt, Geoffrey~S.~Ryan, and the Blanton-Hogg group meeting for insightful discussions. MV was supported by NSF grant AST-1517237. DWH was supported 
