@@ -85,7 +85,8 @@ class Halos(object):
     def __init__(self, catalog='bolshoi'):
         '''
         '''
-        self.column_list = ['id', 'upid', 'x', 'y', 'z', 'vx', 'vy', 'vz', 'Vpeak', 'Mpeak']
+        self.column_list = ['id', 'upid', 'x', 'y', 'z', 'vx', 'vy', 'vz', 
+                'Vpeak', 'Mpeak', 'vrms', 'mvir', 'rvir']
         if catalog not in ['bolshoi', 'smdpl']:
             raise NotImplementedError("Catalog not included yet") 
         self.catalog = catalog 
@@ -181,7 +182,16 @@ class shamHalos(object):
         else:
             raise ValueError('not recognize m_kind = %s' % m_kind)
     
-        sham_attr = getattr(self, sham_prop)
+        if sham_prop == 'tailored': 
+            # special request SHAM : 
+            # v_vir * (v_max / v_vir)^0.57
+            sham_attr = np.zeros(len(self.vrms))
+            v_vir = (self.mvir / self.rvir)**0.5 
+            vvir_notzero = np.where(v_vir != 0.) 
+            sham_attr[vvir_notzero] = v_vir[vvir_notzero] * (
+                    self.Vpeak[vvir_notzero] / v_vir[vvir_notzero])**0.57
+        else: 
+            sham_attr = getattr(self, sham_prop)
         print 'SHAM attribute = ', sham_attr.min(), sham_attr.max()
         m_kind_attr = np.zeros(len(sham_attr), np.float32)
         if m_kind == 'mstar':
@@ -888,9 +898,11 @@ if __name__=='__main__':
     #DownloadedCatalog(catalog='smdpl')
     sham_dict = { 
             'm_kind': 'mag_r', 
-            'scat': 0.2, 
+            'scat': 0.17, 
             'source': 'blanton', 
-            'sham_prop': 'Vpeak'
+            'sham_prop': 'tailored'
             }
     shame = shamHalos(catalog='smdpl', sham_dict=sham_dict)
+    shame.ReadHaloCatalog()
     shame.Write()
+

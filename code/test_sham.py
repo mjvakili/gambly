@@ -20,7 +20,7 @@ from ChangTools.plotting import prettycolors
 
 
 
-def HaloMF(scatter=0.0, m_kind='mag_r', source='blanton'): 
+def HaloMF(catalog='bolshoi', scatter=0.0, m_kind='mag_r', source='blanton'): 
     ''' 
     Compare the SHAMed LF/SMF to the analytic LF/SMFs
 
@@ -45,7 +45,7 @@ def HaloMF(scatter=0.0, m_kind='mag_r', source='blanton'):
             'source': source, 
             'sham_prop': 'Vpeak'
             }
-    haloh = sham.shamHalos(sham_dict=sham_dict)
+    haloh = sham.shamHalos(catalog=catalog, sham_dict=sham_dict)
     haloh.Read()
         
     dlogm = 0.1
@@ -84,6 +84,7 @@ def HaloMF(scatter=0.0, m_kind='mag_r', source='blanton'):
     sub.legend(loc='upper right')
     fig_file = ''.join(['figs/'
         'HaloMF', 
+        '.', catalog, 
         '.', m_kind, 
         '.', source, 
         '.', str(round(scatter,2)),
@@ -118,5 +119,5 @@ def MF_est(m_kind, dlogm=None, m_arr=None, box=None,  h=0.7):
 
 
 if __name__=='__main__': 
-    HaloMF(scatter=0.0, m_kind='mag_r', source='blanton')
-    HaloMF(scatter=0.2, m_kind='mag_r', source='blanton')
+    HaloMF(catalog='smdpl', scatter=0.0, m_kind='mag_r', source='blanton')
+    HaloMF(catalog='smdpl', scatter=0.2, m_kind='mag_r', source='blanton')
