@@ -17,19 +17,19 @@ def DownloadedCatalog(catalog='bolshoi'):
     so that the halo catalog can be easily read 
     ''' 
     current_dir = os.path.dirname(os.path.realpath(__file__))
-    if current_dir != '/home/users/hahn/projects/gambly/code':
+    if current_dir != '/home/mj/assembly/code':
         raise ValueError("This function is only meant to be run on Chang's user directory on Sirocco!") 
     
     if catalog == 'bolshoi':        # Bolshoi Box
         list_file = ''.join([
-            '/mount/sirocco1/hahn/bolshoi_rockstar/', 
+            '/export/bbq2/mj/', 
             'hlist_1.00231.list'
             ])
         a_scale = 1.00231
         redshift = 0.0  # close enough
     elif catalog == 'smdpl':        # Small MultiDark Planck
         list_file = ''.join([
-            '/mount/sirocco1/hahn/bolshoi_rockstar/', 
+            '/export/bbq2/mj/', 
             'smdpl_hlist_1.00000.list'
             ])
         a_scale = 1.00
@@ -50,11 +50,11 @@ def DownloadedCatalog(catalog='bolshoi'):
     # save all columns to hdf5
     if catalog == 'bolshoi': 
         hdf5_file = ''.join([
-            '/mount/sirocco1/hahn/bolshoi_rockstar/', 
+            '/export/bbq2/mj/', 
             catalog, '_a1.00231.hdf5'])
     elif catalog == 'smdpl': 
         hdf5_file = ''.join([
-            '/mount/sirocco1/hahn/bolshoi_rockstar/', 
+            '/export/bbq2/mj/', 
             catalog, '_a1.00000.hdf5'])
 
     f = h5py.File(hdf5_file, 'w') 
@@ -86,7 +86,7 @@ class Halos(object):
         '''
         '''
         self.column_list = ['id', 'upid', 'x', 'y', 'z', 'vx', 'vy', 'vz', 
-                'Vpeak', 'Mpeak', 'vrms', 'mvir', 'rvir']
+                'Vpeak', 'Mpeak', 'vrms', 'mvir', 'rvir', 'Vmax@Mpeak']
         if catalog not in ['bolshoi', 'smdpl']:
             raise NotImplementedError("Catalog not included yet") 
         self.catalog = catalog 
@@ -94,7 +94,7 @@ class Halos(object):
     def File(self):
         '''
         '''
-        file_dir = '/mount/sirocco1/hahn/bolshoi_rockstar/'
+        file_dir = '/export/bbq2/mj/'
         if self.catalog == 'bolshoi': 
             self.file_name = ''.join([file_dir, 'bolshoi_a1.00231.hdf5']) 
         elif self.catalog == 'smdpl':
@@ -116,6 +116,8 @@ class Halos(object):
         for col in cols:
             if col == 'Mpeak': 
                 setattr(self, col, np.log10(grp[col][:]))
+            elif col == 'Vmax@Mpeak':
+                setattr(self, "VmaxMpeak", grp[col][:])
             else: 
                 setattr(self, col, grp[col][:])
         return None 
@@ -140,8 +142,11 @@ class shamHalos(object):
         '''
         halocat = Halos(catalog=self.catalog) 
         halocat.Read() 
-        for col in halocat.Columns(): 
-            setattr(self, col, getattr(halocat, col)) 
+        for col in halocat.Columns():
+            if col == "Vmax@Mpeak":
+                setattr(self, "VmaxMpeak", getattr(halocat, "VmaxMpeak"))
+            else: 
+                setattr(self, col, getattr(halocat, col)) 
         self.a_scale = halocat.a_scale
         self.redshift = halocat.redshift
 
@@ -189,7 +194,7 @@ class shamHalos(object):
             v_vir = (self.mvir / self.rvir)**0.5 
             vvir_notzero = np.where(v_vir != 0.) 
             sham_attr[vvir_notzero] = v_vir[vvir_notzero] * (
-                    self.Vpeak[vvir_notzero] / v_vir[vvir_notzero])**0.57
+                    self.VmaxMpeak[vvir_notzero] / v_vir[vvir_notzero])**0.57
         else: 
             sham_attr = getattr(self, sham_prop)
         print 'SHAM attribute = ', sham_attr.min(), sham_attr.max()
@@ -279,6 +284,8 @@ class shamHalos(object):
                 col_data[nonneg[sub_upid]] = col_data[sub_id]
             elif col == 'Mpeak':
                 col_data = np.log10(getattr(self, col))
+            elif col == 'Vmax@Mpeak':
+                col_data = getattr(self, 'VmaxMpeak')
             else: 
                 col_data = getattr(self, col)
 
@@ -898,7 +905,7 @@ if __name__=='__main__':
     #DownloadedCatalog(catalog='smdpl')
     sham_dict = { 
             'm_kind': 'mag_r', 
-            'scat': 0.17, 
+            'scat': 0.15, 
             'source': 'blanton', 
             'sham_prop': 'tailored'
             }
