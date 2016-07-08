@@ -86,7 +86,7 @@ class Halos(object):
         '''
         '''
         self.column_list = ['id', 'upid', 'x', 'y', 'z', 'vx', 'vy', 'vz', 
-                'Vpeak', 'Mpeak', 'vrms', 'mvir', 'rvir', 'Vmax@Mpeak']
+                'Vpeak', 'Mpeak', 'vrms', 'mvir', 'rvir', 'Vmax@Mpeak', 'Mpeak_Scale']
         if catalog not in ['bolshoi', 'smdpl']:
             raise NotImplementedError("Catalog not included yet") 
         self.catalog = catalog 
@@ -191,7 +191,12 @@ class shamHalos(object):
             # special request SHAM : 
             # v_vir * (v_max / v_vir)^0.57
             sham_attr = np.zeros(len(self.vrms))
-            v_vir = ((180 ** 0.5) * (4.302 * 10 ** -7.) * (10. ** self.Mpeak))**1./3 
+            delta  = 360
+            omegam = 0.3
+            omegal = 0.7 
+            H_scale = omegam / (self.Mpeak_Scale)**3.  + omegal
+            v_vir = (0.5 * delta * H_scale ** 2. * 4.302**2. * 10.**14. )**(1./6) * (10. ** self.Mpeak)**1./3
+            #v_vir = ((100 ** 0.5) * (4.302 * 10 ** -7.) * (10. ** self.Mpeak))**1./3 
             vvir_notzero = np.where(v_vir != 0.) 
             sham_attr[vvir_notzero] = v_vir[vvir_notzero] * (
                     self.VmaxMpeak[vvir_notzero] / v_vir[vvir_notzero])**0.57
