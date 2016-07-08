@@ -191,7 +191,7 @@ class shamHalos(object):
             # special request SHAM : 
             # v_vir * (v_max / v_vir)^0.57
             sham_attr = np.zeros(len(self.vrms))
-            v_vir = (self.mvir / self.rvir)**0.5 
+            v_vir = ((180 ** 0.5) * (4.302 * 10 ** -7.) * (10. ** self.Mpeak))**1./3 
             vvir_notzero = np.where(v_vir != 0.) 
             sham_attr[vvir_notzero] = v_vir[vvir_notzero] * (
                     self.VmaxMpeak[vvir_notzero] / v_vir[vvir_notzero])**0.57
@@ -905,7 +905,7 @@ if __name__=='__main__':
     #DownloadedCatalog(catalog='smdpl')
     sham_dict = { 
             'm_kind': 'mag_r', 
-            'scat': 0.15, 
+            'scat': 0.17, 
             'source': 'blanton', 
             'sham_prop': 'tailored'
             }
