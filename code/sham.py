@@ -74,6 +74,90 @@ def DownloadedCatalog(catalog='bolshoi'):
     f.close()
     return None 
 
+def add_to_catalog(catalog='bolshoi'):
+
+    from astropy.table import Table
+    from halotools.utils import group_member_generator
+
+    a_scale = 1.00
+    redshift = 0.0  # close enough
+
+    if catalog == 'bolshoi': 
+        hdf5_file = ''.join([
+            '/export/bbq2/mj/', 
+            catalog, '_a1.00231.hdf5'])
+        hdf5_file_new = ''.join([
+            '/export/bbq2/mj/', 
+            catalog, '_new_a1.00231.hdf5'])
+    
+    elif catalog == 'smdpl': 
+        hdf5_file = ''.join([
+            '/export/bbq2/mj/', 
+            catalog, '_a1.00000.hdf5'])
+        hdf5_file_new = ''.join([
+            '/export/bbq2/mj/', 
+            catalog, '_new_a1.00000.hdf5'])
+    
+    f = h5py.File(hdf5_file, 'r') 
+    grp = f["data"]
+    #cols = grp.keys()
+    cols = ['id', 'pid', 'upid', 'x', 'y', 'z', 'vx', 'vy', 'vz', 
+                'Vpeak', 'Mpeak', 'vrms', 'mvir', 'rvir', 'Vmax@Mpeak', 'Mpeak_Scale', 'rs']
+
+    names = [col for col in grp.keys()]
+   
+    #table_content = [grp[col] for col in grp.keys()]
+
+    idd = grp['id'][:]
+    pid = grp['pid'][:]
+    upid = grp['upid'][:]
+    x = grp['x'][:]
+    y = grp['y'][:]
+    z = grp['z'][:]
+    vx = grp['vx'][:]
+    vy = grp['vy'][:]
+    vz = grp['vz'][:]
+    Vpeak = grp['Vpeak'][:]
+    Mpeak = grp['Mpeak'][:]
+    vrms = grp['vrms'][:]
+    mvir = grp['mvir'][:]
+    rvir = grp['rvir'][:]
+    Vmax_at_Mpeak = grp['Vmax@Mpeak'][:]
+    Mpeak_Scale = grp['Mpeak_Scale'][:]
+    rs = grp['rs'][:]
+ 
+    table = Table([idd, pid, upid, x, y, z, vx, vy, vz, Vpeak, Mpeak, vrms, mvir, rvir, 
+                      Vmax_at_Mpeak, Mpeak_Scale, rs], names = cols, meta= {'name': 'first table'})
+    host_id = idd[:].copy()
+
+    sats = np.where(upid[:]!= -1)[0]
+    host_id[sats] = upid[:][sats]
+
+    table['host_id'] = host_id
+    table.sort(['host_id','upid'])
+    grouping_key = 'host_id'
+    requested_columns = ['mvir']
+    group_gen = group_member_generator(table, grouping_key, requested_columns)
+    host_mass = np.zeros(len(table))
+    for first, last, member_props in group_gen:
+                    mvir_members = member_props[0]
+                    mvir_host = mvir_members[0]
+                    host_mass[first:last] = mvir_host
+    table['host_mass'] = host_mass
+    f_new = h5py.File(hdf5_file_new, 'w') 
+    grp_new = f_new.create_group('data') 
+        
+    columns = table.colnames
+    
+    grp_new.attrs['a_scale'] = a_scale 
+    grp_new.attrs['redshift'] = redshift
+    for i_col, col in enumerate(columns): 
+        data_column = table[col]
+        grp_new.create_dataset(col, data=data_column)
+    
+    f_new.close()
+
+    return None
 
 class Halos(object): 
     ''' 
@@ -85,8 +169,8 @@ class Halos(object):
     def __init__(self, catalog='bolshoi'):
         '''
         '''
-        self.column_list = ['id', 'upid', 'x', 'y', 'z', 'vx', 'vy', 'vz', 
-                'Vpeak', 'Mpeak', 'vrms', 'mvir', 'rvir', 'Vmax@Mpeak', 'Mpeak_Scale']
+        self.column_list = ['id', 'pid', 'upid', 'x', 'y', 'z', 'vx', 'vy', 'vz', 
+                'Vpeak', 'Mpeak', 'vrms', 'mvir', 'rvir', 'Vmax@Mpeak', 'Mpeak_Scale', 'rs', 'host_id', 'host_mass']
         if catalog not in ['bolshoi', 'smdpl']:
             raise NotImplementedError("Catalog not included yet") 
         self.catalog = catalog 
@@ -96,9 +180,9 @@ class Halos(object):
         '''
         file_dir = '/export/bbq2/mj/'
         if self.catalog == 'bolshoi': 
-            self.file_name = ''.join([file_dir, 'bolshoi_a1.00231.hdf5']) 
+            self.file_name = ''.join([file_dir, 'bolshoi_new_a1.00231.hdf5']) 
         elif self.catalog == 'smdpl':
-            self.file_name = ''.join([file_dir, 'smdpl_a1.00000.hdf5']) 
+            self.file_name = ''.join([file_dir, 'smdpl_new_a1.00000.hdf5']) 
         return self.file_name
     
     def Read(self): 
@@ -107,7 +191,7 @@ class Halos(object):
         file = self.File()
 
         f = h5py.File(file, 'r') 
-        grp = f['data'] 
+        grp = f['data']
         for attr in grp.attrs.keys():
             setattr(self, attr, grp.attrs[attr]) 
 
@@ -192,8 +276,8 @@ class shamHalos(object):
             # v_vir * (v_max / v_vir)^0.57
             sham_attr = np.zeros(len(self.vrms))
             delta  = 360
-            omegam = 0.3
-            omegal = 0.7 
+            omegam = 0.307115
+            omegal = 0.692885
             H_scale = omegam / (self.Mpeak_Scale)**3.  + omegal
             v_vir = (0.5 * delta * H_scale ** 2. * 4.302**2. * 10.**14. )**(1./6) * (10. ** self.Mpeak)**1./3
             #v_vir = ((100 ** 0.5) * (4.302 * 10 ** -7.) * (10. ** self.Mpeak))**1./3 
@@ -276,6 +360,7 @@ class shamHalos(object):
         grp = f.create_group('data') 
 
         columns = self.Columns()
+        print columns
         for i_col, col in enumerate(columns): 
 
             if col == 'M200b': 
@@ -907,14 +992,15 @@ def intersection_index(arr1, arr2):
 
 
 if __name__=='__main__': 
+    add_to_catalog(catalog='bolshoi')
     #DownloadedCatalog(catalog='smdpl')
     sham_dict = { 
             'm_kind': 'mag_r', 
-            'scat': 0.17, 
+            'scat': 0.17, # '0.15' 
             'source': 'blanton', 
-            'sham_prop': 'tailored'
+            'sham_prop': 'tailored' #'Vpeak'
             }
-    shame = shamHalos(catalog='smdpl', sham_dict=sham_dict)
+    shame = shamHalos(catalog='bolshoi', sham_dict=sham_dict)
     shame.ReadHaloCatalog()
     shame.Write()
 
