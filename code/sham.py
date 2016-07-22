@@ -994,13 +994,14 @@ def intersection_index(arr1, arr2):
 if __name__=='__main__': 
     add_to_catalog(catalog='bolshoi')
     #DownloadedCatalog(catalog='smdpl')
-    sham_dict = { 
-            'm_kind': 'mag_r', 
-            'scat': 0.17, # '0.15' 
-            'source': 'blanton', 
-            'sham_prop': 'tailored' #'Vpeak'
-            }
-    shame = shamHalos(catalog='bolshoi', sham_dict=sham_dict)
-    shame.ReadHaloCatalog()
-    shame.Write()
+    for style in [(0.17 , 'tailored') , (0.15 , 'Vpeak')]:
+        sham_dict = { 
+                'm_kind': 'mag_r', 
+                'scat': style[0], 
+                'source': 'blanton', 
+                'sham_prop': style[1]
+                }
+        shame = shamHalos(catalog='bolshoi', sham_dict=sham_dict)
+        shame.ReadHaloCatalog()
+        shame.Write()
 
