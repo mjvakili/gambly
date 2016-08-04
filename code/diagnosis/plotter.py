@@ -245,7 +245,7 @@ def plot_corner_mcmc(Nchains , Nburns, Mr , style , filename):
             fill_contours=True,
             levels=[0.68, 0.95],
             color='#ee6a50',
-            bins=25,
+            bins=15,
             smooth=1.)
     fig_name = ''.join(['post',
          str(Mr),str(style),  
@@ -470,20 +470,23 @@ def plot_occupations(Mr, nburnins, nchains, assembly = True , clotter = False , 
 if __name__=='__main__':
  
    dire = "/export/bbq2/mj/chains/"
-   #filename = "mcmc_chain_Mr19.0_style_AM.hdf5"
+   filename = dire+"adhoc_mcmc_chain_Mr21.5.hdf5"
    #filename = "Mr19.0-f.hdf5"
    #filename = "Mr20.0-group.hdf5"
+   #filename =  dire+"Mr21.0.hdf5"
+   filename2 = dire+"adhoc_mcmc_chain_Mr21.0.hdf5"
+   filename1 = dire+"Mr21.0.hdf5"
+   #filename1 = dire+"newhalo_mcmc_chain_Mr18.0.hdf5" #"group_mcmc_chain_Mr20.0.hdf5"
+   #filename2 = dire+"newhalo_adhoc_mcmc_chain_Mr18.0.hdf5" #"adhoc_group_mcmc_chain_Mr20.0.hdf5"
 
-   filename1 = dire+"group_mcmc_chain_Mr20.0.hdf5"
-   filename2 = dire+"adhoc_group_mcmc_chain_Mr20.0.hdf5"
-
-   Nchains1 , Nburns1 = 3100 , 1100
-   Nchains2 , Nburns2 = 2300 , 300
+   Nchains1 , Nburns1 = 20000 , 18000
+   Nchains2 , Nburns2 = 20000 , 18000
    
-   Mr = 20.0
-   style = "gmf"
-   #plot_time_mcmc(Nwalkers = 140, Nchains = 2200, filename=filename)
+   Mr = 21.0
+   style = "wp"
+   plot_time_mcmc(Nwalkers = 140, Nchains = 1000, filename=filename)
    #plot_predictions(19.0 , 8000 , 20000, True , True)
    #plot_occupations(20. , 2000 , 2100 , True , True , "SHAM")
-   #plot_corner_mcmc_hod(Nchains = 3000 , Nburns = 500, Mr = 18.5, style = "wp-hod", filename=filename)
-   plot_overlay_corner(Nchains1 , Nchains2, Nburns1, Nburns2, Mr , style , filename1, filename2) 
+   #plot_corner_mcmc(Nchains = 20000 , Nburns = 18000, Mr = 21.0, style = "wp-hod", filename=filename)
+   #plot_corner_mcmc_hod(Nchains = 20000 , Nburns = 18000, Mr = 21.0, style = "wp-hod", filename=filename)
+   #plot_overlay_corner(Nchains1 , Nchains2, Nburns1, Nburns2, Mr , style , filename1, filename2) 

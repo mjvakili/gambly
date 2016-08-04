@@ -23,6 +23,9 @@ def load_wp(Mr):
     Mr : (int)
         Absolute r-band magnitude threshold. Default is M_r = -21
     '''
+    if Mr == 21.5:
+        data_file = ''.join([util.dat_dir(),
+            'wpxi_dr72_bright0_mr21.5_z0.198_nj400'])
     if Mr == 21.:
         data_file = ''.join([util.dat_dir(),
             'wpxi_dr72_bright0_mr21.0_z0.159_nj400']) 
@@ -51,6 +54,8 @@ def load_wp(Mr):
 def load_nbar(Mr):
     '''load the number density of the data
     '''
+    if Mr == 21.5:
+        nbar = 0.29 * 10.**-3.
     if Mr == 21.:
         nbar = 1.16 * 10**-3.
     if Mr == 20.5:
@@ -75,6 +80,9 @@ def load_wp_covariance(Mr):
     Mr : (int)
         Absolute r-band magnitude threshold. Default is M_r = -21
     '''
+    if Mr == 21.5:
+        data_file = ''.join([util.dat_dir(),
+            'wpxicov_dr72_bright0_mr21.5_z0.198_nj400'])
     if Mr == 21.:
         data_file = ''.join([util.dat_dir(),
             'wpxicov_dr72_bright0_mr21.0_z0.159_nj400']) 
@@ -103,6 +111,8 @@ def load_wp_covariance(Mr):
 def load_nbar_variance(Mr):
     '''load the variance of the number density of the data
     '''
+    if Mr == 21.5:
+        nbarerr= 0.03 * 10**-3.
     if Mr == 21.:
         nbarerr= 0.12 * 10**-3.
     if Mr == 20.5:
@@ -122,6 +132,8 @@ def load_nbar_variance(Mr):
 def load_hod_random_guess(Mr):
     '''random guess for the walkers'''
 
+    if Mr == 21.5:
+        pos = [13.13 , 0.72 , 13.53 , 1.14 , 14.52]
     if Mr == 21.:
         pos = [12.78 , 0.49 , 12.59 , 1.14 , 13.99]
     if Mr == 20.5:
@@ -143,7 +155,9 @@ def load_hod_random_guess(Mr):
 
 def load_dechod_random_guess(Mr):
     '''random guess for the walkers'''
-
+    
+    if Mr == 21.5:
+        pos = [13.13 , 0.72 , 13.53 , 1.14 , 14.52 , 0.0 , 0.0]
     if Mr == 21.:
         pos = [12.59 , 0.49 , 12.78 , 1.14 , 13.99 , 0.5 , 0.5]
     if Mr == 20.5:
