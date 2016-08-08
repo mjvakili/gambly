@@ -648,6 +648,10 @@ def plot_wpres_prediction(obs = "wp", clotter = True):
         ax.errorbar(rbin18, np.zeros_like(data18), yerr=err18/data18, fmt="o", color='k', markersize=0, lw=0, capsize=3, elinewidth=1.5)
         ax.scatter(rbin18, np.zeros_like(data18), c='k', s=10, lw=0)
 
+        blue_line = mlines.Line2D([], [], ls = '-', c = pretty_colors[1], linewidth=3, label = 'with assembly bias')
+        red_line = mlines.Line2D([], [], ls = '-', c = '#ee6a50' , linewidth=3, label = 'without assembly-bias')
+        first_legend = plt.legend(handles=[blue_line, red_line], frameon=False, loc= (0.04 , 0.8), fontsize=17)
+        
         if obs == "wp":
           #ax.set_xlabel(r'$r_{p} \; [\mathrm{Mpc}\; h^{-1}]$', fontsize=27)
           ax.set_ylabel(r'$w_{p}^{\mathrm{model}}/w_{p}^{\mathrm{data}} \; -1 $', fontsize=27)
@@ -1031,7 +1035,11 @@ def plot_wpmodel_prediction(obs = "wp", clotter = True):
         ax.fill_between(rbin18, b, d, color='#ee6a50', alpha=0.6, edgecolor="none")
         ax.errorbar(rbin18, data18, yerr=err18, fmt="o", color='k', markersize=0, lw=0, capsize=3, elinewidth=1.5)
         ax.scatter(rbin18, data18, c='k', s=10, lw=0)
-
+         
+        blue_line = mlines.Line2D([], [], ls = '-', c = pretty_colors[1], linewidth=3, label = 'with assembly bias')
+        red_line = mlines.Line2D([], [], ls = '-', c = '#ee6a50' , linewidth=3, label = 'without assembly-bias')
+        first_legend = plt.legend(handles=[blue_line, red_line], frameon=False, loc='best', fontsize=17)
+        
         if obs == "wp":
           #ax.set_xlabel(r'$r_{p} \; [\mathrm{Mpc}\; h^{-1}]$', fontsize=27)
           ax.set_ylabel(r'$w_{p}(r_{p}) \; [\mathrm{Mpc} \; h^{-1}]$', fontsize=27)
@@ -1463,4 +1471,5 @@ if __name__=='__main__':
    #compute_chisq_aic_bic(filename , nchains, nburnins, Mr, obs, model)
    #model_predictions(filename, Mr, nburnins, nchains, obs, model)   
    #plot_model_prediction(obs = "wp", model= "dec", clotter = True)
+   plot_wpres_prediction(obs = "wp", clotter = True)
    plot_wpmodel_prediction(obs = "wp", clotter = True)
