@@ -1,6 +1,5 @@
 '''
 Module for handling the SHAM catalogs 
-made by ChangHoon Hahn
 '''
 import h5py
 import numpy as np
@@ -16,7 +15,8 @@ def read_catalog():
     '''read SHAM catalog
     '''
 
-    filename =  util.dat_dir()+'bolshoi_a1.00231.mag_r.source_blanton.scatter0.2.Vpeak.hdf5'
+    filename =  '/export/bbq2/mj/smdpl_a1.00000.mag_r.source_blanton.scatter0.0.tailored.hdf5'
+    #filename =  '/export/bbq2/mj/smdpl_a1.00000.mag_r.source_blanton.scatter0.17.tailored.hdf5'
     cat = h5py.File(filename, "r")['data']
     length_file = len(cat['x'][:])
     cat_file = np.zeros((length_file , 7))
@@ -45,7 +45,7 @@ def save_luminosity_threshold(Mr):
        luminosity threshold'''
 
     reduced_cat = impose_luminosity_threshold(Mr)
-    filename = util.dat_dir()+'SHAM_Mr'+str(Mr)+'dat'
+    filename = util.dat_dir()+'SHAM_smdpl_Mr'+str(Mr)+'dat'
     np.savetxt(filename , reduced_cat)
 
     return None
@@ -56,14 +56,16 @@ def measure_nbar_clustering(Mr):
 
     #Corrfunc settings for wp measurements:
 
-    boxsize = 250
+    #boxsize = 250
+    boxsize = 400
     nthreads = 4
     pimax = 40.0
     binfile = path.join(path.dirname(path.abspath(__file__)),
                         "../", "bin")
     autocorr = 1
 
-    filename = util.dat_dir()+'SHAM_Mr'+str(Mr)+'dat'
+    #filename = util.dat_dir()+'SHAM_Mr'+str(Mr)+'dat'
+    filename = util.dat_dir()+'SHAM_smdpl_Mr'+str(Mr)+'dat'
     cat = np.loadtxt(filename)
     pos = cat[:,0:3]
     x, y, z = pos[:,0], pos[:,1], pos[:,2] 
@@ -208,8 +210,9 @@ def save_jackknife_covariance(Mr , nsub):
 
 if __name__ == "__main__":
 
-     Mr = 19
+     Mrs = [21.0 + 0.5 * x for x in range(2)]
      nsub = 3
-     save_luminosity_threshold(Mr)    
-     save_nbar_clustering(Mr)
-     save_jackknife_covariance(Mr , nsub)   
+     for Mr in Mrs:
+         print Mr
+         save_luminosity_threshold(Mr)    
+         save_nbar_clustering(Mr)
