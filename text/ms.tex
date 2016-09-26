@@ -1,4 +1,4 @@
-ss[12pt, preprint]{aastex}
+\documentclass[12pt, preprint]{aastex}
 \usepackage[breaklinks,colorlinks, 
 urlcolor=blue,citecolor=blue,linkcolor=blue]{hyperref}
 \usepackage{graphicx}	% For figures
@@ -87,7 +87,7 @@ citecolor=darkblue}
 %% LaTeX will automatically break titles if they run longer than
 %% one line. However, you may use \\ to force a line break if
 %% you desire.
-\title{How do galaxies get assigned to halos? \\ Searching for the assembly bias in the SDSS galaxy clustering}
+\title{How do galaxies get assigned to halos? \\ Searching for assembly bias in the SDSS galaxy clustering}
 
 %%\title{Collapsed Cores in Globular Clusters, \\
 %%    Gauge-Boson Couplings, and AAS\TeX\ Examples}
@@ -111,7 +111,7 @@ Clustering of dark matter halos has been shown to depend on halo properties beyo
 
 Given the SDSS clustering data, our constraints on HOD with assembly bias, suggests that satellite population is not correlated with halo concentration at fixed halo mass. Furthermore, in terms of the number of centrals at fixed halo mass, our results favor lack of correlation with halo concentration in the most luminous samples ($M_{\rm r}<-21.5,-21$), modest levels of correlation for $M_{\rm r}<-20.5,-20, -19.5$ samples, lack of correlation for $M_{\rm r}<-19,-18.5$ samples, and anti-correlation for the faintest sample $M_{\rm r}<-18$.
 
-We show that in comparison with abundance-matching mock catalogs, our findings suggest modest levels of assembly bias. Furthermore, by performing model comparison based on information criteria, we find that in most cases, the standard mass-only HOD model is still favored by the observations.
+We show that in comparison with abundance-matching mock catalogs, our findings suggest qualitatively similar but modest levels of assembly bias. Furthermore, by performing model comparison based on information criteria, we find that in most cases, the standard mass-only HOD model is still favored by the observations.
 
 \end{abstract}
 \keywords{Cosmology: large-scale-structure of the universe, galaxies: halos}
@@ -127,10 +127,9 @@ Despite this very simplifying assumption, the models of galaxy-halo connection b
 HOD has been used in constraining the cosmological parameters through modeling the galaxy two-point correlation function (hereafter 2PCF) (\citealt{abazajian2005}), combination of 2PCF with mass-to-light ratio of galaxies (\citealt{tinker05}), redshift space distortions (\citealt{tinker_rsd2007}), mass-to-number ratio of galaxy clusters (\citealt{tinker2012}) galaxy-galaxy weak lensing (\citealt{vdb03,cacciato13,more13,vdb13}) in the main sample of galaxies
 of the Sloan Digital Sky Survey (hereafter SDSS, \citealt{york2000}), and also the combination of galaxy clustering and galaxy-galaxy lensing (\citealt{more15}) in SDSS III Baryon Oscillation Spectroscopic Survey (BOSS, \citealt{boss}). Furthermore, HOD is implemented in producing mock galaxy catalogs in the BOSS survey (\citealt{manera2013,white2014}). It has also been used in galaxy evolution studies (\citealt{conroy09,leauthaud12,behroozi13,hudson2015,zu2015,zu2016}).
 
-The simplifying assumption of standard HODs  
-does not sufficiently model the complex small scale clustering and galaxy
-formation. Numerous $N$-body simulations that examine the clustering of 
-dark matter halos argue that halo clustering is correlated with the formation 
+This simple assumption of standard HODs  
+does not sufficiently model the complexity of structure formation. Numerous $N$-body simulations that examine the clustering of 
+dark matter halos have demonstrated that halo clustering is correlated with the formation 
 history of halos. That is, at a fixed halo mass, the halo bias is correlated 
 with properties of halos beyond mass, such as the concentration, formation time, or etc. 
 This phenomenon is known as halo assembly bias (see \citealt{sheth2004,gao2005, harker2006, weschler2006, gao2007,croton2007,wang2007,angulo2008,dalal2008,li2008,sunayama2016}). 
@@ -143,12 +142,8 @@ Based on a group catalog of SDSS galaxies, \citet{blanton_group_2007} find that 
 
 Another family of empirical galaxy-halo connection models is \emph{Abundance} \emph{Matching}. In Abundance Matching models, galaxies are assumed to live in halos/subhalos and are assigned luminosities or stellar masses by assuming a one-to-one mapping that preserves the rank ordering between its host halo/subhalo property and its luminosity or stellar mass
 (\citealt{kravtsov2004,vale2004,tasitsiomi2004,conroy2009,guo2010,wetzel2010,Neisten2011,watson2012,rodriguez2012,kravstov2013,mao2015,chavez2016}). 
-In practice, the standard abundance-matching models use host-halo properties 
-that trace the depth of the gravitational well of the halo, such as 
-the maximum circular velocity the host halo had in its history, $V_\mathrm{max}$, 
-and assume a scatter in this property's one-to-one mapping with 
-stellar mass/luminosity. With this, 
-abundance-matching models have been successfully used in modeling a wide range of the 
+In practice, the standard abundance-matching models assume a monotonic mapping between the stellar mass/luminosity of galaxies and some host-halo property, such as 
+the maximum circular velocity the host halo $V_\mathrm{max}$ that traces the depth of the gravitational potential well of the halo. Furthermore, a scatter is assumed in this one-to-one relation between galaxy property and halo/subhalo property. With this framework, abundance-matching models have been successfully used in modeling a wide range of the 
 statistical properties of galaxies such as two-point correlation function (\citealt{reddick2013,lehman2015,hod_vs_sham}) as well as the group statistics of galaxies (\citealt{sham_gmf}). 
 
 It has been shown that the abundance-matching mock catalogs that use $V_{\rm max}$ (see \citealt{hw2013,arz2014}), or the ones that use some combination of $V_{\rm max}$ and host halo/subhalo virial mass $M_{\rm vir} $(see \citealt{lehman2015}) exhibit significant levels of assembly bias. That is, halo occupation in these models depends not only on halo mass, but also on other halo properties. This has been demonstrated by randomizing the galaxies among host halos of in bins of halo mass, such that the HOD remains constant, and comparing the difference in the 2PCF of the randomized catalog and the original mock catalog.  
@@ -321,7 +316,7 @@ and satellite galaxies are different. The large scale clustering---or the two ha
 In particular, findings of (\citealt{weschler2006,sunayama2016})
 have demonstrated that for the halos with mass bellow the collapse mass ($M \leq M_{\rm col} \simeq 10^{12.5}\; M_{\odot} $) the large scale bias of high-$V_{\rm max}$ or high-$c$ halos is larger than that of the low-$V_{\rm max}$ or low-$c$ halos. This signal reverses and weakens for the high mass halos ($M \geq M_{\rm col}$). Note that the halo concentration traces the maximum circular velocity $V_{\rm max}$ such that halos with higher $V_{max}$ have higher concentration and vice versa (see \citealt{prada2012}). 
 
-Furthermore, investigation of the scale-dependence of halo assembly bias has shown that the ratio of the bias of high-$V_{\rm max}$ halos and the low-$V_{\rm max}$ halos has a bump-like feature in the quasi-linear scales $\sim$ 0.5 $\mathrm{Mpc}h^{-1}-5\mathrm{Mpc}h^{-1}$. From the theoretical standpoint, this phenomenon has been attributed to a population of distinct halos at the present time that belonged to higher mass halos at some point in their formation history (\citealt{sunayama2016}, and see \citealt{more2016} for the observational investigation of this signal by means of galaxy-galaxy lensing). Also note that this signal vanishes for the high mass halos. 
+Furthermore, investigation of the scale-dependence of halo assembly bias has shown that the ratio of the bias of high-$V_{\rm max}$ halos and the low-$V_{\rm max}$ halos has a bump-like feature in the quasi-linear scales $\sim$ 0.5 $\mathrm{Mpc}h^{-1}-5\mathrm{Mpc}h^{-1}$. From the theoretical standpoint, this phenomenon has been attributed to a population of distinct halos with $\log M \sim 11.7$ (in the units of $h^{-1}M_{\odot}$) the present time that are close to the most massive groups and clusters (\citealt{sunayama2016}, and see \citealt{more2016} for the observational investigation of this signal by means of galaxy-galaxy lensing). The clustering of these population of halos is therefore dictated by that of the massive halos which cluster more strongly. Also note that this signal vanishes for the high mass halos. 
 
 Consequently, at a fixed halo mass less than $M_{\rm col}$, assignment of more central galaxies to the high-$c$ halos (higher expected number of central galaxies in the high-$c$ halos) gives rise to a boost in the galaxy clustering in the linear scales as well as in regimes corresponding to the one-halo to two-halo transition. For the more massive halos ($M \geq M_{\rm col}$), we expect the large-scale clustering boost to reverse sign, and the quasi-linear bump feature to vanish.  
 
@@ -341,7 +336,7 @@ However, our results suggest that for all the 8 luminosity-threshold samples, th
 
 It is important to note that the halo mass range in which the central assembly bias $\acen$ affects the central galaxy population is the mass range that satisfies the condition $0<\langle N_{\rm cen}|M \rangle<1$. As a result, larger scatter parameter $\sigmam$ increases the dynamical mass range in which assembly bias affects the galaxy clustering. As evident in Table \ref{tab:constraints}, in the HOD model with assembly bias, the constraints found on the scatter parameter are not tight. This is in keeping with the results of \citealt{guo2015} (which uses the same SDSS data) according to which, the scatter parameter remains largely unconstrained when only $n_{g}$ and $w_{p}$ are used as observables. Note that even if $n_{g}$ and $w_{p}$ are used, $\sigmam$ is better constrained for the most luminous galaxy samples (this is attributed to the steep dependence of the halo bias and halo mass function on halo mass in the high mass end). But since these samples live in the most massive halos, we do not expect the tighter constraints on scatter to help us constrain the central assembly bias parameter. \citealt{guo2015} shows that by employing additional measurements such as the monopole ($\xi_{0}$), quadruple ($\xi_{2}$), hexadecapole ($\xi_{4}$), one can obtain tighter constraints on the scatter parameter. Tightening of constraints on the scatter parameters leads to reduction of uncertainty in the inferred central assembly bias parameter.    
 
-As shown in Table \ref{tab:constraints}, our constraints on the underlying standard HOD model obtained from the model with assembly bias and the model without assembly bias are in good agreement. The only cases in which there are (very) mild tensions between the constraints found from the two models on the underlying HOD parameters, are the $M_{\rm r}<-20$ and the $M_{\rm r}<-20.5$ samples. However, these tensions are within one-sigma uncertainties. For instance, Figure {fig:posterior} shows that in the $M_{\rm r}<-20.5$ sample, the constraint on the parameter $\alpha$ found from the model without assembly bias favor slightly higher values than the constraint found from the model with assembly bias. Also the scatter parameter $\sigmam$ is more tightly constrained in the standard HOD model. However, it is important to emphasize that these constraints are still in agreement with each other within a one-sigma level. \citealt{arz2014} shows that in the catalogs that exhibit significant levels of assembly bias, using a simple mass-only occupation model can lead to considerable biases in inference of the galaxy-halo connection parameters. Although we cannot rule out moderate level of assembly bias in our findings, we do not find any considerable discrepancy between the two models in terms of estimating the underlying HOD parameters. 
+As shown in Table \ref{tab:constraints}, our constraints on the underlying standard HOD model obtained from the model with assembly bias and the model without assembly bias are in good agreement. The only cases in which there are mild tensions between the constraints found from the two models on the underlying HOD parameters, are the $M_{\rm r}<-20$ and the $M_{\rm r}<-20.5$ samples. However, these tensions are within one-sigma uncertainties. For instance, Figure \ref{fig:posterior} shows that in the $M_{\rm r}<-20.5$ sample, the constraint on the parameter $\alpha$ found from the model without assembly bias favor slightly higher values than the constraint found from the model with assembly bias. Also the scatter parameter $\sigmam$ is more tightly constrained in the standard HOD model. However, it is important to emphasize that these constraints are still in agreement with each other within a one-sigma level. \citealt{arz2014} shows that in the catalogs that exhibit significant levels of assembly bias, using a simple mass-only occupation model can lead to considerable biases in inference of the galaxy-halo connection parameters. Although we cannot rule out moderate level of assembly bias in our findings, we do not find any considerable discrepancy between the two models in terms of estimating the underlying HOD parameters. 
  
 A few galaxy-halo connection methods have been proposed in the literature that give rise to assembly bias in the galaxy population. \citealt{arz2014} demonstrates that the abundance matching techniques based on $V_{\rm max }$ (as introduced in \citealt{hw2013,reddick2013}) exhibit some levels of assembly bias. 
 
@@ -448,8 +443,10 @@ Comparison of the levels of assembly bias in the catalogs predicted from our con
 
 \section*{Acknowledgments}
 
-We are grateful to David~W.~Hogg, Yao~Yun Mao, Andrew Hearin, Chang~Hoon~Hahn, Andrew Zentner, Tomomi Sunayama, Kilian~W.~Walsh, and Chia~Hsun~Chuang for
+We are grateful to David~W.~Hogg, Yao~Yun Mao, Chang~Hoon~Hahn, Andrew Hearin, Andrew Zentner, Tomomi Sunayama, and Chia~Hsun~Chuang for
 discussions related to this work. All the computations in this work were carried out in the New York University High Performance Computing Mercer facility. We thank Shenglong~Wang, the administrator of the NYU HPC center for his continuous and consistent support throughout the completion of this study. 
+
+The CosmoSim database used in this paper is a service by the Leibniz-Institute for Astrophysics Potsdam (AIP). The MultiDark database was developed in cooperation with the Spanish MultiDark Consolider Project CSD2009-00064. The authors gratefully acknowledge the Gauss Centre for Supercomputing e.V. (www.gauss-centre.eu) and the Partnership for Advanced Supercomputing in Europe (PRACE, www.prace-ri.eu) for funding the MultiDark simulation project by providing computing time on the GCS Supercomputer SuperMUC at Leibniz Supercomputing Centre (LRZ, www.lrz.de).
 
 All of the code written for this project is available in an open-source
 code repository at \url{https://github.com/mjvakili/gambly}. All the MCMC chains of our analysis will be available upon request.
