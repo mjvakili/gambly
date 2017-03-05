@@ -50,10 +50,10 @@ def lnPost(theta, **kwargs):
     	prior_range = kwargs['prior_range']
     	# Likelihood
     	model_obvs = generator(theta, prior_range)
-        model_nbar , model_wp , model_nbar_var , model_wp_var = model_obvs[0] , model_obvs[1] , model_obvs[2] , model_obvs[3]
+        model_nbar , model_wp , model_wp_var = model_obvs[0] , model_obvs[1] , model_obvs[2]
        
         wp_cov = wp_cov + model_wp_var
-        nbar_var = nbar_var + model_nbar_var 
+        nbar_var = nbar_var
 
         res_nbar = model_nbar - data_nbar
         res_wp = model_wp - data_wp
