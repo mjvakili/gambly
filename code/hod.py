@@ -34,6 +34,8 @@ class MCMC_model(object):
         self.pimax = 40.0
         self.binfile = path.join(path.dirname(path.abspath(__file__)),
                         "../", "bin")
+        
+        self.rbins = np.loadtxt(self.binfile) 
         self.autocorr = 1
 
     def __call__(self, theta, prior_range):
@@ -57,11 +59,67 @@ class MCMC_model(object):
         # enforcing PBC
         pos = enforce_periodicity_of_box(pos, self.boxsize)
         pos = pos.astype(np.float32)
+         
+        wp , wp_cov = helpers.projected_correlation(pos, self.rbins, self.pimax, self.boxsize, 
+                                           jackknife_nside = 8 , bias_correction = True) 
+
+        nbar = 1.*len(pos)/(self.boxsize)**3.
+        
+        nsub = 8. #FIXME
+        number_of_subboxes = nsub ** 3
+        subbox_size = self.boxsize / nsub
+        
+        nbars = np.zeros((number_of_subboxes , 1)) #placeholder for nbars of jk subsamples
+
+        for subvol_index in xrange(number_of_subboxes):
+
+            sub_rsd_pos = mask_positions(rsd_pos , subvol_index , nsub)
+            sub_rsd_pos = sub_rsd_pos.astype(np.float32)
+            nbars[subvol_index] = 1.*len(sub_rsd_pos)/subbox_size**3.
+           
+        nbar_var = np.array([np.var(nbars)])    
+        
+        ######################## End of rewriting for model covariance ############## 
+        
+        """
+        # applying RSD
+        pos = return_xyz_formatted_array(x, y, z, velocity = vz, velocity_distortion_dimension = 'z')
+        # enforcing PBC
+        pos = enforce_periodicity_of_box(pos, self.boxsize)
+        pos = pos.astype(np.float32)
         x, y, z = pos[:,0] , pos[:,1] , pos[:,2]
         results_wp = _countpairs.countpairs_wp(self.boxsize, self.pimax, 
                                            self.nthreads,
                                            self.binfile, x, y, z)
         wp = np.array(results_wp)[:,3]
         nbar = 1.*len(pos)/(self.boxsize)**3.
+        """
+        return nbar , wp , nbar_var , wp_cov
 
-        return nbar , wp
+
+        #x, y, z = pos[:,0] , pos[:,1] , pos[:,2]
+        #results_wp = _countpairs.countpairs_wp(self.boxsize, self.pimax, 
+        #                                   self.nthreads,
+        #                                   self.binfile, x, y, z)
+        #wp = np.array(results_wp)[:,3]
+        #nbar = 1.*len(pos)/(self.boxsize)**3.
+
+        #return nbar , wp
+
+def mask_positions(pos , boxdize, subvol_index , nsub):
+
+    '''masks the positions of galaxies in
+       model to compute jk covariance'''
+
+    
+    subbox_size = 1.*box_size / nsub
+    
+    xi , yi , zi  = edge(subvol_index, nsub)
+    submask = np.where((xi <pos[:, 0]) * \
+                       (pos[:, 0] < xi + subbox_size) * \
+                       (yi <pos[:, 1]) * \
+                       (pos[:, 1] < yi + subbox_size) * \
+                       (zi <pos[:, 2]) *  \
+                       (pos[:, 2] < zi + subbox_size))
+    
+    return pos[submask] - edge(subvol_index,nsub)
