@@ -42,9 +42,9 @@ class MCMC_model(object):
         self.boxsize = self.halocat.Lbox
         self.nthreads = 1
         self.pimax = 40.0
-        self.rbins = np.loadtxt(self.binfile) 
         self.binfile = path.join(path.dirname(path.abspath(__file__)),
                         "../", "bin")
+        self.rbins = np.loadtxt(self.binfile) 
         self.autocorr = 1
 
     def __call__(self, theta, prior_range):
