@@ -38,7 +38,8 @@ class MCMC_model(object):
         
         self.Mr = Mr
         self.model = composite_model(Mr)
-        self.halocat = CachedHaloCatalog(simname = 'bolplanck', redshift = 0, halo_finder = 'rockstar')
+        self.halocat = CachedHaloCatalog(simname = 'smdp', redshift = 0.0 , version_name = 'mj', halo_finder = 'rockstar')
+        #self.halocat = CachedHaloCatalog(simname = 'bolplanck', redshift = 0.0 , halo_finder = 'rockstar')
 
         ###pair counter settings ###
 
@@ -47,7 +48,7 @@ class MCMC_model(object):
         self.pimax = 40.0
         self.binfile = path.join(path.dirname(path.abspath(__file__)),
                         "../", "bin")
-        self.rbins = np.loadtxt("rbins.dat") 
+        self.rbins = np.loadtxt("/scratch/mv1003/projects/gambly/code/rbins.dat") 
         self.autocorr = 1
 
     def __call__(self, theta, prior_range):
