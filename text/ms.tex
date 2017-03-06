@@ -173,9 +173,11 @@ In the $\mathtt{SMDP}$ simulation, as discussed in \citet{halodemographic}, the 
 }
 %%%
 Furthermore, since we are studying the higher order halo occupation statistics, the concentration-dependence in particular, it is important to use a simulation that can resolve the internal structure of halos. 
-%%% CHH: see issue in github
-{\bf \color{darkgreen}
-    In the context of Subhalo-Abundance matching modeling accuracy of which depends on subhalo completeness especially in the low mass limit, the $\mathtt{SMDP}$ simulation has been used to model the faintest galaxy samples in the SDSS data~\citep[see][]{hod_vs_sham}. 
+%%% CHH: Re-worded based on (github issue #1)
+{\bf \color{dred}
+    In the context of Subhalo-Abundance Matching models, which requires subhalo completeness 
+    in the low mass limit, the $\mathtt{SMDP}$ simulation has been used to model the faintest 
+    galaxy samples in the SDSS data~\citep[see][]{hod_vs_sham}. 
 }
 %%%
 The added advantage of using the $\mathtt{SMDP}$ simulation over some of the other industrial simulation boxes commonly used in the literature such as $\mathtt{Bolshoi}$ (\citealt{Klypin2011,smallmultidark}) simulation is its larger comoving volume. Larger volume makes this simulation more suitable for performing inference with $L_{\star}$ (corresponding to $M_{\rm r} \sim -20.44$, see \citealt{blanton2003}) and more luminous than $L_{\star}$ galaxy samples that occupy larger comoving volumes.
@@ -192,7 +194,13 @@ and the occupation of the satellite galaxies follows a Poisson distribution. The
 \end{eqnarray}
 
 For populating the halos with galaxies, we follow the procedure described in \citet{2016arXiv160701782H}, and \citet{decorated}. The central galaxies are assumed to be at the center of the host dark matter halos. We assume that the central galaxies are at rest with respect to the bulk motion of the halos and their velocities are given by the velocity of the center of mass of their host halo. Note that this assumption is shown to be violated in brighter than $L_{\star}$ galaxy samples (see \citealt{guo2015}). But since we are not considering the redshift space 2PCF multipoles in our study, we do not expect this velocity bias to impact our inference. We place the satellite galaxies within the virial radius of the halo following a Navarro-Frenk-White profile (hereafter NFW; \citealt{nfw}). This approach is different from other simulation-based halo occupation modeling techniques (see \citealt{hod_vs_sham,zheng_guo}) in that the positions of the satellites are not assigned to the dark matter particles in the $N$-body simulation. 
-The concentration of the NFW profile is given by the empirical mass-concentration relation provided by \citet{nfw_c(M)}. The velocities of the satellite galaxies are given by two components. The first component is the velocity of the host halo. The second component is the velocity of the satellite galaxy with respect to the host halo which is computed following the solution to the NFW profile Jeans equations (\citealt{more2010}). We refer the readers to \citet{decorated} for a more comprehensive and detailed discussion of the forward modeling of the galaxy mock catalogs.
+%%% Missing citation
+{\bf \color{darkgreen} 
+    The concentration of the NFW profile is given by the empirical 
+    mass-concentration relation provided by \citet{nfw_c(M)}. 
+}
+%%%
+The velocities of the satellite galaxies are given by two components. The first component is the velocity of the host halo. The second component is the velocity of the satellite galaxy with respect to the host halo which is computed following the solution to the NFW profile Jeans equations (\citealt{more2010}). We refer the readers to \citet{decorated} for a more comprehensive and detailed discussion of the forward modeling of the galaxy mock catalogs.
 
 \subsubsection{Model with Assembly bias}\label{subsubsec:decorated}
 Now let us provide a brief overview of HOD modeling with $\mathtt{Heaviside}$ $\mathtt{Assemblybias}$ (referred to as the decorated HOD) introduced in \citet{decorated}. At a fixed halo mass $M_{h}$, halos are split into two populations: population of halos with the 0.5-percentile of highest concentration, and population of halos with 0.5 percentile of lowest concentration. For simplicity, we call the first population ``type-1'' halos, and the second population ``type-2'' halos. In the decorated HOD model, the expected number of central and satellite galaxies at a fixed halo mass $M_{h}$ in the two populations are given by
@@ -288,7 +296,7 @@ where $N=400$ is the number of the jackknife samples, and $d=12$ is the length o
     Parameter & & Prior & & Range \\ \hline
   $\alpha$ & & Uniform & & [0.85, 1.45] \\
   $\sigmam$ & & Uniform & &  [0.05, 1.5] \\
-   $\mzero$   & & Uniform & &  [10.0, 14.5] \\
+  $\mzero$   & & Uniform & &  [10.0, 14.5] \\
   $\mmin$ & &   Uniform & &  [10.0, 14.0] \\
   $\mone$ & & Uniform & & [11.5, 15.0] \\ 
   $\acen^{*}$ & & Uniform & & [-1.0, 1.0] \\
@@ -303,11 +311,18 @@ For sampling from the posterior probability, given the likelihood function (see 
 
 \section{Results and Discussion}\label{sec:result}
 
-\subsection{constraints and interpretations}
-
-Our constraints on the assembly bias parameters fall into two main categories. First, the satellite 
-assembly bias parameter $\asat$ and the second, the central assembly bias parameter $\acen$. As shown in Figure \ref{fig:bias}, for all the eight luminosity-threshold samples in the SDSS DR7 data, our constraints on the parameter $\asat$ are 
-consistent with zero. On the other hand, our constraints on the parameter $\acen$---albeit not tightly constrained---show a trend which can be summarized as the following. In the most luminous galaxy samples, i.e. $M_{\rm r} < -21.5$ and $M_{\rm r} < -21$, $\acen$ is poorly constrained and the constraints are equivalent to zero. As we investigate less luminous samples, $M_{\rm r} < -20.5 , -20, -19.5$, our constraints on $\acen$ shift toward positive values, with the $M_{\rm r}<-20$ sample favoring the highest values for $\acen$. Furthermore, the posterior constraints on the assembly bias parameters in the slightly fainter samples, i.e. $M_{\rm r} < -19$ and i.e. $M_{\rm r} < -18.5$, are consistent with zero. In the faintest galaxy sample, i.e. $M_{\rm r} < -18$, our constraints favor negative values of $\acen$.
+\subsection{{\color{dred} Constraints and Interpretations}}
+%Our constraints on the assembly bias parameters fall into two main categories. First, the satellite 
+%assembly bias parameter $\asat$ and the second, the central assembly bias parameter $\acen$. 
+%%% Re-worded
+{\bf \color{dred}  
+    In this section, we present the constraints derived for the two assembly 
+    bias parameters: the satellite assembly bias parameter ($\asat$) and the 
+    central assembly bias parameter $\acen$. 
+} 
+%%%
+As shown in Figure \ref{fig:bias}, for all the eight luminosity-threshold samples in the SDSS DR7 data, our constraints on the parameter $\asat$ are 
+consistent with zero. On the other hand, our constraints on the parameter $\acen$--- albeit not tightly constrained--- show a trend which can be summarized as the following. In the most luminous galaxy samples, i.e. $M_{\rm r} < -21.5$ and $M_{\rm r} < -21$, $\acen$ is poorly constrained and the constraints are equivalent to zero. As we investigate less luminous samples, $M_{\rm r} < -20.5 , -20, -19.5$, our constraints on $\acen$ shift toward positive values, with the $M_{\rm r}<-20$ sample favoring the highest values for $\acen$. Furthermore, the posterior constraints on the assembly bias parameters in the slightly fainter samples, i.e. $M_{\rm r} < -19$ and i.e. $M_{\rm r} < -18.5$, are consistent with zero. In the faintest galaxy sample, i.e. $M_{\rm r} < -18$, our constraints favor negative values of $\acen$.
 
 The underlying theoretical consideration for explaining the assembly bias of the central 
 and satellite galaxies are different. The large scale clustering---or the two halo term in the galaxy clustering---is mainly governed by the clustering of the central galaxies. The central galaxy clustering can be thought as the weighted average over the halo clustering. The large scale bias of the dark matter halo clustering depends not only on mass, but also on the other properties of halos beyond mass, such as concentration (\citealt{weschler2006,gao2007,miyatake2016}), spin (\citealt{gao2007}), formation time (\citealt{gao2007, li2008}), and maximum circular velocity of the halo $V_{\rm max}$ (\citealt{sunayama2016}).
@@ -345,7 +360,12 @@ As shown in Table \ref{tab:constraints}, our constraints on the underlying stand
 
 \citet{arz2014} shows that in the mock catalogs that exhibit significant levels of assembly bias, using a simple mass-only occupation model can lead to considerable biases in inference of the galaxy--halo connection parameters. Although we cannot rule out moderate levels of assembly bias in our findings, we do not find any considerable discrepancy between the two models in terms of estimating the underlying HOD parameters. 
  
-A few galaxy--halo connection methods have been proposed in the literature that give rise to assembly bias in the galaxy population. \citet{arz2014} demonstrates that the abundance matching techniques based on $V_{\rm max }$ (as introduced in \citealt{hw2013,reddick2013}) exhibit some levels of assembly bias. 
+A few galaxy--halo connection methods have been proposed in the literature that give rise to assembly bias in the galaxy population. 
+%%%% CHH: (Ref. Report Minor #5) re-worded and Conroy et al. (2006) included in citations. 
+{\bf \color{dred} 
+    \citet{arz2014} demonstrates that the abundance matching techniques based on $V_{\rm max }$ 
+    \citep{conroy:2006aa,hw2013,reddick2013} exhibit some levels of assembly bias. 
+}
 We aim to provide a comparison between the impact of assembly bias on clustering in these mock catalogs and the mock catalogs predicted from our constraints on the decorated HOD model for $L_{\star}$-type galaxies. In particular, we consider the abundance matching catalogs produced by \citet{hw2013}. These catalogs have been extensively studied for examining potential systematic effects of galaxy assembly bias on cosmological (\citealt{edHOD-weinberg}) and halo occupation (\citealt{arz2014}) parameter inferences. 
 
 This abundance matching catalog was built based on the $\mathtt{Bolshoi}$ $N$-body simulation (\citealt{Klypin2011}) using the adaptive refinement tree code (ART \citealt{art}). The Box size for this simulation is 250 $h^{-1} \rm{Mpc}$, the number of simulation particles is 2048$^3$, the mass per simulation particle $m_{\rm p}$ is $1.35 \times 10^{8} \; h^{-1} M_{\odot}$, and the gravitational softening length $\epsilon$ is 1 $h^{-1} \rm{kpc}$. The halos and subhalos in this simulation are identified using the ROCKSTAR algorithm (\citealt{rockstar}). 

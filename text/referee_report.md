@@ -32,9 +32,13 @@ The phrasing of the section has been clarified.
 
 > 4.Most of the interpretation of the clustering results, especially toward the beginning of section 5.1, follows directly from the modeling paper of Hearin et al. 2016. This work should be cited as the source for this interpretation.
 
-5. In section 5.1, the authors attribute abundance matching by Vmax to Hearin and Watson 2013. These authors did use abundance matching, but did not introduce Abundance matching via Vmax. Abundance matching via Vmax goes back at least to a paper by Conroy et al. 2006. 
+> 5.In section 5.1, the authors attribute abundance matching by Vmax to Hearin and Watson 2013. These authors did use abundance matching, but did not introduce Abundance matching via Vmax. Abundance matching via Vmax goes back at least to a paper by Conroy et al. 2006. 
 
-6. In comparing results from different simulations in section 5.3, the authors draw particular attention to the -20.5 and -19 samples. However, drawing attention to these particular samples seems hardly warranted given the uncertainties in each inference of Asat (e.g., in Fig. 6). Rather, these seem to be specific examples of the general trend that Asat inferred from Bolshoi-P tends to be marginally higher than Asat inferred from SMDP.
+Conroy et al. (2006) has been included in the citation for abundance matching via V_max.
 
-7. There are a number of awkward phrasings in the text. As an example, take the first sentence of Section 5.1. "The constraints on the assembly bias parameters fall into two main categories. First, the satellite assembly bias parameter Asat and the second, the central assembly bias parameter Acen." This is awkward because category really isn't the correct word here. There are simply two parameters. Second, the second "sentence" is actually a sentence fragment as it has no verb. This is one example of awkwardness that is sprinkled throughout the paper. The manuscript could stand to be proofread more thoroughly, both by the authors and by a native English speaker if neither of the authors speak English as a native language.
+> 6.In comparing results from different simulations in section 5.3, the authors draw particular attention to the -20.5 and -19 samples. However, drawing attention to these particular samples seems hardly warranted given the uncertainties in each inference of Asat (e.g., in Fig. 6). Rather, these seem to be specific examples of the general trend that Asat inferred from Bolshoi-P tends to be marginally higher than Asat inferred from SMDP.
+
+> 7.There are a number of awkward phrasings in the text. As an example, take the first sentence of Section 5.1. "The constraints on the assembly bias parameters fall into two main categories. First, the satellite assembly bias parameter Asat and the second, the central assembly bias parameter Acen." This is awkward because category really isn't the correct word here. There are simply two parameters. Second, the second "sentence" is actually a sentence fragment as it has no verb. This is one example of awkwardness that is sprinkled throughout the paper. The manuscript could stand to be proofread more thoroughly, both by the authors and by a native English speaker if neither of the authors speak English as a native language.
+
+This comment is bit offensive... 
 
