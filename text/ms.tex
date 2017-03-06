@@ -1,17 +1,13 @@
-\documentclass[12pt, preprint]{aastex}
-%\documentclass[12pt, preprint]{emulateapj}
-\usepackage[breaklinks,colorlinks, urlcolor=blue,citecolor=blue,linkcolor=blue]{hyperref}
-\usepackage{graphicx}	% For figures
-\usepackage{natbib}	% For citep and citep
-\usepackage{amsmath}	% for \iint
-\usepackage{mathtools}
-\usepackage{bm}
-\usepackage[breaklinks]{hyperref}	% for blackboard bold numbers
-\usepackage{hyperref}
-\usepackage{algorithmic,algorithm}
-\hypersetup{colorlinks}
-\usepackage{color}
-\usepackage{morefloats}
+\documentclass[twocolumn]{aastex61}
+\pdfoutput=1 %for arXiv submission
+\usepackage{amsmath,amstext}
+\usepackage[T1]{fontenc}
+\usepackage{apjfonts} 
+\usepackage[figure,figure*]{hypcap}
+
+\renewcommand*{\sectionautorefname}{Section} %for \autoref
+\renewcommand*{\subsectionautorefname}{Section} %for \autoref
+
 \definecolor{dred}{rgb}{0.75,0,0}
 \definecolor{darkred}{rgb}{0.5,0,0}
 \definecolor{darkgreen}{rgb}{0,0.5,0}
@@ -47,20 +43,22 @@ citecolor=darkblue}
 
 
 
-\begin{document}
 
+\shorttitle{AASTeX 6.1 Template}
+\shortauthors{Vakili \& Hahn}
+
+\begin{document}
 
 \title{How are galaxies assigned to halos? \\ Searching for assembly bias in the SDSS galaxy clustering}
 
+\author{Mohammadjavad Vakili}
+\affiliation{Center for Cosmology and Particle Physics, Department of Physics, New York University, 4 Washington Pl, New York, NY, 10003}
 
-\author{Mohammadjavad Vakili\altaffilmark{1}, Chang~Hoon Hahn\altaffilmark{1}}
+\author{ChangHoon Hahn}
+\affiliation{Center for Cosmology and Particle Physics, Department of Physics, New York University, 4 Washington Pl, New York, NY, 10003}
 
-\email{mjvakili@nyu.edu}
-
-\altaffiltext{1}{Center for Cosmology and Particle Physics, Department of Physics, New York University, 4 Washington Pl, New York, NY, 10003}
 
 \begin{abstract}
-
 Clustering of dark matter halos has been shown to depend on halo properties beyond mass such as halo concentration, a phenomenon referred to as halo assembly bias. Standard halo occupation modeling (HOD) in large scale structure studies assumes that halo mass alone is sufficient in characterizing the connection between galaxies and halos. Modeling of galaxy clustering can face systematic effects if the number of galaxies are correlated with other halo properties. Using the Small MultiDark-Planck high resolution $N$-body simulation and the measurements of the projected two-point correlation function and the number density of Sloan Digital Sky Survey (SDSS) DR7 main galaxy sample, we investigate the extent to which the dependence of halo occupation on halo concentration can be constrained, and to what extent allowing for this dependence can improve our modeling of galaxy clustering.  
 
 Given the SDSS clustering data, our constraints on HOD with assembly bias, suggests that satellite population is not correlated with halo concentration at fixed halo mass. Furthermore, in terms of the occupation of centrals at fixed halo mass, our results favor lack of correlation with halo concentration in the most luminous samples ($M_{\rm r}<-21.5,-21$), modest levels of correlation for $M_{\rm r}<-20.5,-20, -19.5$ samples, lack of correlation for $M_{\rm r}<-19,-18.5$ samples, and anti-correlation for the faintest sample $M_{\rm r}<-18$.
@@ -69,10 +67,10 @@ We show that in comparison with abundance-matching mock catalogs, our findings s
 Furthermore, by performing model comparison based on information criteria, we find that in most cases, the standard mass-only HOD model is still favored by the observations.
 
 \end{abstract}
-\keywords{Cosmology: large-scale-structure of the universe, galaxies: halos}
+
+\keywords{Cosmology: large-scale-structure of the universe--- galaxies: halos}
 
 \section{Introduction}
-
 Most theories of cosmology and large-scale structure formation under consideration today rely on the central assumption that galaxies reside in dark matter halos. Detailed study of the galaxy--halo connection is therefore critical in order to constrain cosmological models (by modeling galaxy clustering at non-linear scales) as well as providing a window into galaxy formation physics. One of the most powerful methods for describing the galaxy--halo connection is the halo occupation 
 distribution (HOD, see \citealt{seljak2000, berlind_weinberg2002, scoccimarro2001, zheng2005, zheng07, leauthaud12, tinker2013, decorated, 2016arXiv160701782H}).
 
@@ -113,7 +111,7 @@ In this work, we aim to investigate the dependence of halo occupation on
 In order to achieve this goal, we need to adopt a HOD model that takes into account 
 a dependence on halo properties beyond mass. 
 %%% CHH: Re-phrasing to address ref. report
-{\bf \color{dred} 
+{\bf \color{red} 
     A number of frameworks in the literature \citep{edHOD-tinker,edHOD-gillmartin,edHOD-weinberg} 
     have proposed environment-dependent HOD models that take into account the large-scale density contrast. 
     In this investigation, we use the following case of the decorated HOD framework \citep{decorated}.  
@@ -150,7 +148,7 @@ In this section, we discuss the ingredients of our modeling one-by-one. First, w
 
 For the simulations used in this work, we make use of the Rockstar (\citealt{rockstar}) halo catalogs in the $z=0$ snapshot of the Small MultiDark of Planck cosmology (referred to as $\mathtt{SMDP}$) (\citealt{smallmultidark}). This high resolution $N$-body simulation (publicly available at \url{https://www.cosmosim.org}) was carried out using the 
 %%% CHH: small typo
-{\bf \color{dred} GADGET-2 (see \citealt{smallmultidark} and references therein) code}, 
+{\bf \color{red} GADGET-2 (see \citealt{smallmultidark} and references therein) code}, 
 %%%
 following the Planck $\Lambda$CDM cosmological parameters 
 $\Omega_{\rm m} = 0.307$, $\Omega_{\rm b} = 0.048$, $\Omega_{\Lambda} = 0.693$, $\sigma_{8} = 0.823$, $n_{\rm s}=0.96$, 
@@ -158,13 +156,13 @@ $h=0.678$. The Box size for this $N$-body simulation is 0.4 $h^{-1} \rm{Gpc}$, t
 
 In the $\mathtt{SMDP}$ simulation, as discussed in \citet{halodemographic}, the Rockstar algorithm can reliably resolve halos with $\geq 100$
 %%% CHH: grammar error
-{\bf \color{dred} particles, which corresponds to $M_{\rm vir} \geq 9.6 \times 10^{9} \; h^{-1}M_{\odot}$.}
+{\bf \color{red} particles, which corresponds to $M_{\rm vir} \geq 9.6 \times 10^{9} \; h^{-1}M_{\odot}$.}
 %%%
 %The advantage of using the $\mathtt{SMDP}$ simulation is that it satisfies both the size and resolution 
 %requirements of studying the galaxy--halo connection in a wide range of luminosity thresholds. 
 %%%
 %%% Re-worded 
-{\bf \color{dred}
+{\bf \color{red}
     The $\mathtt{SMDP}$ simulation provides a number of advantages by satisfying both the size 
     and resolution requirements of studying the galaxy--halo connection in a wide range of 
     luminosity thresholds. For fainter galaxy samples, the faintest galaxies reside in lower 
@@ -174,7 +172,7 @@ In the $\mathtt{SMDP}$ simulation, as discussed in \citet{halodemographic}, the 
 %%%
 Furthermore, since we are studying the higher order halo occupation statistics, the concentration-dependence in particular, it is important to use a simulation that can resolve the internal structure of halos. 
 %%% CHH: Re-worded based on (github issue #1)
-{\bf \color{dred}
+{\bf \color{red}
     In the context of Subhalo-Abundance Matching models, which requires subhalo completeness 
     in the low mass limit, the $\mathtt{SMDP}$ simulation has been used to model the faintest 
     galaxy samples in the SDSS data~\citep[see][]{hod_vs_sham}. 
@@ -195,7 +193,7 @@ and the occupation of the satellite galaxies follows a Poisson distribution. The
 
 For populating the halos with galaxies, we follow the procedure described in \citet{2016arXiv160701782H}, and \citet{decorated}. The central galaxies are assumed to be at the center of the host dark matter halos. We assume that the central galaxies are at rest with respect to the bulk motion of the halos and their velocities are given by the velocity of the center of mass of their host halo. Note that this assumption is shown to be violated in brighter than $L_{\star}$ galaxy samples (see \citealt{guo2015}). But since we are not considering the redshift space 2PCF multipoles in our study, we do not expect this velocity bias to impact our inference. We place the satellite galaxies within the virial radius of the halo following a Navarro-Frenk-White profile (hereafter NFW; \citealt{nfw}). This approach is different from other simulation-based halo occupation modeling techniques (see \citealt{hod_vs_sham,zheng_guo}) in that the positions of the satellites are not assigned to the dark matter particles in the $N$-body simulation. 
 %%% Missing citation
-{\bf \color{darkgreen} 
+{\bf \color{green} 
     The concentration of the NFW profile is given by the empirical 
     mass-concentration relation provided by \citet{nfw_c(M)}. 
 }
@@ -308,7 +306,6 @@ where $N=400$ is the number of the jackknife samples, and $d=12$ is the length o
 
 For sampling from the posterior probability, given the likelihood function (see equation \ref{eq:lnlike_wp}) and the prior probability distributions (see Table \ref{tab:prior}), we use the affine-invariant ensemble MCMC sampler (\citealt{goodmanweare}) and its implementation $\mathtt{emcee}$ (\citealt{emcee}). In particular, we run the $\mathtt{emcee}$ code with 20 walkers and we run the chains for at least 10000 iterations. We discard the first one-third part of the chains as burn-in samples and use the reminder of the chains as production MCMC chains. Furthermore, we perform Gelman-Rubin convergence test (\citealt{grtest}) to ensure that the MCMC chains have reached convergence.
 
-
 \section{Results and Discussion}\label{sec:result}
 
 \subsection{{\color{dred} Constraints and Interpretations}}
@@ -378,7 +375,6 @@ For $L_{\star}$ galaxies, the difference in $w_{p}$ between the randomized and t
 Furthermore, we investigate whether the impact of assembly bias on galaxy clustering predicted by our findings are in agreement with the abundance matching catalogs of \citet{hw2013}. First, we make random draws from the posterior probability distribution function over the parameters of the model with assembly bias. Then, we create mock catalogs with these random draws, and then we compute the difference in $w_{p}$ between the randomized catalogs and the original catalogs. The relative difference in $w_{p}$ predicted from our constraints are shown with blue curves in Figure \ref{fig:randomized}. 
 
 We note that our findings follow the same trend. That is, we see negligible difference in the small scale clustering and more considerable differences in $w_{p}$ on larger scales ($r_{p} > 1\; \mathrm{Mpc}h^{-1}$). Similar to findings of \citet{arz2014}, \citet{lehman2015}, and \citet{edHOD-weinberg}, we see that the impact of assembly bias on galaxy clustering becomes less significant in brighter galaxy samples. Furthermore, we notice that our mock catalogs favor more moderate changes in galaxy clustering as a result of assembly bias. 
-
 
 \begin{table*}
 \begin{center}
@@ -462,7 +458,6 @@ For the $M_{\rm r}<-19, -20.5$ samples, the marginalized posterior PDFs over $\a
 
 In terms of the effect of assembly bias on galaxy clustering, note that mocks created using the inferred parameters with the $\mathtt{SMDP}$ simulation show the same behavior as we observe in the abundance matching catalogs presented in \citet{arz2014} and \citet{lehman2015}. That is, the difference in $w_{p}$ between the mock catalogs and the randomized catalogs is mostly on large scales where the clustering is governed by the central galaxies. That is, the impact of assembly bias on the satellite occupation is negligible and only the central occupation is affected.  
 
-
 \section{Summary and Conclusion}\label{sec:summary}
 
 In this investigation, we provide constraints on the concentration-dependence of halo occupation for a wide range of galaxy luminosities in the SDSS data. In particular, the modeling is done in the context of the decorated HOD model \citet{decorated}, and the data used in this investigation is the projected 2PCF measurements published by \citet{guo2015}. We make use of $\mathtt{SMDP}$ high resolution $N$-body simulation that enables us to reliably perform inference for the faintest galaxy samples in the SDSS DR7 catalog that live in low mass halos, and the brightest galaxy samples that occupy large comoving volumes. 
@@ -502,7 +497,7 @@ code repository at \url{https://github.com/mjvakili/gambly}. The SDSS clustering
 \end{center}
 \end{figure*}
 
-\clearpage
+%\clearpage
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % WP MODEL
@@ -514,7 +509,7 @@ code repository at \url{https://github.com/mjvakili/gambly}. The SDSS clustering
 \label{fig:wpmodel}
 \end{center}
 \end{figure*}
-\clearpage
+%\clearpage
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % WPRES
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -526,7 +521,7 @@ code repository at \url{https://github.com/mjvakili/gambly}. The SDSS clustering
 \end{center}
 \end{figure*}
 
-\clearpage
+%\clearpage
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % WP RANDOMIZED
@@ -539,7 +534,7 @@ code repository at \url{https://github.com/mjvakili/gambly}. The SDSS clustering
 \end{center}
 \end{figure*}
 
-\clearpage
+%\clearpage
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Information Criteria
@@ -552,7 +547,7 @@ code repository at \url{https://github.com/mjvakili/gambly}. The SDSS clustering
 \end{center}
 \end{figure*}
 
-\clearpage
+%\clearpage
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % BIAS COMPARISON
@@ -565,7 +560,7 @@ code repository at \url{https://github.com/mjvakili/gambly}. The SDSS clustering
 \end{center}
 \end{figure*}
 
-\clearpage
+%\clearpage
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % ASAT DISCREPANCY
@@ -578,7 +573,7 @@ code repository at \url{https://github.com/mjvakili/gambly}. The SDSS clustering
 \end{center}
 \end{figure*}
 
-\clearpage
+%\clearpage
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % EXAMPLE POSTERIOR PDF
@@ -595,6 +590,3 @@ code repository at \url{https://github.com/mjvakili/gambly}. The SDSS clustering
 \bibliography{assemble}
 
 \end{document}
-
-%%
-%% End of file `sample.tex'.
