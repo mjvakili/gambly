@@ -12,6 +12,7 @@
 \hypersetup{colorlinks}
 \usepackage{color}
 \usepackage{morefloats}
+\definecolor{dred}{rgb}{0.75,0,0}
 \definecolor{darkred}{rgb}{0.5,0,0}
 \definecolor{darkgreen}{rgb}{0,0.5,0}
 \definecolor{darkblue}{rgb}{0,0,0.5}
@@ -127,12 +128,19 @@ In this section, we discuss the ingredients of our modeling one-by-one. First, w
 
 \subsection{Simulation}
 
-For the simulations used in this work, we make use of the Rockstar (\citealt{rockstar}) halo catalogs in the $z=0$ snapshot of the Small MultiDark of Planck cosmology (referred to as $\mathtt{SMDP}$) (\citealt{smallmultidark}). This high resolution $N$-body simulation (publicly available at \url{https://www.cosmosim.org}) was carried out using the GADGET-2 code 
-(see \citealt{smallmultidark} and references therein) code, following the Planck $\Lambda$CDM cosmological parameters 
+For the simulations used in this work, we make use of the Rockstar (\citealt{rockstar}) halo catalogs in the $z=0$ snapshot of the Small MultiDark of Planck cosmology (referred to as $\mathtt{SMDP}$) (\citealt{smallmultidark}). This high resolution $N$-body simulation (publicly available at \url{https://www.cosmosim.org}) was carried out using the 
+%%% CHH: small typo
+{\bf \color{dred} GADGET-2 (see \citealt{smallmultidark} and references therein) code}, 
+%%%
+following the Planck $\Lambda$CDM cosmological parameters 
 $\Omega_{\rm m} = 0.307$, $\Omega_{\rm b} = 0.048$, $\Omega_{\Lambda} = 0.693$, $\sigma_{8} = 0.823$, $n_{\rm s}=0.96$, 
 $h=0.678$. The Box size for this $N$-body simulation is 0.4 $h^{-1} \rm{Gpc}$, the number of simulation particles is 3840$^3$, the mass per simulation particle $m_{\rm p}$ is $9.6 \times 10^{7} \; h^{-1} M_{\odot}$, and the gravitational softening length $\epsilon$ is 1.5 $h^{-1} \rm{kpc}$.
 
-In the $\mathtt{SMDP}$ simulation, as discussed in \citet{halodemographic}, the Rockstar algorithm can reliably resolve halos with $\geq 100$ particles which corresponds to $M_{\rm vir} \geq 9.6 \times 10^{9} \; h^{-1}M_{\odot}$. The advantage of using the $\mathtt{SMDP}$ simulation is that it satisfies both the size and resolution requirements of studying the galaxy--halo connection in a wide range of luminosity thresholds. Fainter galaxy samples reside in lower mass halos, and the more luminous galaxy samples considered in this investigation occupy higher comoving volumes. Furthermore, since we are studying the higher order halo occupation statistics, the concentration-dependence in particular, it is important to use a simulation that can resolve the internal structure of halos. In the context of Subhalo-Abundance matching modeling, accuracy of which depends on subhalo completeness especially in the low mass limit, the $\mathtt{SMDP}$ simulation has been used to model the faintest galaxy samples in the SDSS data (see \citet{hod_vs_sham}). The added advantage of using the $\mathtt{SMDP}$ simulation over some of the other industrial simulation boxes commonly used in the literature such as $\mathtt{Bolshoi}$ (\citealt{Klypin2011,smallmultidark}) simulation is its larger comoving volume. Larger volume makes this simulation more suitable for performing inference with $L_{\star}$ (corresponding to $M_{\rm r} \sim -20.44$, see \citealt{blanton2003}) and more luminous than $L_{\star}$ galaxy samples that occupy larger comoving volumes.
+In the $\mathtt{SMDP}$ simulation, as discussed in \citet{halodemographic}, the Rockstar algorithm can reliably resolve halos with $\geq 100$
+%%% CHH: grammar error
+{\bf \color{dred} particles, which corresponds to $M_{\rm vir} \geq 9.6 \times 10^{9} \; h^{-1}M_{\odot}$.}
+%%%
+The advantage of using the $\mathtt{SMDP}$ simulation is that it satisfies both the size and resolution requirements of studying the galaxy--halo connection in a wide range of luminosity thresholds. Fainter galaxy samples reside in lower mass halos, and the more luminous galaxy samples considered in this investigation occupy higher comoving volumes. Furthermore, since we are studying the higher order halo occupation statistics, the concentration-dependence in particular, it is important to use a simulation that can resolve the internal structure of halos. In the context of Subhalo-Abundance matching modeling, accuracy of which depends on subhalo completeness especially in the low mass limit, the $\mathtt{SMDP}$ simulation has been used to model the faintest galaxy samples in the SDSS data (see \citet{hod_vs_sham}). The added advantage of using the $\mathtt{SMDP}$ simulation over some of the other industrial simulation boxes commonly used in the literature such as $\mathtt{Bolshoi}$ (\citealt{Klypin2011,smallmultidark}) simulation is its larger comoving volume. Larger volume makes this simulation more suitable for performing inference with $L_{\star}$ (corresponding to $M_{\rm r} \sim -20.44$, see \citealt{blanton2003}) and more luminous than $L_{\star}$ galaxy samples that occupy larger comoving volumes.
 
 \subsection{Halo occupation modeling}
 \subsubsection{standard model without assembly bias}\label{subsubsec:hod}
