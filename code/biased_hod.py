@@ -38,7 +38,9 @@ class MCMC_model(object):
         
         self.Mr = Mr
         self.model = composite_model(Mr)
-        self.halocat = CachedHaloCatalog(simname = 'smdp', redshift = 0.0 , version_name = 'mj', halo_finder = 'rockstar')
+        self.halocat = CachedHaloCatalog(simname = 'bolshoi_planck', redshift = 0.0 , version_name = 'mj', halo_finder = 'rockstar')
+
+        # , fname ='/scratch/mv1003/halocat/', update_cached_fname ='/home/mj/halocat/hlist_1.00.list.smdp.hdf5.')# '/scratch/mv1003/halocat/hlist_1.00.list.smdp.hdf5.')
         #self.halocat = CachedHaloCatalog(simname = 'bolplanck', redshift = 0.0 , halo_finder = 'rockstar')
 
         ###pair counter settings ###

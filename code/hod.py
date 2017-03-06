@@ -25,7 +25,7 @@ class MCMC_model(object):
         
         self.Mr = Mr
         self.model = single_model(Mr)
-        self.halocat = CachedHaloCatalog(simname = 'bolplanck', redshift = 0, halo_finder = 'rockstar')
+        self.halocat = CachedHaloCatalog(simname = 'bolshoi_planck', version_name = 'mj', redshift = 0, halo_finder = 'rockstar')
 
         ###pair counter settings ###
 
@@ -35,7 +35,7 @@ class MCMC_model(object):
         self.binfile = path.join(path.dirname(path.abspath(__file__)),
                         "../", "bin")
         
-        self.rbins = np.loadtxt("rbins.dat") 
+        self.rbins = np.loadtxt("/scratch/mv1003/projects/wp195/code/rbins.dat") 
         self.autocorr = 1
 
     def __call__(self, theta, prior_range):
