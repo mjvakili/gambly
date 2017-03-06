@@ -140,7 +140,25 @@ In the $\mathtt{SMDP}$ simulation, as discussed in \citet{halodemographic}, the 
 %%% CHH: grammar error
 {\bf \color{dred} particles, which corresponds to $M_{\rm vir} \geq 9.6 \times 10^{9} \; h^{-1}M_{\odot}$.}
 %%%
-The advantage of using the $\mathtt{SMDP}$ simulation is that it satisfies both the size and resolution requirements of studying the galaxy--halo connection in a wide range of luminosity thresholds. Fainter galaxy samples reside in lower mass halos, and the more luminous galaxy samples considered in this investigation occupy higher comoving volumes. Furthermore, since we are studying the higher order halo occupation statistics, the concentration-dependence in particular, it is important to use a simulation that can resolve the internal structure of halos. In the context of Subhalo-Abundance matching modeling, accuracy of which depends on subhalo completeness especially in the low mass limit, the $\mathtt{SMDP}$ simulation has been used to model the faintest galaxy samples in the SDSS data (see \citet{hod_vs_sham}). The added advantage of using the $\mathtt{SMDP}$ simulation over some of the other industrial simulation boxes commonly used in the literature such as $\mathtt{Bolshoi}$ (\citealt{Klypin2011,smallmultidark}) simulation is its larger comoving volume. Larger volume makes this simulation more suitable for performing inference with $L_{\star}$ (corresponding to $M_{\rm r} \sim -20.44$, see \citealt{blanton2003}) and more luminous than $L_{\star}$ galaxy samples that occupy larger comoving volumes.
+%The advantage of using the $\mathtt{SMDP}$ simulation is that it satisfies both the size and resolution 
+%requirements of studying the galaxy--halo connection in a wide range of luminosity thresholds. 
+%%%
+%%% Re-worded 
+{\bf \color{dred}
+    The $\mathtt{SMDP}$ simulation provides a number of advantages by satisfying both the size 
+    and resolution requirements of studying the galaxy--halo connection in a wide range of 
+    luminosity thresholds. For fainter galaxy samples, the faintest galaxies reside in lower 
+    mass halos, which requires high resolution. Meanwhile for luminous galaxy samples, their 
+    lower number densities requires a large comoving volume. 
+}
+%%%
+Furthermore, since we are studying the higher order halo occupation statistics, the concentration-dependence in particular, it is important to use a simulation that can resolve the internal structure of halos. 
+%%% CHH: see issue in github
+{\bf \color{darkgreen}
+    In the context of Subhalo-Abundance matching modeling accuracy of which depends on subhalo completeness especially in the low mass limit, the $\mathtt{SMDP}$ simulation has been used to model the faintest galaxy samples in the SDSS data~\citep[see][]{hod_vs_sham}. 
+}
+%%%
+The added advantage of using the $\mathtt{SMDP}$ simulation over some of the other industrial simulation boxes commonly used in the literature such as $\mathtt{Bolshoi}$ (\citealt{Klypin2011,smallmultidark}) simulation is its larger comoving volume. Larger volume makes this simulation more suitable for performing inference with $L_{\star}$ (corresponding to $M_{\rm r} \sim -20.44$, see \citealt{blanton2003}) and more luminous than $L_{\star}$ galaxy samples that occupy larger comoving volumes.
 
 \subsection{Halo occupation modeling}
 \subsubsection{standard model without assembly bias}\label{subsubsec:hod}

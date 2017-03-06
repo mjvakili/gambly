@@ -2,7 +2,7 @@
 ## Reviewer's Comments:
 I have completed my review of this manuscript and I apologize to the authors for the long delay. My recommendation is that this manuscript be revised prior to publication and that the revised version also be reviewed. I would be happy to review the revised manuscript. In the remainder of this report, I give the reasons for this recommendation.
 
-Major comments.
+## Major comments.
 
 I have a small number of comments that I consider to be significant and that could, in principle, affect the quantitative results of the manuscript. It is my recommendation that the authors be required to address these issues in any revised manuscript.
 
@@ -18,7 +18,7 @@ These possibilities should be checked by the authors and the method for estimati
 
 4. I am rather concerned that the resolution of the Bolshoi-P and SMDP simulations is insufficient to analyze the samples with Mr > -19.5. This issue cannot remain unaddressed in the manuscript. My reasoning is as follows. For these samples, log Mmin is on the order of 11.5 to 11.7, while sigma_log_M is on the order of 0.6 or larger (much larger in some cases). In the models studied by the authors, a significant number of halos are populated that are ~ 2*sigma_logM from the value of log Mmin. That means that halos with log-masses of log(Mmin)-2*(sigma_log_M) must be well resolved. For the -18.5 sample (just as an example) this corresponds to a mass of ~10^10 solar masses! For these simulations, that is about 100 particles. This may be too few to determine clustering reliably in dense regions as poorly resolved halos will have their structures disturbed by neighboring halos to a much larger degree than well resolved halos, enhancing the "assembly bias effect." More specifically, determining halo concentration from halos with few particles is quite uncertain, and it is not clear how this additional uncertainty may alter the results quoted in the present manuscript. There are many papers on this subject, recent examples being Poveda-Ruiz et al. 2016 and Klypin et al. 2016, but see the references therein as well. The rule-of-thumb that is often used is that the halos should have a few thousand particles in order to have concentration determined reliably. Therefore, it is probably necessary to consider only halos with masses above ~10^11 solar masses in the present work. Alternatively, the authors may attempt to construct an argument that demonstrates that resolution does not alter their results and that this rule-of-thumb criterion may not be applicable in this case. 
 
-Minor comments.
+## Minor comments.
 
 1. The two-population model of assembly bias within the context of the halo model is only a special case of the decorated HOD models described in Hearin et al. 2016. This is not clear from the text of the manuscript, particularly around the 9th paragraph of section 1.
 
