@@ -20,13 +20,17 @@ These possibilities should be checked by the authors and the method for estimati
 
 ## Minor comments.
 
-1. The two-population model of assembly bias within the context of the halo model is only a special case of the decorated HOD models described in Hearin et al. 2016. This is not clear from the text of the manuscript, particularly around the 9th paragraph of section 1.
+> 1.The two-population model of assembly bias within the context of the halo model is only a special case of the decorated HOD models described in Hearin et al. 2016. This is not clear from the text of the manuscript, particularly around the 9th paragraph of section 1.
 
-2. In Section 2.1, the larger volumes are necessary because of lower number densities. The phrasing in this section (that some samples occupy "larger volumes") is strange and potentially misleading.
+The 9th paragraph now explicitly states that the two-population model used in this investigation is a special case of the decorated HOD model from Hearin et al. (2016). 
 
-3. In Section 2.2, the authors state that they choose the concentrations of the halos from the Dutton & Maccio median relation. This is acceptable. However, this has the potential to mitigate one source of assembly bias that may (or may not) be present in nature. In particular, because individual halos cluster as a function of concentration, satellite populations may also be distributed within their halos in a manner that is correlated spatially. By using the Dutton & Maccio relation, the authors eliminate this possibility. This is likely to be a small effect, but this detail should at least be pointed out by the authors. 
+> 2.In Section 2.1, the larger volumes are necessary because of lower number densities. The phrasing in this section (that some samples occupy "larger volumes") is strange and potentially misleading.
 
-4. Most of the interpretation of the clustering results, especially toward the beginning of section 5.1, follows directly from the modeling paper of Hearin et al. 2016. This work should be cited as the source for this interpretation.
+The phrasing of the section has been clarified. 
+
+> 3.In Section 2.2, the authors state that they choose the concentrations of the halos from the Dutton & Maccio median relation. This is acceptable. However, this has the potential to mitigate one source of assembly bias that may (or may not) be present in nature. In particular, because individual halos cluster as a function of concentration, satellite populations may also be distributed within their halos in a manner that is correlated spatially. By using the Dutton & Maccio relation, the authors eliminate this possibility. This is likely to be a small effect, but this detail should at least be pointed out by the authors. 
+
+> 4.Most of the interpretation of the clustering results, especially toward the beginning of section 5.1, follows directly from the modeling paper of Hearin et al. 2016. This work should be cited as the source for this interpretation.
 
 5. In section 5.1, the authors attribute abundance matching by Vmax to Hearin and Watson 2013. These authors did use abundance matching, but did not introduce Abundance matching via Vmax. Abundance matching via Vmax goes back at least to a paper by Conroy et al. 2006. 
 
