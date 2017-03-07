@@ -2,8 +2,9 @@
 ------------
 Searching for Galaxy assembly bias in SDSS clustering measurements
 
-#Author: 
+#Authors: 
 
 Mohammadjavad Vakili (CCPP, NYU)
+ChangHoon Hahn (CCPP, NYU)
 
 

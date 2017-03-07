@@ -1,2 +1,6 @@
+# Manuscript for the Gambly project
 
-Place-holder for the manuscript.
+
+## Editing
+- Bold Dark Red : Edited
+- BOld Dark Green : Requires attention; see comments in .tex 

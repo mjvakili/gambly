@@ -42,8 +42,6 @@ citecolor=darkblue}
 \newcommand{\todo}[1]{{\em \textcolor{red}{ #1}}}
 
 
-
-
 \shorttitle{AASTeX 6.1 Template}
 \shortauthors{Vakili \& Hahn}
 
@@ -57,13 +55,27 @@ citecolor=darkblue}
 \author{ChangHoon Hahn}
 \affiliation{Center for Cosmology and Particle Physics, Department of Physics, New York University, 4 Washington Pl, New York, NY, 10003}
 
-
 \begin{abstract}
-Clustering of dark matter halos has been shown to depend on halo properties beyond mass such as halo concentration, a phenomenon referred to as halo assembly bias. Standard halo occupation modeling (HOD) in large scale structure studies assumes that halo mass alone is sufficient in characterizing the connection between galaxies and halos. Modeling of galaxy clustering can face systematic effects if the number of galaxies are correlated with other halo properties. Using the Small MultiDark-Planck high resolution $N$-body simulation and the measurements of the projected two-point correlation function and the number density of Sloan Digital Sky Survey (SDSS) DR7 main galaxy sample, we investigate the extent to which the dependence of halo occupation on halo concentration can be constrained, and to what extent allowing for this dependence can improve our modeling of galaxy clustering.  
+Clustering of dark matter halos has been shown to depend on halo properties beyond mass such as halo concentration, a phenomenon referred to as halo assembly bias. 
+%%% 
+Standard halo occupation {\bf \color{dred} models} (HOD) in large scale structure studies assume that halo mass alone is sufficient in characterizing the connection between galaxies and halos. 
+%%% 
+%%% CHH: @MJV, this sentence is far too long and indirect (RE RefReport Minor #7)
+{\bf \color{darkgreen}
+Modeling of galaxy clustering can face systematic effects if the number of galaxies are correlated with other halo properties. Using the Small MultiDark-Planck high resolution $N$-body simulation and the measurements of the projected two-point correlation function and the number density of Sloan Digital Sky Survey (SDSS) DR7 main galaxy sample, we investigate the extent to which the dependence of halo occupation on halo concentration can be constrained, and to what extent allowing for this dependence can improve our modeling of galaxy clustering.  
+}
+%%% 
 
-Given the SDSS clustering data, our constraints on HOD with assembly bias, suggests that satellite population is not correlated with halo concentration at fixed halo mass. Furthermore, in terms of the occupation of centrals at fixed halo mass, our results favor lack of correlation with halo concentration in the most luminous samples ($M_{\rm r}<-21.5,-21$), modest levels of correlation for $M_{\rm r}<-20.5,-20, -19.5$ samples, lack of correlation for $M_{\rm r}<-19,-18.5$ samples, and anti-correlation for the faintest sample $M_{\rm r}<-18$.
+%%% 
+{\bf \color{dred} From our} constraints on HOD with assembly bias, suggests that satellite population is not correlated with halo concentration at fixed halo mass. 
+%%% 
+%%% CHH: @MJV, this sentence is also long and a bit difficult to comprehend -- clarify. 
+{\bf \color{darkgreen} 
+Furthermore, in terms of the occupation of centrals at fixed halo mass, our results favor lack of correlation with halo concentration in the most luminous samples ($M_{\rm r}<-21.5,-21$), modest levels of correlation for $M_{\rm r}<-20.5,-20, -19.5$ samples, lack of correlation for $M_{\rm r}<-19,-18.5$ samples, and anti-correlation for the faintest sample $M_{\rm r}<-18$.} 
+%%%
 
-We show that in comparison with abundance-matching mock catalogs, our findings suggest qualitatively similar but modest levels of the impact of halo assembly bias on galaxy clustering. That is, the effect is only present in the central occupation and becomes less significant in brighter galaxy samples.
+We show that in comparison with abundance-matching mock catalogs, our findings suggest qualitatively similar but modest levels of the impact of halo assembly bias on galaxy clustering. 
+{\bf \color{dred} The} effect is only present in the central occupation and becomes less significant in brighter galaxy samples.
 Furthermore, by performing model comparison based on information criteria, we find that in most cases, the standard mass-only HOD model is still favored by the observations.
 
 \end{abstract}
@@ -71,10 +83,21 @@ Furthermore, by performing model comparison based on information criteria, we fi
 \keywords{Cosmology: large-scale-structure of the universe--- galaxies: halos}
 
 \section{Introduction}
-Most theories of cosmology and large-scale structure formation under consideration today rely on the central assumption that galaxies reside in dark matter halos. Detailed study of the galaxy--halo connection is therefore critical in order to constrain cosmological models (by modeling galaxy clustering at non-linear scales) as well as providing a window into galaxy formation physics. One of the most powerful methods for describing the galaxy--halo connection is the halo occupation 
+Most theories of cosmology and large-scale structure formation under consideration today rely on the central assumption that galaxies reside in dark matter halos. 
+%%%
+Detailed study of the galaxy--halo connection is therefore critical in {\bf \color{dred} constraining} cosmological models (by modeling galaxy clustering at non-linear scales) as well as providing a window into galaxy formation physics. 
+%%%
+One of the most powerful methods for describing the galaxy--halo connection is the halo occupation 
 distribution (HOD, see \citealt{seljak2000, berlind_weinberg2002, scoccimarro2001, zheng2005, zheng07, leauthaud12, tinker2013, decorated, 2016arXiv160701782H}).
 
-HOD is an empirical framework that provides an analytic prescription for the expected number of galaxies $N$ that reside in halos by specifying a probability distribution function $P(N|x)$ where $x$ is a property of the halo. The assumption of the standard HOD modeling is that the halo mass $M$ alone is sufficient in determining the galaxy population of a halo. That is, the statistical properties of galaxies is governed by the halo mass. Mathematically, this assumption can be written as $P(N|M,\{x\})=P(N|M)$ where $\{x\}$ is the set of all possible halo properties beyond halo mass $M$.
+HOD is an empirical framework that provides an analytic prescription for the expected number of galaxies $N$ that reside in halos by specifying a probability distribution function $P(N|x)$ where $x$ is a property of the halo. 
+%%%
+{\bf \color{dred} The standard HOD model assumes} that halo mass $M$ alone is sufficient in determining the galaxy population of a halo. 
+%%%
+%%% CHH: @MJV, what do you mean by "statistical properties of galaxies"? Their spacial statistics? 
+{\bf \color{dred} In the standard model,} {\bf \color{darkgreen} the statistical properties of galaxies is governed by the halo mass.}
+%%%
+Mathematically, this assumption can be written as $P(N|M,\{x\})=P(N|M)$ where $\{x\}$ is the set of all possible halo properties beyond halo mass $M$.
 
 Despite this simplifying assumption, the models of galaxy--halo connection based on HOD have been successfully used in fitting the measurements of a wide range of statistics such as the projected two-point correlation function of galaxies, small scale redshift space distortion, three-point function, and galaxy--galaxy lensing with remarkable success (e.g. \citealt{zheng07,tinker_rsd2007,zehavi2011,leauthaud12,parejko2013,coupon2015,hod-3pcf,guo2015,miyatake15,zu2015,hod_vs_sham}). 
 HOD has been used in constraining the cosmological parameters through modeling the galaxy two-point correlation function (hereafter 2PCF) (\citealt{abazajian2005}), combination of 2PCF with mass-to-light ratio of galaxies (\citealt{tinker05}), redshift space distortions (\citealt{tinker_rsd2007}), mass-to-number ratio of galaxy clusters (\citealt{tinker2012}) galaxy-galaxy weak lensing (\citealt{vdb03,cacciato13,more13,vdb13}) in the main sample of galaxies
