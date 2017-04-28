@@ -58,11 +58,14 @@ class MCMC_model(object):
         pos = return_xyz_formatted_array(x, y, z, velocity = vz, velocity_distortion_dimension = 'z')
         # enforcing PBC
         pos = enforce_periodicity_of_box(pos, self.boxsize)
-        #pos = pos.astype(np.float32)
-
-              
-        wp , wp_cov = helpers.projected_correlation(pos, self.rbins, self.pimax, self.boxsize, 
-                                           jackknife_nside = 8 , bias_correction = True) 
+        pos = pos.astype(np.float32)
+        x, y, z = pos[:,0], pos[:,1], pos[:,2] 
+        wp_result = _countpairs.countpairs_wp(self.boxsize, self.pimax, 
+                                   self.nthreads, self.binfile, 
+				   x, y, z)
+        wp = np.array(wp_result)[:,3]
+        #wp , wp_cov = helpers.projected_correlation(pos, self.rbins, self.pimax, self.boxsize, 
+        #                                   jackknife_nside = 8 , bias_correction = True) 
         
         nbar = 1.*len(pos)/(self.boxsize)**3.
         
@@ -79,11 +82,9 @@ class MCMC_model(object):
             print sub_pos.shape
             sub_pos = sub_pos.astype(np.float32)
             nbars[subvol_index] = (len(pos) - len(sub_pos))*(nsub**3)/((nsub **3 - 1. )*self.boxsize**3)
-            print nbars[subvol_index]    
-        nbar_var = np.var(nbars)
         """
 
-        return nbar , wp , wp_cov   
+        return nbar , wp #, wp_cov   
        
 
 def edge(boxsize, index , nsub):
