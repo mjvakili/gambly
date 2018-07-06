@@ -9,11 +9,12 @@ import h5py
 # --- Local ---
 import util
 import data as Data
+import biased_hod
 from biased_hod import MCMC_model
 from prior import PriorRange
 
 
-def lnPost(theta, **kwargs):
+def lnPost(theta, box, **kwargs):
     def lnprior(theta, **kwargs):
         '''log prior 
         '''
@@ -52,15 +53,15 @@ def lnPost(theta, **kwargs):
     	# Likelihood
     	model_obvs = generator(theta, prior_range)
         
-        model_nbar , model_wp , model_wp_var = model_obvs[0] , model_obvs[1] , model_obvs[2]
+        model_nbar , model_wp = model_obvs[0] , model_obvs[1]
        
-        wp_cov = wp_cov + model_wp_var
         nbar_var = nbar_var
         
         res_nbar = model_nbar - data_nbar
         res_wp = model_wp - data_wp
 
-        f_vol = Data.load_Volume_corrector(Mr)**-1.
+        f_vol = Data.load_Volume_corrector(Mr, box)**-1.
+	#print "fvol" , f_vol
 
         f_bias = (400. - len(res_wp) -2.)/(400. - 1.)
 
@@ -77,7 +78,7 @@ def lnPost(theta, **kwargs):
     return lp + lnlike(theta, **kwargs)
 
 
-def mcmc_mpi(Nwalkers, Niters, Mr, prior_name = 'first_try'): 
+def mcmc_mpi(Nwalkers, Niters, Mr, box, prior_name = 'first_try'): 
     '''
     Parameters
     -----------
@@ -95,15 +96,72 @@ def mcmc_mpi(Nwalkers, Niters, Mr, prior_name = 'first_try'):
     Ndim = len(data_hod)
 
     # Priors
-    prior_min, prior_max = PriorRange(prior_name , Mr)
+    prior_min, prior_max = PriorRange(prior_name, Mr, box)
     prior_range = np.zeros((len(prior_min),2))
     prior_range[:,0] = prior_min
     prior_range[:,1] = prior_max
     
     # mcmc chain output file 
-    chain_file_name = ''.join([util.mcmc_dir(),'mcmc_chain_Mr',str(Mr),'.hdf5'])
- 
+    ##chain_file_name = ''.join([util.mcmc_dir(),'mcmc_chain_Mr',str(Mr),'_box_',box,'.hdf5'])
+    
+    random_guess = data_hod
+    pos0 = np.repeat(random_guess, Nwalkers).reshape(Ndim, Nwalkers).T + \
+                         5.e-3 * np.random.randn(Ndim * Nwalkers).reshape(Nwalkers, Ndim)
+    
+       
+        # Initializing Walkers
+   
+    print "initial position of the walkers = " , pos0.shape
+    # Initializing MPIPool
+    pool = MPIPool(loadbalance=True)
+    if not pool.is_master():
+        pool.wait()
+        sys.exit(0)
 
+    # Initializing the emcee sampler
+    hod_kwargs = {
+            'prior_range': prior_range, 
+            'data': fake_obs, 
+            'data_icov': fake_obs_icov, 
+            'Mr': Mr,
+	    'box': box
+            }
+    sampler = emcee.EnsembleSampler(Nwalkers, Ndim, lnPost, pool=pool, kwargs=hod_kwargs)
+
+    cnt = 0
+
+    chain_file_name = ''.join(['/disks/shear14/mj/mcmc','mcmc_chain_Mr',str(Mr),'_box_',box,'.hdf5'])
+    # Initializing Walkers 
+    for result in sampler.sample(pos0, iterations = Niters, storechain=False):
+        position = result[0]
+        sample_file = h5py.File(chain_file_name)
+        sample_file["mcmc"][cnt] = position
+        sample_file.close()
+        print cnt
+        cnt += 1
+        pass
+    pool.close()
+
+if __name__=="__main__": 
+   
+    continue_chain = False
+    Nwalkers = int(sys.argv[1])
+    print 'N walkers = ', Nwalkers
+    Niters = int(sys.argv[2])
+    print 'N iterations = ', Niters
+    Mr = np.float(sys.argv[3])
+    print 'Mr = ', np.float(Mr)
+    box = sys.argv[4]
+    print 'box = ', box
+    generator = MCMC_model(Mr, box)
+    mcmc_mpi(Nwalkers, Niters, Mr, box)
+
+    chain_file_name = ''.join(['/disks/shear14/mj/mcmc','mcmc_chain_Mr',str(Mr),'_box_',box,'.hdf5'])
+    sample_file = h5py.File(chain_file_name , 'w')
+    sample_file.create_dataset("mcmc",(Niters, Nwalkers, Ndim), data = np.zeros((Niters, Nwalkers , Ndim)))
+    sample_file.close()
+    
+    """ 
     if os.path.isfile(chain_file_name) and continue_chain:   
         print 'Continuing previous MCMC chain!'
         sample = h5py.File(chain_file_name , "r") 
@@ -119,51 +177,4 @@ def mcmc_mpi(Nwalkers, Niters, Mr, prior_name = 'first_try'):
     else:
         # new chain
         print "chain_file_name=" , chain_file_name
- 
-        sample_file = h5py.File(chain_file_name , 'w')
-        sample_file.create_dataset("mcmc",(Niters, Nwalkers, Ndim), data = np.zeros((Niters, Nwalkers , Ndim)))
-        sample_file.close()
-         
-        # Initializing Walkers
-        random_guess = data_hod
-        pos0 = np.repeat(random_guess, Nwalkers).reshape(Ndim, Nwalkers).T + \
-                         5.e-2 * np.random.randn(Ndim * Nwalkers).reshape(Nwalkers, Ndim)
-    print "initial position of the walkers = " , pos0.shape
-    # Initializing MPIPool
-    pool = MPIPool(loadbalance=True)
-    if not pool.is_master():
-        pool.wait()
-        sys.exit(0)
-
-    # Initializing the emcee sampler
-    hod_kwargs = {
-            'prior_range': prior_range, 
-            'data': fake_obs, 
-            'data_icov': fake_obs_icov, 
-            'Mr': Mr
-            }
-    sampler = emcee.EnsembleSampler(Nwalkers, Ndim, lnPost, pool=pool, kwargs=hod_kwargs)
-
-    cnt = 0
-
-    # Initializing Walkers 
-    for result in sampler.sample(pos0, iterations = Niters, storechain=False):
-        position = result[0]
-        sample_file = h5py.File(chain_file_name)
-        sample_file["mcmc"][cnt] = position
-        sample_file.close()
-        print cnt
-        cnt += 1
-        pass
-    pool.close()
-
-if __name__=="__main__": 
-    continue_chain = False
-    Nwalkers = int(sys.argv[1])
-    print 'N walkers = ', Nwalkers
-    Niters = int(sys.argv[2])
-    print 'N iterations = ', Niters
-    Mr = np.float(sys.argv[3])
-    print 'Mr = ', np.float(Mr)
-    generator = MCMC_model(Mr)
-    mcmc_mpi(Nwalkers, Niters, Mr)
+    """
