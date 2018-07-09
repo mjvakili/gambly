@@ -12,6 +12,7 @@ import data as Data
 import biased_hod
 from biased_hod import MCMC_model
 from prior import PriorRange
+from halo_utils import load_project_halocat 
 
 
 def lnPost(theta, box, **kwargs):
@@ -130,7 +131,7 @@ def mcmc_mpi(Nwalkers, Niters, Mr, box, prior_name = 'first_try'):
 
     cnt = 0
 
-    chain_file_name = ''.join(['/disks/shear14/mj/mcmc','mcmc_chain_Mr',str(Mr),'_box_',box,'.hdf5'])
+    chain_file_name = ''.join(['/disks/shear14/mj/mcmc/','mcmc_chain_Mr',str(Mr),'_box_',box,'.hdf5'])
     # Initializing Walkers 
     for result in sampler.sample(pos0, iterations = Niters, storechain=False):
         position = result[0]
@@ -153,13 +154,16 @@ if __name__=="__main__":
     print 'Mr = ', np.float(Mr)
     box = sys.argv[4]
     print 'box = ', box
-    generator = MCMC_model(Mr, box)
-    mcmc_mpi(Nwalkers, Niters, Mr, box)
-
-    chain_file_name = ''.join(['/disks/shear14/mj/mcmc','mcmc_chain_Mr',str(Mr),'_box_',box,'.hdf5'])
+    Ndim = 7 # the number of hod parameters
+    halocat = load_project_halocat(box)
+    generator = MCMC_model(Mr, box, halocat)
+    #generator = MCMC_model(Mr, box)
+    chain_file_name = ''.join(['/disks/shear14/mj/mcmc/','mcmc_chain_Mr',str(Mr),'_box_',box,'.hdf5'])
     sample_file = h5py.File(chain_file_name , 'w')
     sample_file.create_dataset("mcmc",(Niters, Nwalkers, Ndim), data = np.zeros((Niters, Nwalkers , Ndim)))
     sample_file.close()
+    
+    mcmc_mpi(Nwalkers, Niters, Mr, box)
     
     """ 
     if os.path.isfile(chain_file_name) and continue_chain:   

@@ -31,11 +31,12 @@ def composite_model(Mr):
 
 class MCMC_model(object):
 
-    def __init__(self, Mr, box):
+    def __init__(self, Mr, box, halocat):
         
         self.Mr = Mr
         self.model = composite_model(Mr)
-        self.halocat = load_project_halocat(box)
+        #self.halocat = load_project_halocat(box)
+        self.halocat = halocat
         self.boxsize = self.halocat.Lbox[0]
         self.nthreads = 1
         self.pimax = 40.0
