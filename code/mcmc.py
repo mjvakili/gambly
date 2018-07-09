@@ -79,7 +79,7 @@ def lnPost(theta, box, **kwargs):
     return lp + lnlike(theta, **kwargs)
 
 
-def mcmc_mpi(Nwalkers, Niters, Mr, box, prior_name = 'first_try'): 
+def mcmc_mpi(Nwalkers, Niters, Mr, box, it, start_chain, prior_name = 'first_try'): 
     '''
     Parameters
     -----------
@@ -102,15 +102,17 @@ def mcmc_mpi(Nwalkers, Niters, Mr, box, prior_name = 'first_try'):
     prior_range[:,0] = prior_min
     prior_range[:,1] = prior_max
     
-    # mcmc chain output file 
-    ##chain_file_name = ''.join([util.mcmc_dir(),'mcmc_chain_Mr',str(Mr),'_box_',box,'.hdf5'])
+    #Initializing Walkers
     
-    random_guess = data_hod
-    pos0 = np.repeat(random_guess, Nwalkers).reshape(Ndim, Nwalkers).T + \
+    if it == 0:
+
+       random_guess = data_hod
+       pos0 = np.repeat(random_guess, Nwalkers).reshape(Ndim, Nwalkers).T + \
                          5.e-3 * np.random.randn(Ndim * Nwalkers).reshape(Nwalkers, Ndim)
-    
+    else:
        
-        # Initializing Walkers
+       pos0 = start_chain
+       
    
     print "initial position of the walkers = " , pos0.shape
     # Initializing MPIPool
@@ -145,7 +147,7 @@ def mcmc_mpi(Nwalkers, Niters, Mr, box, prior_name = 'first_try'):
 
 if __name__=="__main__": 
    
-    continue_chain = False
+    continue_chain = True
     Nwalkers = int(sys.argv[1])
     print 'N walkers = ', Nwalkers
     Niters = int(sys.argv[2])
@@ -154,31 +156,43 @@ if __name__=="__main__":
     print 'Mr = ', np.float(Mr)
     box = sys.argv[4]
     print 'box = ', box
+    it = np.int(sys.argv[5])
+    print 'it = ', it
     Ndim = 7 # the number of hod parameters
+    #generator = MCMC_model(Mr, box)
+  
     halocat = load_project_halocat(box)
     generator = MCMC_model(Mr, box, halocat)
-    #generator = MCMC_model(Mr, box)
-    chain_file_name = ''.join(['/disks/shear14/mj/mcmc/','mcmc_chain_Mr',str(Mr),'_box_',box,'.hdf5'])
-    sample_file = h5py.File(chain_file_name , 'w')
-    sample_file.create_dataset("mcmc",(Niters, Nwalkers, Ndim), data = np.zeros((Niters, Nwalkers , Ndim)))
-    sample_file.close()
     
-    mcmc_mpi(Nwalkers, Niters, Mr, box)
-    
-    """ 
-    if os.path.isfile(chain_file_name) and continue_chain:   
-        print 'Continuing previous MCMC chain!'
-        sample = h5py.File(chain_file_name , "r") 
-        Nchains = Niters - len(sample) # Number of chains left to finish 
-        if Nchains > 0: 
-            pass
-        else: 
-            raise ValueError
-        print Nchains, ' iterations left to finish'
+    if it == 0: 
 
-        # Initializing Walkers from the end of the chain 
-        pos0 = sample[-Nwalkers:]
+        chain_file_name = ''.join(['/disks/shear14/mj/mcmc/','mcmc_chain_Mr',str(Mr),'_box_',box,'.hdf5'])
+    	sample_file = h5py.File(chain_file_name , 'w')
+    	sample_file.create_dataset("mcmc",(Niters, Nwalkers, Ndim), data = np.zeros((Niters, Nwalkers , Ndim)))
+    	sample_file.close()
+
+    if it == 1:	
+        
+        old_chain_file_name = ''.join(['/disks/shear14/mj/mcmc/','mcmc_chain_Mr',str(Mr),'_box_',box,'.hdf5'])
+	old_sample = h5py.File(old_chain_file_name, 'r')
+        start_chain = old_sample["mcmc"][-1,:,:]
+	old_sample.close()
+
+        chain_file_name = ''.join(['/disks/shear14/mj/mcmc/','mcmc_chain_Mr',str(Mr),'_box_',box,'_1.hdf5'])
+    	sample_file = h5py.File(chain_file_name , 'w')
+    	sample_file.create_dataset("mcmc",(Niters, Nwalkers, Ndim), data = np.zeros((Niters, Nwalkers , Ndim)))
+    	sample_file.close()
+
     else:
-        # new chain
-        print "chain_file_name=" , chain_file_name
-    """
+
+        old_chain_file_name = ''.join(['/disks/shear14/mj/mcmc/','mcmc_chain_Mr',str(Mr),'_box_',box,'_'+str(it-1)+'.hdf5'])
+	old_sample = h5py.File(old_chain_file_name, 'r')
+        start_chain = old_sample["mcmc"][-1,:,:]
+	old_sample.close()
+
+        chain_file_name = ''.join(['/disks/shear14/mj/mcmc/','mcmc_chain_Mr',str(Mr),'_box_',box,'_'+str(it)+'.hdf5'])
+    	sample_file = h5py.File(chain_file_name , 'w')
+    	sample_file.create_dataset("mcmc",(Niters, Nwalkers, Ndim), data = np.zeros((Niters, Nwalkers , Ndim)))
+    	sample_file.close()
+    
+    mcmc_mpi(Nwalkers, Niters, Mr, box, it, start_chain)
