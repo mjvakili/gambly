@@ -167,7 +167,9 @@ if __name__=="__main__":
     	sample_file.create_dataset("mcmc",(Niters, Nwalkers, Ndim), data = np.zeros((Niters, Nwalkers , Ndim)))
     	sample_file.close()
 
-    if it == 1:	
+	start_chain = np.zeros((Nwalkers,Ndim))
+
+    elif it == 1:	
         
         old_chain_file_name = ''.join(['/disks/shear14/mj/mcmc/','mcmc_chain_Mr',str(Mr),'_box_',box,'.hdf5'])
 	old_sample = h5py.File(old_chain_file_name, 'r')
@@ -183,12 +185,12 @@ if __name__=="__main__":
 
         old_chain_file_name = ''.join(['/disks/shear14/mj/mcmc/','mcmc_chain_Mr',str(Mr),'_box_',box,'_'+str(it-1)+'.hdf5'])
 	old_sample = h5py.File(old_chain_file_name, 'r')
-        start_chain = old_sample["mcmc"][-2,:,:]
+        start_chain = old_sample["mcmc"][-1,:,:]
 	old_sample.close()
-        print start_chain
+        #print start_chain
         chain_file_name = ''.join(['/disks/shear14/mj/mcmc/','mcmc_chain_Mr',str(Mr),'_box_',box,'_'+str(it)+'.hdf5'])
     	sample_file = h5py.File(chain_file_name , 'w')
     	sample_file.create_dataset("mcmc",(Niters, Nwalkers, Ndim), data = np.zeros((Niters, Nwalkers , Ndim)))
     	sample_file.close()
-    print start_chain
+    #print start_chain
     mcmc_mpi(Nwalkers, Niters, Mr, box, it, start_chain, chain_file_name)
