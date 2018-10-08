@@ -30,6 +30,8 @@ The phrasing of the section has been clarified.
 
 > 3.In Section 2.2, the authors state that they choose the concentrations of the halos from the Dutton & Maccio median relation. This is acceptable. However, this has the potential to mitigate one source of assembly bias that may (or may not) be present in nature. In particular, because individual halos cluster as a function of concentration, satellite populations may also be distributed within their halos in a manner that is correlated spatially. By using the Dutton & Maccio relation, the authors eliminate this possibility. This is likely to be a small effect, but this detail should at least be pointed out by the authors. 
 
+The halo concentrations now come directly from the halo catalog.
+
 > 4.Most of the interpretation of the clustering results, especially toward the beginning of section 5.1, follows directly from the modeling paper of Hearin et al. 2016. This work should be cited as the source for this interpretation.
 
 > 5.In section 5.1, the authors attribute abundance matching by Vmax to Hearin and Watson 2013. These authors did use abundance matching, but did not introduce Abundance matching via Vmax. Abundance matching via Vmax goes back at least to a paper by Conroy et al. 2006. 
