@@ -6,20 +6,45 @@ I have completed my review of this manuscript and I apologize to the authors for
 
 I have a small number of comments that I consider to be significant and that could, in principle, affect the quantitative results of the manuscript. It is my recommendation that the authors be required to address these issues in any revised manuscript.
 
-1. The author's describe the covariance matrix from the measurements. However, as the predictions are made using a finite simulation, there should be an analogous contribution to the covariance from the predictions themselves. As the simulated and observed volumes are not very dissimilar for many of the samples the authors study, this error on the theoretical predictions should not necessarily be negligible.
+> 1. The author's describe the covariance matrix from the measurements. However, as the predictions are made using a finite simulation, there should be an analogous contribution to the covariance from the predictions themselves. As the simulated and observed volumes are not very dissimilar for many of the samples the authors study, this error on the theoretical predictions should not necessarily be negligible.
 
-2. Figure 8 shows some features that indicate MCMC chains that are not very well converged (at least in the sense of making the particular statements that the authors aim to make). The bimodality of the univariate posteriors evident in some panels (for example, for Acen, the most important parameter studied in this analysis) indicates possible poor convergence as it is extremely unlikely that this bimodality is physical. Likewise, the analogous criticism holds for the "isthmuses" of probability evident in several of the bivariate posterior plots. This comment may seem knit-picky, but is important for several reasons. A standard convergence test, such as Gelman-Rubin, more or less checks that the mean of the posterior is converged. However, these posterior plots suggest that the low-probability tails of the posterior are not well converged. This is important because it is the shape of the posterior in these low-probability tails that determines things such as the errors on the inferred parameters and the compatibility of the inferred parameters with various hypotheses. Based on these figures, I would not be surprised if these quantitative statements could change with a larger MCMC sample. In the context of the present work, convergence is likely to be slow because each region of parameter space must be sampled many times due to the fact that the likelihood function itself is stochastic.
+We agree with the referee comment. Since we use a simulation with a finite box as our model, the model uncertainties 
+need to be included in the covariance matrix. In the revised manuscript, the total convariance matrix used in the 
+likelihood is given by adding the estimate of the covariance matrix from the measurements to the estimate of the 
+covariance matrix from the predictions. In particulr, we use the approach described in Zheng&Guo 2016 and Gue etal 2016 
+to estimate the model covariance matrix. Assuming that the 2PCF covariance matrix is inversely proportional 
+to the comoving volume, we define an effective model covariance matrix given by equation 13 which is added to the jackknife 
+covariance matrix of the measurements to obtain the total covariance matrix (equation 14). 
+The model covariance matrix is estimated as (Vd/Vm)Cd where Vd is the comoving volume of the data, Vm is the comoving volume 
+of the simulation, and Cd is the covariance of the data. This has been thoroighly explained in section 2.3. 
+We have also considered computing the model covariance matrix everytime a new mock catalog is created after sampling 
+a set of HOD parameters. But have realized that this is computationally prohibitive.
 
-3. Related to point 2 above, the authors should specify how they determine the maximum likelihood (or minimum chi^2). The current manuscript does not describe this calculation, but it may have important consequences, especially for model comparison. The calculation of the maximum likelihood in this context is non-trivial for two reasons. First, MCMC is not particularly good at determining the maximum likelihood. Do the authors simply choose the maximum likelihood realized in their chains? That may not be a particularly good estimate of maximum likelihood, especially if the likelihood is strongly peaked or has features on a scale smaller than the 68% regions. It would be better to get close to the maximum likelihood using the results of the MCMC chain and then to find the maximum likelihood using a function maximization procedure. 
+> 2. Figure 8 shows some features that indicate MCMC chains that are not very well converged (at least in the sense of making the particular statements that the authors aim to make). The bimodality of the univariate posteriors evident in some panels (for example, for Acen, the most important parameter studied in this analysis) indicates possible poor convergence as it is extremely unlikely that this bimodality is physical. Likewise, the analogous criticism holds for the "isthmuses" of probability evident in several of the bivariate posterior plots. This comment may seem knit-picky, but is important for several reasons. A standard convergence test, such as Gelman-Rubin, more or less checks that the mean of the posterior is converged. However, these posterior plots suggest that the low-probability tails of the posterior are not well converged. This is important because it is the shape of the posterior in these low-probability tails that determines things such as the errors on the inferred parameters and the compatibility of the inferred parameters with various hypotheses. Based on these figures, I would not be surprised if these quantitative statements could change with a larger MCMC sample. In the context of the present work, convergence is likely to be slow because each region of parameter space must be sampled many times due to the fact that the likelihood function itself is stochastic.
+
+We have changed our convergence test in the revised manuscript. 
+In emcee, the walkers are not indpendent markov chains. As a result, we cannot use 
+the standard Gelman-Rubin test to assess whether the chains have converged or not. 
+Now we use the auto-correlation test to assess the convergence of MCMC chains.
+This has been clarified in second-to-last paragraph of chapter 4.
+
+> 3. Related to point 2 above, the authors should specify how they determine the maximum likelihood (or minimum chi^2). The current manuscript does not describe this calculation, but it may have important consequences, especially for model comparison. The calculation of the maximum likelihood in this context is non-trivial for two reasons. First, MCMC is not particularly good at determining the maximum likelihood. Do the authors simply choose the maximum likelihood realized in their chains? That may not be a particularly good estimate of maximum likelihood, especially if the likelihood is strongly peaked or has features on a scale smaller than the 68% regions. It would be better to get close to the maximum likelihood using the results of the MCMC chain and then to find the maximum likelihood using a function maximization procedure. 
 
 Second, the maximum likelihood is difficult to determine in this type of model because the likelihood itself is stochastic. The maximum likelihood should be estimated from an average of many likelihood calculations at a single point in the parameter space. 
 
 These possibilities should be checked by the authors and the method for estimating the maximum likelihood should be specified.
 
+In the previous version, we estimated the maximum likelihood directly from the chains. 
+In the revised manuscript however, we follow the referee's instructions for estimating the maximum 
+likelihood. We use the scipy implementation of the BFGS algorithm to seacrh for the minimum chi^2 
+within the 68% confidence intervals given by MCMC. This is clarified in the last paragraph of section 4. 
+
 > 4. I am rather concerned that the resolution of the Bolshoi-P and SMDP simulations is insufficient to analyze the samples with Mr > -19.5. This issue cannot remain unaddressed in the manuscript. My reasoning is as follows. For these samples, log Mmin is on the order of 11.5 to 11.7, while sigma_log_M is on the order of 0.6 or larger (much larger in some cases). In the models studied by the authors, a significant number of halos are populated that are ~ 2*sigma_logM from the value of log Mmin. That means that halos with log-masses of log(Mmin)-2*(sigma_log_M) must be well resolved. For the -18.5 sample (just as an example) this corresponds to a mass of ~10^10 solar masses! For these simulations, that is about 100 particles. This may be too few to determine clustering reliably in dense regions as poorly resolved halos will have their structures disturbed by neighboring halos to a much larger degree than well resolved halos, enhancing the "assembly bias effect." More specifically, determining halo concentration from halos with few particles is quite uncertain, and it is not clear how this additional uncertainty may alter the results quoted in the present manuscript. There are many papers on this subject, recent examples being Poveda-Ruiz et al. 2016 and Klypin et al. 2016, but see the references therein as well. The rule-of-thumb that is often used is that the halos should have a few thousand particles in order to have concentration determined reliably. Therefore, it is probably necessary to consider only halos with masses above ~10^11 solar masses in the present work. Alternatively, the authors may attempt to construct an argument that demonstrates that resolution does not alter their results and that this rule-of-thumb criterion may not be applicable in this case. 
 
-In our revision of the paper, we have only included halos with at least 1000 particles. As a result, we have limited 
-our analysis to samples with Mr > -19.5. This is now explicitely pointed out in the 4th paragraph of section 2.1.
+In the revised manuscript, we have only included halos with at least 1000 particles. 
+As a result, we have limited our analysis to the luminosity-threshold samples: Mr<-19.5, -20, -20.5, -21, -21.5. 
+This is now explicitely pointed out in the 4th paragraph of section 2.1. The faintest samples are dropped from 
+the analysis, figures, tables, and discussions throughout the paper.
 
 ## Minor comments.
 
@@ -29,7 +54,7 @@ The 9th paragraph now explicitly states that the two-population model used in th
 
 > 2.In Section 2.1, the larger volumes are necessary because of lower number densities. The phrasing in this section (that some samples occupy "larger volumes") is strange and potentially misleading.
 
-The phrasing of the section has been clarified. 
+The phrasing of the section has been clarified. A simillar pharsing is dropped from the first paragraph of section 6 to avoid confusion. 
 
 > 3.In Section 2.2, the authors state that they choose the concentrations of the halos from the Dutton & Maccio median relation. This is acceptable. However, this has the potential to mitigate one source of assembly bias that may (or may not) be present in nature. In particular, because individual halos cluster as a function of concentration, satellite populations may also be distributed within their halos in a manner that is correlated spatially. By using the Dutton & Maccio relation, the authors eliminate this possibility. This is likely to be a small effect, but this detail should at least be pointed out by the authors. 
 
@@ -37,13 +62,20 @@ The halo concentrations now come directly from the halo catalog.
 
 > 4.Most of the interpretation of the clustering results, especially toward the beginning of section 5.1, follows directly from the modeling paper of Hearin et al. 2016. This work should be cited as the source for this interpretation.
 
+We have made sure that Hearin et al. 2016 is properly cited as the source for most of the interpretations in section 5.1.
+
 > 5.In section 5.1, the authors attribute abundance matching by Vmax to Hearin and Watson 2013. These authors did use abundance matching, but did not introduce Abundance matching via Vmax. Abundance matching via Vmax goes back at least to a paper by Conroy et al. 2006. 
 
 Conroy et al. (2006) has been included in the citation for abundance matching via V_max.
 
 > 6.In comparing results from different simulations in section 5.3, the authors draw particular attention to the -20.5 and -19 samples. However, drawing attention to these particular samples seems hardly warranted given the uncertainties in each inference of Asat (e.g., in Fig. 6). Rather, these seem to be specific examples of the general trend that Asat inferred from Bolshoi-P tends to be marginally higher than Asat inferred from SMDP.
 
+We have dropped this paragraph. Our new Asat constraints from SMDP and BolshoiP are consistent. 
+In the luminosity-threshold samples considered in the revised version (Mr<-21.5,-21,-20.5,-20,-19.5), 
+there is no descrepancy between the Asat inferred from the two simulations. We have also dropped Figure 7 
+as it is not very relevant to the conclusions of our paper.
+
 > 7.There are a number of awkward phrasings in the text. As an example, take the first sentence of Section 5.1. "The constraints on the assembly bias parameters fall into two main categories. First, the satellite assembly bias parameter Asat and the second, the central assembly bias parameter Acen." This is awkward because category really isn't the correct word here. There are simply two parameters. Second, the second "sentence" is actually a sentence fragment as it has no verb. This is one example of awkwardness that is sprinkled throughout the paper. The manuscript could stand to be proofread more thoroughly, both by the authors and by a native English speaker if neither of the authors speak English as a native language.
 
-This comment is bit offensive... 
+We have changed the phrasing of some of the sentences that were difficult to comprehend.
 
