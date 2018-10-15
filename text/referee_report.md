@@ -1,5 +1,14 @@
 # Referee Report 
-## Reviewer's Comments:
+
+Dear Editor,
+
+We thank the referee for the thorough review of our work and for the constructive comments that substantially improved the quality of the paper. We apologize for the long delay in responding to the review. This is partially due to the fact that in order to incorporate the referee comments into the revised manuscripts, we had to run a new set of MCMC chains. Running the chains have been computationally demanding as we make use of a simulation-based approach. The delay has also been partially due to the fact that both authors graduated in 2017 and moved to new academic institutes.  
+
+Please find below responses to the referee's comments for the submission.
+
+Thank you, Mohammadjavad Vakili (on behalf of the authors).
+
+>## Reviewer's Comments:
 I have completed my review of this manuscript and I apologize to the authors for the long delay. My recommendation is that this manuscript be revised prior to publication and that the revised version also be reviewed. I would be happy to review the revised manuscript. In the remainder of this report, I give the reasons for this recommendation.
 
 ## Major comments.
@@ -11,7 +20,9 @@ I have a small number of comments that I consider to be significant and that cou
 We agree with the referee comment. Since we use a simulation with a finite box as our model, the model uncertainties 
 need to be included in the covariance matrix. In the revised manuscript, the total convariance matrix used in the 
 likelihood is given by adding the estimate of the covariance matrix from the measurements to the estimate of the 
-covariance matrix from the predictions. In particulr, we use the approach described in Zheng&Guo 2016 and Gue etal 2016 
+covariance matrix from the predictions. 
+In order to address this comment, we have made substantial changes to Section 3.
+In particular, we use the approach described in Zheng & Guo 2016 and Gue et al 2016 
 to estimate the model covariance matrix. Assuming that the 2PCF covariance matrix is inversely proportional 
 to the comoving volume, we define an effective model covariance matrix given by equation 13 which is added to the jackknife 
 covariance matrix of the measurements to obtain the total covariance matrix (equation 14). 
