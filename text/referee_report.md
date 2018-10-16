@@ -4,7 +4,8 @@ Dear Editor,
 
 We thank the referee for the thorough review of our work and for the constructive comments that substantially improved the quality of the paper. We apologize for the long delay in responding to the review. This is partially due to the fact that in order to incorporate the referee comments into the revised manuscripts, we had to run a new set of MCMC chains. Running the chains have been computationally demanding as we make use of a simulation-based approach. The delay has also been partially due to the fact that both authors graduated in 2017 and moved to new academic institutes.  
 
-Please find below responses to the referee's comments for the submission.
+Please find below responses to the referee's comments for the submission. 
+In the revised manuscript, the color purple is used for the modifications.
 
 Thank you, Mohammadjavad Vakili (on behalf of the authors).
 
@@ -22,7 +23,7 @@ need to be included in the covariance matrix. In the revised manuscript, the tot
 likelihood is given by adding the estimate of the covariance matrix from the measurements to the estimate of the 
 covariance matrix from the predictions. 
 In order to address this comment, we have made substantial changes to Section 3.
-We use the approach described in Zheng & Guo 2016 and Gue et al 2016 
+We use the approach described in Zheng & Guo 2016 and Guo et al 2016 
 to estimate the model covariance matrix. Assuming that the 2PCF covariance matrix is inversely proportional 
 to the comoving volume, we define an effective model covariance matrix given by Equation 13 which is added to the jackknife 
 covariance matrix of the measurements to obtain the total covariance matrix (Equation 14). 
@@ -84,6 +85,12 @@ In the luminosity-threshold samples considered in the revised version (Mr<-21.5,
 there is no descrepancy between the Asat inferred from the two simulations. We have also dropped Figure 7 
 as it is not very relevant to the conclusions of our paper.
 
+Furthermore, we decided to move Section 5.3 to appendix. This section only provides a technical 
+and it is not necesary to include it in the main results. 
+It demonstrates that the results remain largely consistent 
+by a lower-resolution smaller N-body. Therefore, it'd be easier for the readers 
+if this section moved to the appendix.
+
 > 7.There are a number of awkward phrasings in the text. As an example, take the first sentence of Section 5.1. "The constraints on the assembly bias parameters fall into two main categories. First, the satellite assembly bias parameter Asat and the second, the central assembly bias parameter Acen." This is awkward because category really isn't the correct word here. There are simply two parameters. Second, the second "sentence" is actually a sentence fragment as it has no verb. This is one example of awkwardness that is sprinkled throughout the paper. The manuscript could stand to be proofread more thoroughly, both by the authors and by a native English speaker if neither of the authors speak English as a native language.
 
-We have changed the phrasing of some of the sentences that were difficult to comprehend.
+We have changed the phrasing of a number of sentences that were difficult to comprehend.
